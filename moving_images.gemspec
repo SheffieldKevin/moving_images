@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = MovingImages::VERSION
   spec.authors       = ["Kevin Meaney"]
   spec.email         = ["ktam@yvs.eu.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{Ruby interface for using MovingImages}
+  spec.description   = %q{Currently not ready for general use}
+  spec.homepage      = "http://blog.yvs.eu.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")

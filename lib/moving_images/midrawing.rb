@@ -572,7 +572,7 @@ module MovingImages
     # Set the fill color used in draw fill element commands
     # @param fillColor [Hash] A hash representation of a color see {MIColor}
     # @return [Hash] The hash of the draw element object
-    def set_fillcolor(fillColor)
+    def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
       @elementHash
     end
@@ -974,7 +974,7 @@ module MovingImages
     # Set the color for drawing the text
     # @param fillColor [Hash] The color to draw text with created with {MIColor}
     # @return [Hash] The representation of the draw string command
-    def set_fillcolor(fillColor)
+    def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
       @elementHash
     end

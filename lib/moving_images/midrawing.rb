@@ -506,7 +506,7 @@ module MovingImages
   
     # Set the blur to apply to the shadow
     # @param theBlur [Float, String] The blur width. String allows a formula
-    def set_blur(theBlur)
+    def blur=(theBlur)
       @shadowHash[:blur] = theBlur
     end
   end
@@ -534,7 +534,7 @@ module MovingImages
     # draw element command that you thought was finalized.
     # @param elementType [String] The type of draw element command.
     # @return [Hash] The draw element hash
-    def set_elementtype(elementType)
+    def elementtype=(elementType)
       @elementHash[:elementtype] = elementType
       @elementHash
     end
@@ -544,7 +544,7 @@ module MovingImages
     # the property values are the values to be assigned to the variables.
     # @param theVariables [Hash] keys are variable names.
     # @return [Hash] The updated hash with variables assigned.
-    def set_variables(theVariables)
+    def variables=(theVariables)
       @elementHash[:variables] = theVariables
       @elementHash
     end
@@ -557,14 +557,14 @@ module MovingImages
 
     # Get the draw element hash
     # @return [Hash] The hash of the draw element object.
-    def get_elementhash()
+    def elementhash
       @elementHash
     end
 
     # Set the rectangle
     # @param theRect [Hash] Assign a rectangle for draw rect and oval elements
     # @return [Hash] The hash of the draw element object
-    def set_rectangle(theRect)
+    def rectangle=(theRect)
       @elementHash[:rect] = theRect
       @elementHash
     end
@@ -714,8 +714,8 @@ module MovingImages
         raise "Can only add a drawElement to \"elementtype\"" +
               " \"arrayofelements\""
       end
-      if drawElement.respond_to? "get_elementhash"
-        drawElement = drawElement.get_elementhash()
+      if drawElement.respond_to? "elementhash"
+        drawElement = drawElement.elementhash
       end
 
       if @elementHash[:arrayofelements].nil?
@@ -807,7 +807,7 @@ module MovingImages
 
     # Get the draw element hash
     # @return [Hash] The hash of the draw element object.
-    def get_elementhash()
+    def elementhash
       return @elementHash
     end
 
@@ -910,7 +910,7 @@ module MovingImages
 
     # Get the draw element hash
     # @return [Hash] The hash of the draw element object.
-    def get_elementhash()
+    def elementhash
       return @elementHash
     end
 
@@ -1079,7 +1079,7 @@ module MovingImages
 
     # Get the draw element hash
     # @return [Hash] The hash of the draw element object.
-    def get_elementhash()
+    def elementhash
       return @elementHash
     end
 

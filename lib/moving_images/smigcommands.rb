@@ -56,7 +56,7 @@ module MovingImages
     class DrawElementCommand < ObjectCommand
       # Initialize a new draw element command object
       # @param receiverObject [Hash] Object handling the draw element command
-      # @param drawinstructions [Hash, #get_elementhash] The draw instructions.
+      # @param drawinstructions [Hash, #elementhash] The draw instructions.
       # @return [DrawElementCommand] The draw element command object.
       def initialize(receiverObject, drawinstructions: nil)
         super(:drawelement, receiverObject)
@@ -64,12 +64,12 @@ module MovingImages
       end
 
       # Assign the draw instructions to the draw element command object.
-      # @param drawInstructions [Hash] Instructions that will do the drawing.
+      # @param drawInstructions [Hash, #elementhash] The draw instructions.
       # @return [Hash] The draw instruction hash.
       def set_drawinstructions(drawInstructions)
         drawInstructionsHash = drawInstructions
-        if drawInstructionsHash.respond_to?("get_elementhash")
-          drawInstructionsHash = drawInstructionsHash.get_elementhash()
+        if drawInstructionsHash.respond_to?("elementhash")
+          drawInstructionsHash = drawInstructionsHash.elementhash
         end
         self.add_option(key: :drawinstructions, value: drawInstructionsHash)
         self.get_commandhash()
@@ -367,7 +367,7 @@ module MovingImages
     # element command then call set_drawinstructions on the draw element
     # object.
     # @param receiverObject [Hash] Object handling the draw element command
-    # @param drawinstructions [Hash, #get_elementhash] The draw instructions.
+    # @param drawinstructions [Hash, #elementhash] The draw instructions.
     # @return [DrawElementCommand] The draw element command object.
     def self.make_drawelement(receiverObject, drawinstructions: nil)
       theCommand = DrawElementCommand.new(receiverObject,

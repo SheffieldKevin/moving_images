@@ -431,7 +431,7 @@ module MovingImages
 
     # Set the render filter chain variables
     # @param theVariables [Hash] The variables
-    def set_variables(theVariables)
+    def variables=(theVariables)
       @renderHash[:variables] = theVariables
       @renderHash
     end

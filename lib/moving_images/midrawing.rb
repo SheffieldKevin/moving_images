@@ -1,6 +1,5 @@
 
 module MovingImages
-
   # == A collection of methods for creating and modifying simple shapes
   module MIShapes
     # Make a point hash
@@ -8,7 +7,7 @@ module MovingImages
     # @param y [Float, #to_f] The vertical position of the point
     # @return [Hash] A point hash containing the x, y coordinates.
     def self.make_point(x, y)
-      return { :x => x.to_f, :y => y.to_f }
+      { :x => x.to_f, :y => y.to_f }
     end
 
     # Modify a points location by adding to the coordinates.
@@ -327,15 +326,15 @@ module MovingImages
 
     # Get the list of named rgb color profiles built in to CoreGraphics
     # @return [Array<String>] An array of rgb color profile names.
-    def self.get_rgbprofiles()
-      return [ "kCGColorSpaceGenericRGB", "kCGColorSpaceGenericRGBLinear",
-                "kCGColorSpaceSRGB", "kCGColorSpaceAdobeRGB1998" ]
+    def self.rgbprofiles
+      return ['kCGColorSpaceGenericRGB', 'kCGColorSpaceGenericRGBLinear',
+                'kCGColorSpaceSRGB', 'kCGColorSpaceAdobeRGB1998']
     end
 
     # Get the list of named grayscale profiles built into CoreGraphics
     # @return [Array<String>] An array of grayscale profile names.
-    def self.get_grayprofiles()
-      return [ "kCGColorSpaceGenericGray", "kCGColorSpaceGenericGrayGamma2_2" ]
+    def self.grayprofiles
+      return ['kCGColorSpaceGenericGray', 'kCGColorSpaceGenericGrayGamma2_2']
     end
   end
 
@@ -360,7 +359,7 @@ module MovingImages
 
     # Get the list of path elements
     # @return [Array<Hash>] list of path elements
-    def get_patharray()
+    def patharray
       return @pathArray
     end
 
@@ -410,11 +409,12 @@ module MovingImages
     # @param controlPoint2 [Hash] Second control point of a bezier curve
     # @param endPoint [Hash] The end point of the bezier curve
     # @return [Array<Hash>] list of path elements
-    def add_bezierpath_withcp1_cp2_endpoint(controlPoint1: {:x => 0.0,
-                                                            :y => 0.0}, 
-                                            controlPoint2: {:x => 9.0,
-                                                            :y => 9.0}, 
-                                            endPoint: {:x => 10.0, :y => 20.0})
+    def add_bezierpath_withcp1_cp2_endpoint(controlPoint1: { :x => 0.0,
+                                                             :y => 0.0 }, 
+                                            controlPoint2: { :x => 9.0,
+                                                             :y => 9.0 }, 
+                                            endPoint: { :x => 10.0,
+                                                        :y => 20.0 })
       pathElement = { :elementtype => "pathbeziercurve",
                         :controlpoint1 => controlPoint1,
                         :controlpoint2 => controlPoint2,
@@ -427,8 +427,8 @@ module MovingImages
     # @param controlPoint1 [Hash] The quadratic curve control point
     # @param endPoint [Hash] The quadratic curve end point
     # @return [Array<Hash>] list of path elements
-    def add_quadraticpath(controlPoint1: {:x => 0.0, :y => 0.0 }, 
-                          endPoint: {:x => 10.0, :y => 20.0})
+    def add_quadraticpath(controlPoint1: { :x => 0.0, :y => 0.0 }, 
+                          endPoint: { :x => 10.0, :y => 20.0 })
       pathElement = { :elementtype => "pathquadraticcurve",
                       :controlpoint1 => controlPoint1,
                       :endpoint => endPoint }
@@ -488,19 +488,19 @@ module MovingImages
   
     # Get the shadow hash
     # @return [Hash] The hash representation of the shadow
-    def get_shadowhash()
+    def shadowhash
       return @shadowHash
     end
 
     # Set the color used to draw the shadow with.
     # @param theColor [Hash] The shadow color.
-    def set_color(theColor)
+    def color=(theColor)
       @shadowHash[:fillcolor] = theColor
     end
   
     # Set the shadow offset
     # @param theOffset [Hash] A size { :width, :height } hash.
-    def set_offset(theOffset = { :width => 5, :height => -10 })
+    def offset=(theOffset)
       @shadowHash[:offset] = theOffset
     end
   
@@ -594,10 +594,10 @@ module MovingImages
     end
 
     # Set the shadow to be applied to the drawing.
-    # @param theShadow [Hash, #get_shadowhash] The shadow to apply to the drawing
+    # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
     def set_shadow(theShadow)
-      if theShadow.respond_to? "get_shadowhash"
-        theShadow = theShadow.get_shadowhash()
+      if theShadow.respond_to? "shadowhash"
+        theShadow = theShadow.shadowhash
       end
       @elementHash[:shadow] = theShadow
     end
@@ -737,7 +737,7 @@ module MovingImages
                (@elementHash[:elementtype].intern.eql? :fillandstrokepath)
         raise "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
       end
-      thePath = thePath.get_patharray() if thePath.respond_to? "get_patharray"
+      thePath = thePath.patharray if thePath.respond_to? "patharray"
       @elementHash[:arrayofpathelements] = thePath
       @elementHash[:startpoint] = startPoint
       @elementHash
@@ -834,8 +834,8 @@ module MovingImages
     # @return [Hash] The representation of the draw element object.
     def set_arrayofpathelements(pathElements, startPoint: nil)
       arrayOfPathElements = pathElements
-      if arrayOfPathElements.respond_to? "get_patharray"
-        arrayOfPathElements = arrayOfPathElements.get_patharray()
+      if arrayOfPathElements.respond_to? "patharray"
+        arrayOfPathElements = arrayOfPathElements.patharray
       end
       startPoint = { :x => 0, :y => 0 } if startPoint.nil?
       @elementHash[:startpoint] = startPoint
@@ -966,7 +966,7 @@ module MovingImages
     # the text using a user interface font.
     # @param fontSize [Float, #to_f] The user interface font to draw the text
     # @return [Hash] The representation of the draw string command
-    def set_fontsize(fontSize)
+    def fontsize=(fontSize)
       @elementHash[:fontsize] = fontSize.to_f
       @elementHash
     end
@@ -984,8 +984,8 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_arrayofpathelements(pathElements)
       arrayOfPathElements = pathElements
-      if arrayOfPathElements.respond_to? "get_patharray"
-        arrayOfPathElements = arrayOfPathElements.get_patharray()
+      if arrayOfPathElements.respond_to? "patharray"
+        arrayOfPathElements = arrayOfPathElements.patharray
       end
 
       @elementHash[:arrayofpathelements] = arrayOfPathElements
@@ -1033,10 +1033,10 @@ module MovingImages
     end
 
     # Set the shadow to be applied to the drawn text.
-    # @param theShadow [Hash, #get_shadowhash] The shadow to apply.
+    # @param theShadow [Hash, #shadowhash] The shadow to apply.
     def set_shadow(theShadow)
       if theShadow.respond_to?
-        theShadow = theShadow.get_shadowhash()
+        theShadow = theShadow.shadowhash
       end
       @elementHash[:shadow] = theShadow
     end
@@ -1139,10 +1139,10 @@ module MovingImages
     end
 
     # Set the shadow to be applied to the drawing.
-    # @param theShadow [Hash, #get_shadowhash] The shadow to apply
+    # @param theShadow [Hash, #shadowhash] The shadow to apply
     def set_shadow(theShadow)
       if theShadow.respond_to?
-        theShadow = theShadow.get_shadowhash()
+        theShadow = theShadow.shadowhash
       end
       @elementHash[:shadow] = theShadow
     end

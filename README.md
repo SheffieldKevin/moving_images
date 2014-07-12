@@ -1,6 +1,6 @@
 # MovingImages
 
-TODO: Write a gem description
+This gem provides an interface for using [MovingImages](https://gitlab.com/ktam/using-movingimages/wikis/Home) a OS X Launch Agent for processing image files.
 
 ## Installation
 
@@ -18,11 +18,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Please see the [documentation for MovingImages]((https://gitlab.com/ktam/using-movingimages/wikis/Contents).
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/moving_images/fork )
+1. Fork it ( https://github.com/SheffieldKevin/moving_images/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

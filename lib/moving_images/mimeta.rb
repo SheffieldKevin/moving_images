@@ -1,6 +1,5 @@
-# Meta about Moving Images, and the launch agent.
 
-require_relative 'smig'
+# require_relative 'smig'
 
 module MovingImages
 

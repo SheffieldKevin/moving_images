@@ -9,9 +9,14 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Kevin Meaney"]
   spec.email         = ["ktam@yvs.eu.com"]
   spec.summary       = %q{Ruby interface for using MovingImages}
-  spec.description   = %q{Currently not ready for general use}
+  spec.description   = %q{Currently a pre alpha release}
   spec.homepage      = "http://blog.yvs.eu.com"
   spec.license       = "MIT"
+
+  spec.extra_rdoc_files = [
+    "LICENSE.txt",
+    "README.md"
+  ]
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
@@ -20,4 +25,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
+  spec.required_ruby_version = '~> 2.0'
 end

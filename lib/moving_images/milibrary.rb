@@ -1,21 +1,14 @@
-# Copyright (C) 2014 Kevin Meaney
-# Please refer to the file LICENSE for the license agreement.
-# You are granted the rights to modify this file for your own purposes
-# or for distribution to third parties. In either case you accept all
-# responsibility for liability. Please include the link to the documentation:
-# https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
-
 require 'Open3'
 require 'optparse'
 require 'pp'
 require 'JSON'
 
-require_relative 'midrawing'
-require_relative 'mifilterchain'
-require_relative 'smigcommands'
-require_relative 'smig'
-require_relative 'smigobjectid'
-require_relative 'spotlight'
+# require_relative 'midrawing'
+# require_relative 'mifilterchain'
+# require_relative 'smigcommands'
+# require_relative 'smig'
+# require_relative 'smigobjectid'
+# require_relative 'spotlight'
 
 module MovingImages
   # A library of functions that do actual stuff

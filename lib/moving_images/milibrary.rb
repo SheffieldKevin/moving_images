@@ -100,7 +100,7 @@ module MovingImages
         drawImageElement = MIDrawImageElement.new
         drawImageElement.set_imagesource(sourceObject: importerObject,
                                          imageIndex: 0)
-        drawImageElement.set_destinationrectangle(destinationRect)
+        drawImageElement.destinationrectangle = destinationRect
         # Create the draw image command
         drawImageCommand = CommandModule.make_drawelement(
                                           intermediateBitmapObject,
@@ -110,7 +110,7 @@ module MovingImages
         renderFilterChain = MIFilterChainRender.new
         renderDestRect = MIShapes.make_rectangle(
                     size: { :width => scaledWidth, :height => scaledHeight })
-        renderFilterChain.set_destinationrectangle(renderDestRect)
+        renderFilterChain.destinationrectangle = renderDestRect
         renderFilterChainCommand = CommandModule.make_renderfilterchain(
                                   filterChainObject,
                                   renderinstructions: renderFilterChain)
@@ -201,7 +201,7 @@ module MovingImages
         drawImageElement.set_imagesource(sourceObject: importerObject, 
                                          imageIndex: 0)
         drawImageElement.contexttransformations = contextTransformations
-        drawImageElement.set_destinationrectangle(destinationRect)
+        drawImageElement.destinationrectangle = destinationRect
         interpQual = Utility.get_cginterpolation(theOpts[:interpqual])
         drawImageElement.set_interpolationquality(interpQual)
         scaleImageCommand = CommandModule.make_drawelement(bitmapObject,

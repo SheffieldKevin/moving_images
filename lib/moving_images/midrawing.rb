@@ -710,24 +710,6 @@ module MovingImages
     # Set the array of path elements used when the draw element is stroke path
     # or fill path, or fill and stroke path.
     # @param thePath [Array<Hash>] The array of path elements defining the path.
-    # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
-    # @return [Hash] The hash of the draw element object
-=begin
-    def set_arrayofpathelements_andstartpoint(thePath, startPoint)
-      unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
-               (@elementHash[:elementtype].intern.eql? :fillpath) ||
-               (@elementHash[:elementtype].intern.eql? :fillandstrokepath)
-        raise "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
-      end
-      thePath = thePath.patharray if thePath.respond_to? "patharray"
-      @elementHash[:arrayofpathelements] = thePath
-      @elementHash[:startpoint] = startPoint
-    end
-=end
-
-    # Set the array of path elements used when the draw element is stroke path
-    # or fill path, or fill and stroke path.
-    # @param thePath [Array<Hash>] The array of path elements defining the path.
     # @return [Array] The array of path elements assign draw element.
     def arrayofpathelements=(thePath)
       unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
@@ -803,7 +785,7 @@ module MovingImages
     @elementHash
 
     def initialize()
-      @elementHash = Hash.new
+      @elementHash = {}
       @elementHash[:elementtype] = :lineargradientfill
       # Assign the start point for the array of path elements which defines
       # the shape within which the gradient fill is drawn. If the list of 
@@ -1010,7 +992,7 @@ module MovingImages
     # value of the stroke width.
     # @param stringStrokeWidth [Float, #to_f] The width for stroking the text.
     # @return [Hash] The representation of the draw string command
-    def set_stringstrokewidth(stringStrokeWidth)
+    def stringstrokewidth=(stringStrokeWidth)
       @elementHash[:stringstrokewidth] = stringStrokeWidth.to_f
     end
 
@@ -1090,7 +1072,7 @@ module MovingImages
     # current transformation where the image will be drawn
     # @param destRect [Hash] A rectangle created using {MIShapes.make_rectangle}
     # @return [Hash] The representation of the draw image command
-    def set_destinationrectangle(destRect)
+    def destinationrectangle=(destRect)
       @elementHash[:destinationrectangle] = destRect
     end
 

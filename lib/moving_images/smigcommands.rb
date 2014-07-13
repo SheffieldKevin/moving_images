@@ -832,7 +832,7 @@ module MovingImages
                         else
                           drawimageelement
                         end
-      drawImageElement.set_destinationrectangle(destinationrect)
+      drawImageElement.destinationrectangle = destinationrect
       imageImporterName = SecureRandom.uuid
       createImageImporterCommand = CommandModule.make_createimporter(
                                                       imagefile,

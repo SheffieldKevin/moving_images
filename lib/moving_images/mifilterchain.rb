@@ -404,7 +404,7 @@ module MovingImages
     # Add a destination rectangle to the render hash
     # @param destinationRect [Hash] A hash representing a rectangle
     # @return [Hash] the render hash
-    def set_destinationrectangle(destinationRect)
+    def destinationrectangle=(destinationRect)
       @renderHash[:destinationrectangle] = destinationRect
     end
 

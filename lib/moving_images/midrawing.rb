@@ -588,14 +588,14 @@ module MovingImages
     # Set the line used used in draw stroke element commands
     # @param lineWidth [Float, String] The stroke draw width
     # @return [Hash] The hash of the draw element object
-    def set_linewidth(lineWidth)
+    def linewidth=(lineWidth)
       @elementHash[:linewidth] = lineWidth
       @elementHash
     end
 
     # Set the shadow to be applied to the drawing.
     # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
-    def set_shadow(theShadow)
+    def shadow=(theShadow)
       if theShadow.respond_to? "shadowhash"
         theShadow = theShadow.shadowhash
       end
@@ -609,7 +609,7 @@ module MovingImages
     # has a debug name specified.
     # @param debugName [String] The debug name
     # @return [Hash] The hash of the draw element object
-    def set_elementdebugname(debugName)
+    def elementdebugname=(debugName)
       @elementHash[:elementdebugname] = debugName
       @elementHash
     end
@@ -620,7 +620,7 @@ module MovingImages
     # it is replaced.
     # @param transformation [Array<Hash>] An ordered list of context transforms
     # @return [Hash] The hash of the draw element object
-    def set_contexttransformations(transformation)
+    def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
       @elementHash
@@ -874,7 +874,7 @@ module MovingImages
     # possible defined affine transform.
     # @param transformation [Array<Hash>] Ordered array of transforms
     # @return [Hash] The representation of the draw element object.
-    def set_contexttransformations(transformation)
+    def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
       @elementHash
@@ -1034,8 +1034,8 @@ module MovingImages
 
     # Set the shadow to be applied to the drawn text.
     # @param theShadow [Hash, #shadowhash] The shadow to apply.
-    def set_shadow(theShadow)
-      if theShadow.respond_to?
+    def shadow=(theShadow)
+      if theShadow.respond_to? "shadowhash"
         theShadow = theShadow.shadowhash
       end
       @elementHash[:shadow] = theShadow
@@ -1046,7 +1046,7 @@ module MovingImages
     # Only one of context transformation, or affine transform is allowed.
     # @param transformation [Array<Hash>] A list of ordered context transforms.
     # @return [Hash] The representation of the draw string command
-    def set_contexttransformations(transformation)
+    def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
       @elementHash
@@ -1140,8 +1140,8 @@ module MovingImages
 
     # Set the shadow to be applied to the drawing.
     # @param theShadow [Hash, #shadowhash] The shadow to apply
-    def set_shadow(theShadow)
-      if theShadow.respond_to?
+    def shadow=(theShadow)
+      if theShadow.respond_to? "shadowhash"
         theShadow = theShadow.shadowhash
       end
       @elementHash[:shadow] = theShadow
@@ -1152,7 +1152,7 @@ module MovingImages
     # Only one of context transformation, or affine transform is allowed.
     # @param transformation [Array<Hash>] A list of ordered context transforms.
     # @return [Hash] The representation of the draw string command
-    def set_contexttransformations(transformation)
+    def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
       @elementHash

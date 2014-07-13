@@ -96,8 +96,8 @@ module MovingImages
       # @param renderInstructions [Hash, #get_renderfilterhchainhash]
       # @return [Hash] The render hash.
       def set_renderinstructions(renderInstructions)
-        if renderInstructions.respond_to?("get_renderfilterchainhash")
-          renderInstructions = renderInstructions.get_renderfilterchainhash()
+        if renderInstructions.respond_to?("renderfilterchainhash")
+          renderInstructions = renderInstructions.renderfilterchainhash
         end
         self.add_option(key: :renderinstructions, value: renderInstructions)
         self.get_commandhash()
@@ -183,14 +183,14 @@ module MovingImages
     end
 
     # Make a create image filter chain object command
-    # @param filterChain [Hash, #get_filterchainhash] Filter chain description
+    # @param filterChain [Hash, #filterchainhash] Filter chain description
     # @param name [String] The name of the image filter chain object to create
     # @return [Command] A command to create an image filter chain object
     def self.make_createimagefilterchain(filterChain, name: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :imagefilterchain)
-      if filterChain.respond_to? "get_filterchainhash"
-        filterChain = filterChain.get_filterchainhash()
+      if filterChain.respond_to? "filterchainhash"
+        filterChain = filterChain.filterchainhash
       end
       theCommand.add_option(key: :imagefilterchaindict, value: filterChain)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?

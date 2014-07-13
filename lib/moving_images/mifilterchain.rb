@@ -197,9 +197,9 @@ module MovingImages
 
     # Add a property to the list of filter properties in the filter object hash.
     # If the filter property list doesn't yet exist, then a new property list
-    # will be created, otherwise the filter property will be added to the already
-    # existing list of properties.
-    # @param filterObject [Hash] The filter object hash to assign the property to.
+    # will be created, otherwise the filter property will be added to the 
+    # already existing list of properties.
+    # @param filterObject [Hash] The filter object hash to assign property to
     # @param theProperty [Hash] The property to be assigned {MIFilterProperty}
     # @return [Hash] The core image filter object hash.
     def self.addproperty_tocifilter(filterObject: {}, theProperty: {})
@@ -307,7 +307,7 @@ module MovingImages
     # Specify whether the filter chain should be rendered in software
     # @param softwareRender [bool] Should filter chain be rendered in software
     # @return [Hash] The filter chain hash
-    def set_softwarerender(softwareRender)
+    def softwarerender=(softwareRender)
       @filterChainHash[:coreimagesoftwarerender] = softwareRender
       @filterChainHash
     end
@@ -318,14 +318,14 @@ module MovingImages
     # should be rendered in the sRGB color space instead.
     # @param useSRGBProfile [bool] Should filter chain be rendered in sRGB
     # @return [Hash] The filter chain hash
-    def set_use_srgbprofile(useSRGBProfile)
+    def use_srgbprofile=(useSRGBProfile)
       @filterChainHash[:use_srgbcolorspace] = useSRGBProfile
       @filterChainHash
     end
 
     # Get the filter chain hash.
     # @return [Hash] The filter chain hash
-    def get_filterchainhash()
+    def filterchainhash
       return @filterChainHash
     end
 
@@ -391,7 +391,7 @@ module MovingImages
 
     # Assign the render hash to an empty hash object.
     def initialize()
-      @renderHash = { }
+      @renderHash = {}
     end
 
     # Add a source rectangle to the render hash
@@ -411,7 +411,7 @@ module MovingImages
     # Set a list of filter properties to the render hash
     # @param renderFilterProperties [Array<Hash>] The filter properties.
     # @return [Hash] the render hash.
-    def set_filterproperties(renderFilterProperties)
+    def filterproperties=(renderFilterProperties)
       @renderHash[:cifilterproperties] = renderFilterProperties
     end
 
@@ -434,7 +434,7 @@ module MovingImages
 
     # Get the render filter chain hash
     # @return The filter chain hash.
-    def get_renderfilterchainhash()
+    def renderfilterchainhash
       return @renderHash
     end
 

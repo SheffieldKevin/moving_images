@@ -734,17 +734,17 @@ module MovingImages
 
     # Get the list of draw element types
     # @return [Array<String>] The list of possible draw element types
-    def self.get_elementtype_list()
-      return [ "fillrectangle", "strokerectangle", "filloval", "strokeoval",
-                "drawline", "drawlines", "fillroundedrectangle",
-                "strokeroundedrectangle", "fillpath", "strokepath",
-                "fillandstrokepath", "drawbasicstring", "lineargradientfill",
-                "drawimage", "arrayofelements" ]
+    def self.elementtype_list
+      return ['fillrectangle', 'strokerectangle', 'filloval', 'strokeoval',
+                'drawline', 'drawlines', 'fillroundedrectangle',
+                'strokeroundedrectangle', 'fillpath', 'strokepath',
+                'fillandstrokepath', 'drawbasicstring', 'lineargradientfill',
+                'drawimage', 'arrayofelements']
     end
 
     # Get the list of path element types
     # @return [Array<String>] The list of possible path element types
-    def self.get_pathelementtype_list()
+    def self.pathelementtype_list
       return ['pathmoveto', 'pathlineto', 'pathbeziercurve',
                'pathquadraticcurve', 'pathrectangle',
                'pathroundedrectangle', 'pathoval', 'pathclosesubpath']
@@ -780,7 +780,7 @@ module MovingImages
     @elementHash
 
     def initialize()
-      @elementHash = { }
+      @elementHash = Hash.new
       @elementHash[:elementtype] = :lineargradientfill
     end
 
@@ -893,7 +893,7 @@ module MovingImages
     # Set the text to be drawn. Required.
     # @param textToDraw [String] The text to be drawn.
     # @return [Hash] The representation of the draw string command
-    def set_stringtext(textToDraw)
+    def stringtext=(textToDraw)
       @elementHash[:stringtext] = textToDraw
     end
 

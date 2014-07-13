@@ -62,7 +62,8 @@ module MovingImages
         theCommands.each { |command|
           newCommandList = CommandModule::SmigCommands.new
           newCommandList.commands = [ command ]
-          newCommandList.set_saveresultstype("lastcommandresult")
+          # newCommandList.set_saveresultstype("lastcommandresult")
+          newCommandList.informationreturned = :lastcommandresult
           jsonString = newCommandList.get_commandshash().to_json
           if jsonString.length > 200000
             tempDir = Dir.tmpdir()

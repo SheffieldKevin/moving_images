@@ -527,7 +527,7 @@ module MovingImages
       # "noresults" then no results will be returned if the commands are being
       # run asynchronously otherwise the result of last command is returned.
       # @param infoReturned [:lastcommandresult, :listofresults, :noresults]
-      def set_informationreturned(infoReturned)
+      def informationreturned=(infoReturned)
         @commandsHash[:returns] = infoReturned
       end
 
@@ -535,7 +535,7 @@ module MovingImages
       # the file is a json or plist file. With ruby it might be sensible to hard
       # code this to json.
       # @param resultType [:jsonfile, :propertyfile] Save results file type
-      def set_saveresultstype(resultType = :jsonfile)
+      def saveresultstype=(resultType)
         @commandsHash[:saveresultstype] = resultType
       end
 

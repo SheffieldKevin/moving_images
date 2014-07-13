@@ -580,7 +580,7 @@ module MovingImages
     # Set the stroke color used in draw stroke element commands
     # @param strokeColor [Hash] A hash representation of a color see {MIColor}
     # @return [Hash] The hash of the draw element object
-    def set_strokecolor(strokeColor)
+    def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
       @elementHash
     end
@@ -1005,7 +1005,7 @@ module MovingImages
     # Set the stroke color for stroking text.
     # @param strokeColor [Hash] The color to stroke text with, see {MIColor}
     # @return [Hash] The representation of the draw string command
-    def set_strokecolor(strokeColor)
+    def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
       @elementHash
     end

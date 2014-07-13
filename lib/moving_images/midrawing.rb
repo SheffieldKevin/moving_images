@@ -536,7 +536,6 @@ module MovingImages
     # @return [Hash] The draw element hash
     def elementtype=(elementType)
       @elementHash[:elementtype] = elementType
-      @elementHash
     end
 
     # Set the variables property of the drawing instruction to variablesHash
@@ -546,7 +545,6 @@ module MovingImages
     # @return [Hash] The updated hash with variables assigned.
     def variables=(theVariables)
       @elementHash[:variables] = theVariables
-      @elementHash
     end
 
     # Convert the draw element hash to a json string.
@@ -566,7 +564,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def rectangle=(theRect)
       @elementHash[:rect] = theRect
-      @elementHash
     end
   
     # Set the fill color used in draw fill element commands
@@ -574,7 +571,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
-      @elementHash
     end
 
     # Set the stroke color used in draw stroke element commands
@@ -582,7 +578,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
-      @elementHash
     end
 
     # Set the line used used in draw stroke element commands
@@ -590,7 +585,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def linewidth=(lineWidth)
       @elementHash[:linewidth] = lineWidth
-      @elementHash
     end
 
     # Set the shadow to be applied to the drawing.
@@ -611,7 +605,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def elementdebugname=(debugName)
       @elementHash[:elementdebugname] = debugName
-      @elementHash
     end
 
     # Set the context transformation for the draw element.
@@ -623,7 +616,6 @@ module MovingImages
     def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
-      @elementHash
     end
 
     # Set the affine transform for the draw element.
@@ -635,7 +627,6 @@ module MovingImages
     def set_affinetransform(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
-      @elementHash
     end
 
     # Set the line needed for drawing lines in the context
@@ -645,7 +636,6 @@ module MovingImages
     def set_line(startPoint: {:x => 0.0, :y => 0.0},
                  endPoint: {:x => 100.0, :y => 100.0})
       @elementHash[:line] = { :startpoint => startPoint, :endpoint => endPoint }
-      @elementHash
     end
 
     # Set an array of points, used in the draw lines draw element command.
@@ -653,7 +643,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_points(arrayOfPoints)
       @elementHash[:points] = arrayOfPoints
-      @elementHash
     end
 
     # Set the linecap which defines how the ends of a line are drawn
@@ -662,7 +651,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_linecap(lineCap)
       @elementHash[:linecap] = lineCap
-      @elementHash
     end
 
     # Set the line join which defines how lines are joined in a path
@@ -671,7 +659,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_linejoin(lineJoin)
       @elementHash[:linejoin] = lineJoin
-      @elementHash
     end
 
     # Set the miter limit. The miter limit is described in the painting a path
@@ -682,7 +669,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_miter(miterVal)
       @elementHash[:miter] = miterVal.to_f
-      @elementHash
     end
 
     # The radius to use for a rounded rectangle
@@ -690,7 +676,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_radius(radius)
       @elementHash[:radius] = radius
-      @elementHash
     end
 
     # The radius to use for each corner of a rounded rectangle. First radius
@@ -700,7 +685,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_radiuses(radiuses)
       @elementHash[:radiuses] = radiuses # radiuses is an array of floats.
-      @elementHash
     end
 
     # Add the draw element to the array of elements to be drawn
@@ -723,7 +707,6 @@ module MovingImages
       else
         @elementHash[:arrayofelements].push(drawElement)
       end
-      @elementHash
     end
 
     # Set the array of path elements used when the draw element is stroke path
@@ -740,7 +723,6 @@ module MovingImages
       thePath = thePath.patharray if thePath.respond_to? "patharray"
       @elementHash[:arrayofpathelements] = thePath
       @elementHash[:startpoint] = startPoint
-      @elementHash
     end
 
     # Set the drawing blend mode
@@ -748,7 +730,6 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def set_blendmode(blendMode)
       @elementHash[:blendmode] = blendMode
-      @elementHash
     end
 
   # Class methods follow
@@ -825,7 +806,6 @@ module MovingImages
                  endPoint: {:x => 100.0, :y => 100.0})
       line = { :startpoint => startPoint, :endpoint => endPoint }
       @elementHash[:line] = line
-      @elementHash
     end
 
     # Set the array of path elements to clip the drawing of the gradient fill
@@ -840,7 +820,6 @@ module MovingImages
       startPoint = { :x => 0, :y => 0 } if startPoint.nil?
       @elementHash[:startpoint] = startPoint
       @elementHash[:arrayofpathelements] = arrayOfPathElements
-      @elementHash
     end
 
     # The two arrays need to be the same length. The locations is an array
@@ -859,7 +838,6 @@ module MovingImages
       end
       @elementHash[:arrayoflocations] = locations
       @elementHash[:arrayofcolors] = colors
-      @elementHash
     end
 
     # Set the blend mode to draw the gradient fill
@@ -867,7 +845,6 @@ module MovingImages
     # @return [Hash] The representation of the draw element object.
     def set_blendmode(blendMode)
       @elementHash[:blendmode] = blendMode
-      @elementHash
     end
 
     # Set the context transformation to draw the gradient fill. Scrubs any
@@ -877,7 +854,6 @@ module MovingImages
     def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
-      @elementHash
     end
 
     # Set the affine transform to draw the gradient fill. Scrubs any
@@ -887,7 +863,6 @@ module MovingImages
     def set_affinetransform(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
-      @elementHash
     end
   end
 
@@ -925,7 +900,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_stringtext(textToDraw)
       @elementHash[:stringtext] = textToDraw
-      @elementHash
     end
 
     # Set the bottom left position of where the text is to be drawn. Required.
@@ -937,7 +911,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_point_textdrawnfrom(drawPoint)
       @elementHash[:point] = drawPoint
-      @elementHash
     end
 
     # Set the postscript name of the font you want to use to draw the text.
@@ -947,7 +920,6 @@ module MovingImages
     def set_postscriptfontname(postscriptFontName)
       @elementHash[:postscriptfontname] = postscriptFontName
       @elementHash.delete(:userinterfacefont)
-      @elementHash
     end
 
     # Set the user interface to draw the text with. A user interface font also
@@ -958,7 +930,6 @@ module MovingImages
     def set_userinterfacefont(userInterfaceFont)
       @elementHash[:userinterfacefont] = userInterfaceFont
       @elementHash.delete(:postscriptfontname)
-      @elementHash
     end
 
     # Set the font size to use to draw the text. A required option if drawing
@@ -968,7 +939,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def fontsize=(fontSize)
       @elementHash[:fontsize] = fontSize.to_f
-      @elementHash
     end
 
     # Set the color for drawing the text
@@ -976,7 +946,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
-      @elementHash
     end
 
     # Set the path within which the text will be drawn.
@@ -989,7 +958,6 @@ module MovingImages
       end
 
       @elementHash[:arrayofpathelements] = arrayOfPathElements
-      @elementHash
     end
 
     # Set the text alignment when drawing the text
@@ -999,7 +967,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_textalignment(textAlignment: "kCTTextAlignmentNatural")
       @elementHash[:textalignment] = textAlignment
-      @elementHash
     end
 
     # Set the stroke color for stroking text.
@@ -1007,7 +974,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
-      @elementHash
     end
 
     # Set stroke width.
@@ -1021,7 +987,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_stringstrokewidth(stringStrokeWidth)
       @elementHash[:stringstrokewidth] = stringStrokeWidth.to_f
-      @elementHash
     end
 
     # Set the blend mode for drawing the text.
@@ -1029,7 +994,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_blendmode(blendMode)
       @elementHash[:blendmode] = blendMode
-      @elementHash
     end
 
     # Set the shadow to be applied to the drawn text.
@@ -1049,7 +1013,6 @@ module MovingImages
     def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
-      @elementHash
     end
 
     # Set the affine transform when drawing the text. See {MITransformations}
@@ -1059,7 +1022,6 @@ module MovingImages
     def set_affinetransform(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
-      @elementHash
     end
   end
 
@@ -1097,7 +1059,6 @@ module MovingImages
     def set_imagesource(sourceObject: {}, imageIndex: nil)
       @elementHash[:sourceobject] = sourceObject
       @elementHash[:imageindex] = imageIndex unless imageIndex.nil?
-      @elementHash
     end
 
     # Set the destination rectangle within  coordinate system of the context's
@@ -1106,7 +1067,6 @@ module MovingImages
     # @return [Hash] The representation of the draw image command
     def set_destinationrectangle(destRect)
       @elementHash[:destinationrectangle] = destRect
-      @elementHash
     end
 
     # Set the source rectangle within the frame of the source image within which
@@ -1115,7 +1075,6 @@ module MovingImages
     # @return [Hash] The representation of the draw image command
     def set_sourcerectangle(sourceRect)
       @elementHash[:sourcerectangle] = sourceRect
-      @elementHash
     end
 
     # Set the interpolation quality option, will be used when drawing the image
@@ -1127,7 +1086,6 @@ module MovingImages
     # @return [Hash] The representation of the draw image command
     def set_interpolationquality(interpolationQuality)
       @elementHash[:interpolationquality] = interpolationQuality
-      @elementHash
     end
   
     # Set the blend mode for drawing the image.
@@ -1135,7 +1093,6 @@ module MovingImages
     # @return [Hash] The representation of the draw string command
     def set_blendmode(blendMode)
       @elementHash[:blendmode] = blendMode
-      @elementHash
     end
 
     # Set the shadow to be applied to the drawing.
@@ -1155,7 +1112,6 @@ module MovingImages
     def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
-      @elementHash
     end
 
     # Set the affine transform when drawing the image. See {MITransformations}
@@ -1165,7 +1121,6 @@ module MovingImages
     def set_affinetransform(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
-      @elementHash
     end
   
     # Class methods.

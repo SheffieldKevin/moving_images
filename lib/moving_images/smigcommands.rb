@@ -119,7 +119,7 @@ module MovingImages
     # Make a create bitmap context command
     # @param width [Fixnum, Float] The width of the bitmap context to be created
     # @param height [Fixnum, Float] Height of the bitmap context to be created.
-    # @param size [Hash] A size hash. Size of bitmap. See {MIShapes#make_size}
+    # @param size [Hash] A size hash. Size of bitmap. See {MIShapes.make_size}
     # @param preset [String, Symbol] Preset used to create the bitmap context.
     # @param name [String] The name of the object to be created.
     # @return [Command] The command to create the bitmap object
@@ -145,7 +145,7 @@ module MovingImages
     # @param height [Fixnum, Float] Content height of the window to be created.
     # @param xloc [Fixnum, Float] x position of bottom left corner of window
     # @param yloc [Fixnum, Float] y position of bottom left corner of window
-    # @param rect [Hash] A representation of a rect {MIShapes#make_rectangle}
+    # @param rect [Hash] A representation of a rect {MIShapes.make_rectangle}
     # @param borderlesswindow [true, false] Should the window be borderless?
     # @param name [String] The name of the object to be created.
     # @return [Command] The command to create a window context
@@ -602,7 +602,7 @@ module MovingImages
       end
 
       # Make a create window context command
-      # @param rect [Hash] A representation of a rect {MIShapes#make_rectangle}
+      # @param rect [Hash] A representation of a rect {MIShapes.make_rectangle}
       # @param addtocleanup [true, false] Should created window be closed?
       # @param borderlesswindow [true, false] Should the window be borderless?
       # @param name [String] The name of the object to be created.

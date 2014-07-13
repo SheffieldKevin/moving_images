@@ -200,7 +200,7 @@ module MovingImages
         drawImageElement = MIDrawImageElement.new
         drawImageElement.set_imagesource(sourceObject: importerObject, 
                                          imageIndex: 0)
-        drawImageElement.set_contexttransformations(contextTransformations)
+        drawImageElement.contexttransformations = contextTransformations
         drawImageElement.set_destinationrectangle(destinationRect)
         interpQual = Utility.get_cginterpolation(theOpts[:interpqual])
         drawImageElement.set_interpolationquality(interpQual)

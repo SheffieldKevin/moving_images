@@ -630,7 +630,7 @@ module MovingImages
     end
 
     # Assign a line hash to the draw element hash
-    # @param theLine [Hash] A start and end point, See {MIShapes#make_line}
+    # @param theLine [Hash] A start and end point, See {MIShapes.make_line}
     # return [Hash] the line hash assigned to the draw element hash.
     def line=(theLine)
       @elementHash[:line] = theLine
@@ -639,23 +639,23 @@ module MovingImages
     # Set an array of points, used in the draw lines draw element command.
     # @param arrayOfPoints [Array<Hash>] A list of points for drawing lines.
     # @return [Hash] The hash of the draw element object
-    def set_points(arrayOfPoints)
+    def points=(arrayOfPoints)
       @elementHash[:points] = arrayOfPoints
     end
 
     # Set the linecap which defines how the ends of a line are drawn
-    # For values see {get_linecap_list}
-    # @param lineCap [String] One of: {get_linecap_list}
+    # For values see {linecap_list}
+    # @param lineCap [String] One of: {linecap_list}
     # @return [Hash] The hash of the draw element object
-    def set_linecap(lineCap)
+    def linecap=(lineCap)
       @elementHash[:linecap] = lineCap
     end
 
     # Set the line join which defines how lines are joined in a path
-    # For values see {get_linejoin_list}
-    # @param lineJoin [String] One of: {get_linejoin_list}
+    # For values see {linejoin_list}
+    # @param lineJoin [String] One of: {linejoin_list}
     # @return [Hash] The hash of the draw element object
-    def set_linejoin(lineJoin)
+    def linejoin=(lineJoin)
       @elementHash[:linejoin] = lineJoin
     end
 
@@ -665,14 +665,14 @@ module MovingImages
     # {https://t.co/0zBEVpD7YZ Painting paths section of Quartz 2D Programming}
     # @param miterVal [Float, #to_f] The miter value.
     # @return [Hash] The hash of the draw element object
-    def set_miter(miterVal)
+    def miter=(miterVal)
       @elementHash[:miter] = miterVal.to_f
     end
 
     # The radius to use for a rounded rectangle
     # @param radius [Float, String] The radius to draw the rectangle's corners
     # @return [Hash] The hash of the draw element object
-    def set_radius(radius)
+    def radius=(radius)
       @elementHash[:radius] = radius
     end
 
@@ -681,7 +681,7 @@ module MovingImages
     # is for the next corner in an anti-clockwise direction.
     # @param radiuses [Array<Float, String>] One value for each corner
     # @return [Hash] The hash of the draw element object
-    def set_radiuses(radiuses)
+    def radiuses=(radiuses)
       @elementHash[:radiuses] = radiuses # radiuses is an array of floats.
     end
 
@@ -726,7 +726,7 @@ module MovingImages
     # Set the drawing blend mode
     # @param blendMode [String] see {MIMeta.get_cgblendmodes} for list of values
     # @return [Hash] The hash of the draw element object
-    def set_blendmode(blendMode)
+    def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
     end
 
@@ -745,9 +745,9 @@ module MovingImages
     # Get the list of path element types
     # @return [Array<String>] The list of possible path element types
     def self.get_pathelementtype_list()
-      return [ "pathmoveto", "pathlineto", "pathbeziercurve",
-               "pathquadraticcurve", "pathrectangle",
-               "pathroundedrectangle", "pathoval", "pathclosesubpath" ]
+      return ['pathmoveto', 'pathlineto', 'pathbeziercurve',
+               'pathquadraticcurve', 'pathrectangle',
+               'pathroundedrectangle', 'pathoval', 'pathclosesubpath']
     end
   
     # Get the list of line cap definitions
@@ -756,8 +756,8 @@ module MovingImages
     # moves it's documentation around so this link might become stale.
     # {https://t.co/0zBEVpD7YZ Painting paths section of Quartz 2D Programming}
     # @return [Array<String>] The list of line cap values
-    def self.get_linecap_list()
-      return [ "kCGLineCapButt", "kCGLineCapRound", "kCGLineCapSquare" ]
+    def self.linecap_list
+      return %w(kCGLineCapButt kCGLineCapRound kCGLineCapSquare)
     end
 
     # Get the list of line join definitions
@@ -766,8 +766,8 @@ module MovingImages
     # moves it's documentation around so this link might become stale.
     # {https://t.co/0zBEVpD7YZ Painting paths section of Quartz 2D Programming}
     # @return [Array<String>] The list of line join values
-    def self.get_linejoin_list()
-      return [ "kCGLineJoinMiter", "kCGLineJoinRound", "kCGLineJoinBevel" ]
+    def self.linejoin_list
+      return %w(kCGLineJoinMiter kCGLineJoinRound kCGLineJoinBevel)
     end
   end
 
@@ -797,7 +797,7 @@ module MovingImages
     end
 
     # Assign a line hash to the draw element hash
-    # @param theLine [Hash] A start and end point, See {MIShapes#make_line}
+    # @param theLine [Hash] A start and end point, See {MIShapes.make_line}
     # return [Hash] the line hash assigned to the draw element hash.
     def line=(theLine)
       @elementHash[:line] = theLine
@@ -838,7 +838,7 @@ module MovingImages
     # Set the blend mode to draw the gradient fill
     # @param blendMode [String] A blend mode, one of {MIMeta.get_cgblendmodes}
     # @return [Hash] The representation of the draw element object.
-    def set_blendmode(blendMode)
+    def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
     end
 
@@ -951,7 +951,6 @@ module MovingImages
       if arrayOfPathElements.respond_to? "patharray"
         arrayOfPathElements = arrayOfPathElements.patharray
       end
-
       @elementHash[:arrayofpathelements] = arrayOfPathElements
     end
 
@@ -960,7 +959,7 @@ module MovingImages
     # kCTTextAlignmentCenter, kCTTextAlignmentJustified, kCTTextAlignmentNatural
     # @param textAlignment [String] Alignment. Default "kCTTextAlignmentNatural"
     # @return [Hash] The representation of the draw string command
-    def set_textalignment(textAlignment: "kCTTextAlignmentNatural")
+    def textalignment=(textAlignment)
       @elementHash[:textalignment] = textAlignment
     end
 
@@ -987,7 +986,7 @@ module MovingImages
     # Set the blend mode for drawing the text.
     # @param blendMode [String] See {MIMeta.get_cgblendmodes} for possible modes
     # @return [Hash] The representation of the draw string command
-    def set_blendmode(blendMode)
+    def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
     end
 
@@ -1030,7 +1029,7 @@ module MovingImages
 
     # Initialize a new draw image element object.
     def initialize()
-      @elementHash = { }
+      @elementHash = Hash.new
       @elementHash[:elementtype] = :drawimage
     end
 
@@ -1075,7 +1074,7 @@ module MovingImages
     # Set the interpolation quality option, will be used when drawing the image
     # is not a straight one to one mapping, when the transform is not an
     # identity transform.
-    # See {MIDrawImageElement.get_listofinterpolationqualityoptions} for 
+    # See {MIDrawImageElement.listofinterpolationqualityoptions} for 
     # possible values.
     # @param interpolationQuality [String] An interpolation quality value.
     # @return [Hash] The representation of the draw image command
@@ -1086,7 +1085,7 @@ module MovingImages
     # Set the blend mode for drawing the image.
     # @param blendMode [String] See {MIMeta.get_cgblendmodes} for possible modes
     # @return [Hash] The representation of the draw string command
-    def set_blendmode(blendMode)
+    def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
     end
 
@@ -1122,10 +1121,10 @@ module MovingImages
   
     # Return the list of interpolation quality strings.
     # @return [Array<String>] A list of interpolation quality strings.
-    def self.get_listofinterpolationqualityoptions()
-      return [ "kCGInterpolationDefault", "kCGInterpolationNone",
-                "kCGInterpolationLow", "kCGInterpolationMedium",
-                "kCGInterpolationHigh" ]
+    def self.listofinterpolationqualityoptions
+      return ['kCGInterpolationDefault', 'kCGInterpolationNone',
+                'kCGInterpolationLow', 'kCGInterpolationMedium',
+                'kCGInterpolationHigh']
     end
   end
 

@@ -712,6 +712,7 @@ module MovingImages
     # @param thePath [Array<Hash>] The array of path elements defining the path.
     # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
     # @return [Hash] The hash of the draw element object
+=begin
     def set_arrayofpathelements_andstartpoint(thePath, startPoint)
       unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
                (@elementHash[:elementtype].intern.eql? :fillpath) ||
@@ -720,6 +721,28 @@ module MovingImages
       end
       thePath = thePath.patharray if thePath.respond_to? "patharray"
       @elementHash[:arrayofpathelements] = thePath
+      @elementHash[:startpoint] = startPoint
+    end
+=end
+
+    # Set the array of path elements used when the draw element is stroke path
+    # or fill path, or fill and stroke path.
+    # @param thePath [Array<Hash>] The array of path elements defining the path.
+    # @return [Array] The array of path elements assign draw element.
+    def arrayofpathelements=(thePath)
+      unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
+               (@elementHash[:elementtype].intern.eql? :fillpath) ||
+               (@elementHash[:elementtype].intern.eql? :fillandstrokepath)
+        raise "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
+      end
+      thePath = thePath.patharray if thePath.respond_to? "patharray"
+      @elementHash[:arrayofpathelements] = thePath
+    end
+
+    # Set the point for the start of the array of path elements.
+    # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
+    # @return [Hash] The start point added to the draw element.
+    def startpoint=(startPoint)
       @elementHash[:startpoint] = startPoint
     end
 
@@ -782,6 +805,11 @@ module MovingImages
     def initialize()
       @elementHash = Hash.new
       @elementHash[:elementtype] = :lineargradientfill
+      # Assign the start point for the array of path elements which defines
+      # the shape within which the gradient fill is drawn. If the list of 
+      # path elements is a single item like a rectangle, or oval etc. then
+      # it would be nice to have a default starting point.
+      @elementHash[:startpoint] = MIShapes.make_point(0, 0)
     end
 
     # Get the draw element hash
@@ -805,16 +833,19 @@ module MovingImages
 
     # Set the array of path elements to clip the drawing of the gradient fill
     # @param pathElements [Array<Hash>] The list of path elements
-    # @param startPoint [Hash] The initial point for creating the path.
     # @return [Hash] The representation of the draw element object.
-    def set_arrayofpathelements(pathElements, startPoint: nil)
+    def arrayofpathelements=(pathElements)
       arrayOfPathElements = pathElements
       if arrayOfPathElements.respond_to? "patharray"
         arrayOfPathElements = arrayOfPathElements.patharray
       end
-      startPoint = { :x => 0, :y => 0 } if startPoint.nil?
-      @elementHash[:startpoint] = startPoint
       @elementHash[:arrayofpathelements] = arrayOfPathElements
+    end
+
+    # Set the start point for the start of the array of path elements.
+    # @param startPoint [Hash] The initial point for creating the path.
+    def startpoint=(startPoint)
+      @elementHash[:startpoint] = startPoint
     end
 
     # The two arrays need to be the same length. The locations is an array
@@ -904,7 +935,7 @@ module MovingImages
     # will be used as the starting point for the path.
     # @param drawPoint [Hash] A point created by {MIShapes.make_point}
     # @return [Hash] The representation of the draw string command
-    def set_point_textdrawnfrom(drawPoint)
+    def point_textdrawnfrom=(drawPoint)
       @elementHash[:point] = drawPoint
     end
 
@@ -912,7 +943,7 @@ module MovingImages
     # Also clear any reference to a user interface font.
     # @param postscriptFontName [String] The postscript name of the font to use
     # @return [Hash] The representation of the draw string command
-    def set_postscriptfontname(postscriptFontName)
+    def postscriptfontname=(postscriptFontName)
       @elementHash[:postscriptfontname] = postscriptFontName
       @elementHash.delete(:userinterfacefont)
     end
@@ -922,7 +953,7 @@ module MovingImages
     # Use {MIMeta.get_listofuserinterfacefonts} to get user interface font list
     # @param userInterfaceFont [String] The user interface font to draw the text
     # @return [Hash] The representation of the draw string command
-    def set_userinterfacefont(userInterfaceFont)
+    def userinterfacefont=(userInterfaceFont)
       @elementHash[:userinterfacefont] = userInterfaceFont
       @elementHash.delete(:postscriptfontname)
     end
@@ -946,7 +977,7 @@ module MovingImages
     # Set the path within which the text will be drawn.
     # @param pathElements [Array<Hash>] Array of path elements. See {MIPath}
     # @return [Hash] The representation of the draw string command
-    def set_arrayofpathelements(pathElements)
+    def arrayofpathelements=(pathElements)
       arrayOfPathElements = pathElements
       if arrayOfPathElements.respond_to? "patharray"
         arrayOfPathElements = arrayOfPathElements.patharray

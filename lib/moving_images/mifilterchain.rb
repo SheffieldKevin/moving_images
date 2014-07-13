@@ -314,8 +314,8 @@ module MovingImages
 
     # Should the filter chain be rendered in the sRGB color space
     # By default the filter chain is rendered in the generic linear rgb color
-    # space. By setting this option, your specifying that the filter chain should
-    # be rendered in the sRGB color space instead.
+    # space. By setting this option, your specifying that the filter chain 
+    # should be rendered in the sRGB color space instead.
     # @param useSRGBProfile [bool] Should filter chain be rendered in sRGB
     # @return [Hash] The filter chain hash
     def set_use_srgbprofile(useSRGBProfile)
@@ -399,7 +399,6 @@ module MovingImages
     # @return [Hash] the render hash
     def set_sourcerectangle(sourceRect)
       @renderHash[:sourcerectangle] = sourceRect
-      @renderHash
     end
 
     # Add a destination rectangle to the render hash
@@ -414,26 +413,23 @@ module MovingImages
     # @return [Hash] the render hash.
     def set_filterproperties(renderFilterProperties)
       @renderHash[:cifilterproperties] = renderFilterProperties
-      @renderHash
     end
 
     # Add a filter property to the list of properties in the render hash
     # @param renderFilterProperty [Hash] The property to be added to the list.
-    # @return [Hash] the render hash.
+    # @return [Array] the list of properties that the property has been added to
     def add_filterproperty(renderFilterProperty)
       if @renderHash[:cifilterproperties].nil?
         @renderHash[:cifilterproperties] = [ renderFilterProperty ]
       else
         @renderHash[:cifilterproperties].push(renderFilterPropery)
       end
-      return @renderHash
     end
 
     # Set the render filter chain variables
     # @param theVariables [Hash] The variables
     def variables=(theVariables)
       @renderHash[:variables] = theVariables
-      @renderHash
     end
 
     # Get the render filter chain hash

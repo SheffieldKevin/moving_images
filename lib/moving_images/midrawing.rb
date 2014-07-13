@@ -624,18 +624,16 @@ module MovingImages
     # replaced.
     # @param affineTransform [Hash] Representation of an affine transform
     # @return [Hash] The hash of the draw element object
-    def set_affinetransform(affineTransform)
+    def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
     end
 
-    # Set the line needed for drawing lines in the context
-    # @param startPoint [Hash] The starting point of the line.
-    # @param endPoint [Hash] Representing a point, see {MIShapes.make_point}
-    # @return [Hash] The hash of the draw element object
-    def set_line(startPoint: {:x => 0.0, :y => 0.0},
-                 endPoint: {:x => 100.0, :y => 100.0})
-      @elementHash[:line] = { :startpoint => startPoint, :endpoint => endPoint }
+    # Assign a line hash to the draw element hash
+    # @param theLine [Hash] A start and end point, See {MIShapes#make_line}
+    # return [Hash] the line hash assigned to the draw element hash.
+    def line=(theLine)
+      @elementHash[:line] = theLine
     end
 
     # Set an array of points, used in the draw lines draw element command.
@@ -798,14 +796,11 @@ module MovingImages
       return @elementHash.to_json
     end
 
-    # Specify the line over which the linear gradient fill varies
-    # @param startPoint [Hash] Representing starting point {MIShapes.make_point}
-    # @param endPoint [Hash] Representing the end point {MIShapes.make_point}
-    # @return [Hash] The representation of the draw element object.
-    def set_line(startPoint: {:x => 0.0, :y => 0.0},
-                 endPoint: {:x => 100.0, :y => 100.0})
-      line = { :startpoint => startPoint, :endpoint => endPoint }
-      @elementHash[:line] = line
+    # Assign a line hash to the draw element hash
+    # @param theLine [Hash] A start and end point, See {MIShapes#make_line}
+    # return [Hash] the line hash assigned to the draw element hash.
+    def line=(theLine)
+      @elementHash[:line] = theLine
     end
 
     # Set the array of path elements to clip the drawing of the gradient fill
@@ -860,7 +855,7 @@ module MovingImages
     # possible defined context transformation.
     # @param affineTransform [Hash] The affine transform representation
     # @return [Hash] The representation of the draw element object.
-    def set_affinetransform(affineTransform)
+    def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
     end
@@ -880,7 +875,7 @@ module MovingImages
     # Initialize a new draw string element object
     def initialize()
       @elementHash = {}
-      @elementHash[:elementtype] = "drawbasicstring"
+      @elementHash[:elementtype] = :drawbasicstring
     end
 
     # Get the draw element hash
@@ -1019,7 +1014,7 @@ module MovingImages
     # Only one of context transformations, or affine transforms is allowed.
     # @param affineTransform [Hash] The affine transform to be set.
     # @return [Hash] The representation of the draw string command
-    def set_affinetransform(affineTransform)
+    def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
     end
@@ -1036,7 +1031,7 @@ module MovingImages
     # Initialize a new draw image element object.
     def initialize()
       @elementHash = { }
-      @elementHash[:elementtype] = "drawimage"
+      @elementHash[:elementtype] = :drawimage
     end
 
     # Get the draw element hash
@@ -1118,7 +1113,7 @@ module MovingImages
     # Only one of context transformations, or affine transforms is allowed.
     # @param affineTransform [Hash] The affine transform to be set.
     # @return [Hash] The representation of the draw string command
-    def set_affinetransform(affineTransform)
+    def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
     end

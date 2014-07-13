@@ -60,8 +60,8 @@ module MovingImages
       begin
         theCommands = commands[:commands]
         theCommands.each { |command|
-          newCommandList = CommandModule::SmigCommands.new()
-          newCommandList.set_commands([ command ])
+          newCommandList = CommandModule::SmigCommands.new
+          newCommandList.commands = [ command ]
           newCommandList.set_saveresultstype("lastcommandresult")
           jsonString = newCommandList.get_commandshash().to_json
           if jsonString.length > 200000

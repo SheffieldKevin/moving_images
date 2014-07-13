@@ -47,7 +47,7 @@ module MovingImages
       # command to the first object has not yet been performed then this can
       # can change receiver object of the original command.
       # @param receiver [Hash] The new object to handle the command.
-      def set_receiver(receiver)
+      def receiver=(receiver)
         self.add_option(key: :receiverobject, value: receiver)
       end
     end
@@ -60,13 +60,13 @@ module MovingImages
       # @return [DrawElementCommand] The draw element command object.
       def initialize(receiverObject, drawinstructions: nil)
         super(:drawelement, receiverObject)
-        self.set_drawinstructions(drawinstructions) unless drawinstructions.nil?
+        self.drawinstructions = drawinstructions unless drawinstructions.nil?
       end
 
       # Assign the draw instructions to the draw element command object.
       # @param drawInstructions [Hash, #elementhash] The draw instructions.
       # @return [Hash, #elementhash] The draw instruction hash.
-      def set_drawinstructions(drawInstructions)
+      def drawinstructions=(drawInstructions)
         drawInstructionsHash = drawInstructions
         if drawInstructionsHash.respond_to?("elementhash")
           drawInstructionsHash = drawInstructionsHash.elementhash
@@ -84,7 +84,7 @@ module MovingImages
       # @return [RenderFilterChainCommand] The newly created object
       def initialize(filterChainObject, instructions: nil)
         super(:renderfilterchain, filterChainObject)
-        self.set_renderinstructions(instructions) unless instructions.nil?
+        self.renderinstructions = instructions unless instructions.nil?
       end
   
       # Set the render instructions which can include filter properties, 
@@ -95,7 +95,7 @@ module MovingImages
       # rendered image should be drawn to.
       # @param renderInstructions [Hash, #renderfilterhchainhash]
       # @return [Hash, #renderfilterhchainhash] The render instructions.
-      def set_renderinstructions(renderInstructions)
+      def renderinstructions=(renderInstructions)
         if renderInstructions.respond_to?("renderfilterchainhash")
           renderInstructions = renderInstructions.renderfilterchainhash
         end
@@ -364,7 +364,7 @@ module MovingImages
 
     # Make a new draw element command object.    
     # If you want to set the draw instructions after making the draw 
-    # element command then call set_drawinstructions on the draw element
+    # element command then call drawinstructions= on the draw element
     # object.
     # @param receiverObject [Hash] Object handling the draw element command
     # @param drawinstructions [Hash, #elementhash] The draw instructions.
@@ -464,7 +464,7 @@ module MovingImages
   
       # Initialize the SmigCommands object.
       def initialize()
-        @commandsHash = { }
+        @commandsHash = {}
       end
 
       # If a command fails, then if stop on failure is true following commands 
@@ -475,14 +475,14 @@ module MovingImages
       # the information returned will be the result of the failed command.
       # @param stopOnFailure [true, false] If true then stop running commands.
       # @return [true, false] The stop on failure value assigned.
-      def set_stoponfailure(stopOnFailure)
+      def stoponfailure=(stopOnFailure)
         @commandsHash[:stoponfailure] = stopOnFailure
       end
 
       # Set the list of commands to be run.
       # @param commandList [Array<Hash>] The list of commands that will be run.
       # @return [Array<Hash>] The list of commands that has been assigned.
-      def set_commands(commandList)
+      def commands=(commandList)
         @commandsHash[:commands] = commandList
       end
 

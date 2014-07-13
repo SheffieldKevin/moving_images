@@ -40,13 +40,13 @@ module MovingImages
 
     # Get exit value from the last perform_commands method run
     # @return [Fixnum] The error code. A value of 0 indicates no error.
-    def self.get_exitvalue()
+    def self.exitvalue
       return @@exitvalue
     end
 
     # Get the string returned from the smig command if an error occurred
     # @return [String] The error message.
-    def self.get_exitstring()
+    def self.exitstring
       return @@exitstring
     end
 

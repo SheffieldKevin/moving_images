@@ -28,13 +28,13 @@ module MovingImages
     public
     # Get exit value from the last failed smig call. Call in exception handler.
     # @return [Fixnum] The error value.
-    def self.get_exitvalue()
+    def self.exitvalue
       return @@exitvalue
     end
 
     # Get the exit string if last smig call failed. Call in exception handler.
     # @return [String]. The smig error message.
-    def self.get_exitstring()
+    def self.exitstring
       return @@exitstring
     end
 
@@ -42,10 +42,10 @@ module MovingImages
     # before the agent will exit. MovingImages Launch Agent will only exit if it
     # contains no base objects.
     # @return [Fixnum] The time in seconds.
-    def self.get_idletime()
+    def self.idletime
       resultStr, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
                                         "idletime")
-      self.raiseexception_unlesstatuszero(method: "MILAMeta.get_idletime",
+      self.raiseexception_unlesstatuszero(method: "MIMeta.idletime",
                                       status: exitVal, result: resultStr)
       return resultStr.to_i
     end

@@ -729,7 +729,7 @@ module MovingImages
     end
 
     # Set the drawing blend mode
-    # @param blendMode [String] see {MIMeta.get_cgblendmodes} for list of values
+    # @param blendMode [String] see {MIMeta.cgblendmodes} for list of values
     # @return [Hash] The hash of the draw element object
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
@@ -849,7 +849,7 @@ module MovingImages
     end
 
     # Set the blend mode to draw the gradient fill
-    # @param blendMode [String] A blend mode, one of {MIMeta.get_cgblendmodes}
+    # @param blendMode [String] A blend mode, one of {MIMeta.cgblendmodes}
     # @return [Hash] The representation of the draw element object.
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
@@ -932,7 +932,7 @@ module MovingImages
 
     # Set the user interface to draw the text with. A user interface font also
     # defines a font size, but this can be over riden by setting the font size.
-    # Use {MIMeta.get_listofuserinterfacefonts} to get user interface font list
+    # Use {MIMeta.listofuserinterfacefonts} to get user interface font list
     # @param userInterfaceFont [String] The user interface font to draw the text
     # @return [Hash] The representation of the draw string command
     def userinterfacefont=(userInterfaceFont)
@@ -997,7 +997,7 @@ module MovingImages
     end
 
     # Set the blend mode for drawing the text.
-    # @param blendMode [String] See {MIMeta.get_cgblendmodes} for possible modes
+    # @param blendMode [String] See {MIMeta.cgblendmodes} for possible modes
     # @return [Hash] The representation of the draw string command
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
@@ -1096,7 +1096,7 @@ module MovingImages
     end
   
     # Set the blend mode for drawing the image.
-    # @param blendMode [String] See {MIMeta.get_cgblendmodes} for possible modes
+    # @param blendMode [String] See {MIMeta.cgblendmodes} for possible modes
     # @return [Hash] The representation of the draw string command
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode

@@ -7,14 +7,15 @@ module MovingImages
   # which match certain criteria.
   module SpotlightCommand
 
-    # Get the image dimensions and return as a hash with attributes :width,:height
+    # Get the image dimensions and return as a hash with attributes 
+    # :width,:height
     # @param imageFilePath [String] Path to file to get dimensions from.
     # @return [Hash] the dimensions stored in a hash.
     def self.get_imagedimensions(imageFilePath)
-      finalResult = { }
+      finalResult = {}
       resultStr, exitVal = Open3.capture2("mdls", "-name", "kMDItemPixelWidth",
                                  "-name", "kMDItemPixelHeight", imageFilePath)
-      return { } unless exitVal.exitstatus.zero? || !resultStr.include?('null')
+      return {} unless exitVal.exitstatus.zero? || !resultStr.include?('null')
       resultStr.split("\n").each do |item|
         if item.include?('kMDItemPixelWidth')
           finalResult[:width] = item.partition(' = ').last.to_i # width

@@ -54,10 +54,10 @@ module MovingImages
     # before the agent will exit.
     # @param idletime [Fixnum] Time in seconds (1..900) (1 sec to 15 mins)
     # @return [Fixnum] The time actually set
-    def self.set_idletime(idletime: 10)
+    def self.idletime=(idletime: 10)
       result, exitVal = Open3.captures(smig, "setproperty", "-property", 
                                         "idletime", idleTime.to_s)
-      self.raiseexception_unlesstatuszero(method: "MILAMeta.set_idletime",
+      self.raiseexception_unlesstatuszero(method: "MIMeta.idletime",
                                       status: exitVal, result: result)
       return result
     end
@@ -158,14 +158,14 @@ module MovingImages
 
     # Get a list of the different types of objects MovingImages can create.
     # @return [Array<Symbol>] The list of object types as ruby symbols
-    def self.get_list_objecttypes()
+    def self.listobjecttypes
       return [ BitmapContextType, ImageImporterType, ImageExporterType, 
                 ImageFilterChainType, PDFContextType, WindowContextType ]
     end
 
     # Get a list of all the commands handled by MovingImages.
     # @return [Array<Symbol>] The array of commands as ruby symbols
-    def self.get_listofallcommands()
+    def self.listofallcommands
       return [ GetPropertyCommand, SetPropertyCommand, GetPropertiesCommand,
                SetPropertiesCommand, CreateObjectCommand, CloseObjectCommand,
                CloseAllObjectsCommand, AddImageCommand, ExportCommand,
@@ -177,7 +177,7 @@ module MovingImages
     # Get a list of the commands handled by classes of type.
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] The array of commands as as ruby symbols
-    def self.get_listofclasscommands(bytype: BitmapContextType)
+    def self.listofclasscommands(bytype: BitmapContextType)
       if (bytype.eql? BitmapContextType) || (bytype.eql? PDFContextType) ||
                                              (bytype.eql? WindowContextType)
         return [ CreateObjectCommand, GetPropertyCommand, 
@@ -191,7 +191,7 @@ module MovingImages
     # Get a list of the commands handled by objects of class type.
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] A list of commands handled by objects of type.
-    def self.get_listofobjectcommands(bytype: BitmapContextType)
+    def self.listofobjectcommands(bytype: BitmapContextType)
       return CommandsForObjectsOfClasses[bytype]
     end
 
@@ -220,21 +220,21 @@ module MovingImages
 
     # Get the list of presets that can be used to create a bitmap context.
     # @return [String] A space delimited string with the list of presets.
-    def self.get_listofpresets()
+    def self.listofpresets
       return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
                                          property: "presets")
     end
 
     # Get the list of blend modes for drawing into a context.
     # @return [String] A space delimited string with the list of blend modes.
-    def self.get_cgblendmodes()
+    def self.cgblendmodes
       return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
                                           property: "blendmodes")
     end
 
     # Get the list of the available user interface fonts.
     # @return [String] A space delimited string of user interface fonts
-    def self.get_listofuserinterfacefonts()
+    def self.listofuserinterfacefonts
       return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
                                          property: "userinterfacefonts")
     end

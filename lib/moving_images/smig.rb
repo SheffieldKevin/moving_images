@@ -64,7 +64,7 @@ module MovingImages
           newCommandList.commands = [ command ]
           # newCommandList.set_saveresultstype("lastcommandresult")
           newCommandList.informationreturned = :lastcommandresult
-          jsonString = newCommandList.get_commandshash().to_json
+          jsonString = newCommandList.commandshash.to_json
           if jsonString.length > 200000
             tempDir = Dir.tmpdir()
             fileName = SecureRandom.uuid + ".json"
@@ -105,8 +105,8 @@ module MovingImages
     # @param debug [bool] Run the commands through self.perform_debugcommands.
     # @return [String] The result from running the commands
     def self.perform_commands(commands, debug: false)
-      if commands.respond_to? "get_commandshash"
-        commands = commands.get_commandshash()
+      if commands.respond_to? "commandshash"
+        commands = commands.commandshash
       end
 
       return self.perform_debugcommands(commands) if debug
@@ -135,7 +135,7 @@ module MovingImages
     end
 
     # Perform MovingImages commands and return how long the commands took to run
-    # @param commands [Hash, #get_commandshash()] The commands to be run
+    # @param commands [Hash, #commandshash] The commands to be run
     # @param debug [bool] Should the commands be run one after the other.
     # @return [String] A message informing how long the commands took to run.
     def self.perform_timed_commands(commands, debug: false)
@@ -169,11 +169,11 @@ module MovingImages
     end
 
     # Perform MovingImages commands without raising an exception
-    # @param commands [Hash, #get_commandshash] The commands to run.
+    # @param commands [Hash, #commandshash] The commands to run.
     # @return [String] The result from running the commands.
     def self.perform_commands_nothrow(commands)
-      if commands.respond_to? "get_commandshash"
-        commands = commands.get_commandshash()
+      if commands.respond_to? "commandshash"
+        commands = commands.commandshash
       end
       result, exitVal = Open3.capture2(Smig, "performcommand",
                                       "-jsonstring", commands.to_json)

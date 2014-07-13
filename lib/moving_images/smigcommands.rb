@@ -542,7 +542,7 @@ module MovingImages
       # Specify a file location where the results will be saved to. Relevant if
       # saveresultstype is set to "propertyfile" or "jsonfile"
       # @param pathToJSONorPLISTFile [String] Path to the output results file.
-      def set_saveresultsto(pathToJSONorPLISTFile)
+      def saveresultsto=(pathToJSONorPLISTFile)
         @commandsHash[:saveresultsto] = pathToJSONorPLISTFile
       end
 
@@ -550,13 +550,13 @@ module MovingImages
       # commands to run after completion of the asynchronously running commands
       # this provides the mechanism.
       # @param runAsync [bool] Should run commands asynchronously.
-      def set_run_asynchronously(runAsync)
+      def run_asynchronously=(runAsync)
         @commandsHash[:runasynchronously] = runAsync
       end
 
       # Reset the command hash.
       def clear()
-        @commandsHash = { }
+        @commandsHash = {}
       end
 
       # Scrub the command list, leaving other options unchanged.
@@ -567,7 +567,7 @@ module MovingImages
 
       # Get the commands hash ready to be passed to Smig.perform_commands
       # @return [Hash] The command has ready for Smig.perform_commands.
-      def get_commandshash()
+      def commandshash
         return @commandsHash
       end
 
@@ -750,7 +750,7 @@ module MovingImages
                                                            name: exporterName)
       commands.add_command(createExporterCommand)
       exporterObject = { :objectname => exporterName,
-                          :objecttype => :imageexporter}
+                          :objecttype => :imageexporter }
       commands.add_tocleanupcommands_closeobject(exporterObject)
       addImageToExporterCommand = CommandModule.make_addimage(exporterObject, 
                                                               imagesource)

@@ -175,7 +175,7 @@ module MovingImages
       firstItem = File.expand_path(fileList.first)
 
       theCommands = CommandModule::SmigCommands.new
-      theCommands.set_run_asynchronously(async)
+      theCommands.run_asynchronously = async
 
       dimensions = SpotlightCommand.get_imagedimensions(firstItem)
       # The export file type is the same as the input file type

@@ -144,22 +144,22 @@ module MovingImages
     end
 
     # Perform a single MovingImages command
-    # @param theCommand [Hash, #get_commandhash] The command to be performed
+    # @param theCommand [Hash, #commandhash] The command to be performed
     # @return [String] The output from running the command
     def self.perform_command(theCommand)
-      if theCommand.respond_to? "get_commandhash"
-        theCommand = theCommand.get_commandhash()
+      if theCommand.respond_to? "commandhash"
+        theCommand = theCommand.commandhash
       end
       commandWrapper = { :commands => [ theCommand ] }
       self.perform_commands(commandWrapper)
     end
 
     # Perform a single MovingImages command and don't throw if an error occurs
-    # @param theCommand [Hash, #get_commandhash] The command to be performed
+    # @param theCommand [Hash, #commandhash] The command to be performed
     # @return [String] The output from running the command
     def self.perform_command_nothrow(theCommand)
-      if theCommand.respond_to? "get_commandhash"
-        theCommand = theCommand.get_commandhash()
+      if theCommand.respond_to? "commandhash"
+        theCommand = theCommand.commandhash
       end
       commandWrapper = { :commands => [ theCommand ] }
       result, exitVal = Open3.capture2(Smig, "performcommand",

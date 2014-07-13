@@ -18,7 +18,7 @@ module MovingImages
     
       # Get the command hash, ready to be passed to Smig.perform_commands.
       # @return [Hash] The command hash that the options have been added to.
-      def get_commandhash()
+      def commandhash
         return @commandHash
       end
 
@@ -65,14 +65,14 @@ module MovingImages
 
       # Assign the draw instructions to the draw element command object.
       # @param drawInstructions [Hash, #elementhash] The draw instructions.
-      # @return [Hash] The draw instruction hash.
+      # @return [Hash, #elementhash] The draw instruction hash.
       def set_drawinstructions(drawInstructions)
         drawInstructionsHash = drawInstructions
         if drawInstructionsHash.respond_to?("elementhash")
           drawInstructionsHash = drawInstructionsHash.elementhash
         end
         self.add_option(key: :drawinstructions, value: drawInstructionsHash)
-        self.get_commandhash()
+        drawInstructions
       end
     end
 
@@ -93,14 +93,14 @@ module MovingImages
       # The source rectangle crops the filter chain rendering and the 
       # destination rectangle specifies where in the render destination the 
       # rendered image should be drawn to.
-      # @param renderInstructions [Hash, #get_renderfilterhchainhash]
-      # @return [Hash] The render hash.
+      # @param renderInstructions [Hash, #renderfilterhchainhash]
+      # @return [Hash, #renderfilterhchainhash] The render instructions.
       def set_renderinstructions(renderInstructions)
         if renderInstructions.respond_to?("renderfilterchainhash")
           renderInstructions = renderInstructions.renderfilterchainhash
         end
         self.add_option(key: :renderinstructions, value: renderInstructions)
-        self.get_commandhash()
+        renderInstructions
       end
     end
 
@@ -487,11 +487,11 @@ module MovingImages
       end
 
       # Add a command to the list of commands to be run
-      # @param command [Hash, #get_commandhash] Command to be added to list
+      # @param command [Hash, #commandhash] Command to be added to list
       # @return [void]
       def add_command(command)
-        if command.respond_to?("get_commandhash")
-          theCommand = command.get_commandhash()
+        if command.respond_to?("commandhash")
+          theCommand = command.commandhash
         else
           theCommand = command
         end
@@ -510,9 +510,9 @@ module MovingImages
       def add_tocleanupcommands_closeobject(objectToClose)
         closeCommand = CommandModule.make_close(objectToClose)
         if @commandsHash[:cleanupcommands].nil?
-          @commandsHash[:cleanupcommands] = [ closeCommand.get_commandhash() ]
+          @commandsHash[:cleanupcommands] = [ closeCommand.commandhash ]
         else
-          @commandsHash[:cleanupcommands].push(closeCommand.get_commandhash())
+          @commandsHash[:cleanupcommands].push(closeCommand.commandhash)
         end
         nil
       end
@@ -808,7 +808,7 @@ module MovingImages
     # @return [void]
     def self.close_object_nothrow(theObject)
       closeCommand = CommandModule.make_close(theObject)
-      commands = { :commands => [ closeCommand.get_commandhash() ] }
+      commands = { :commands => [ closeCommand.commandhash ] }
       Smig.perform_commands_nothrow(commands)
       nil
     end

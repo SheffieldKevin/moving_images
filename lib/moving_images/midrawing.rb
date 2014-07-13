@@ -1042,7 +1042,7 @@ module MovingImages
 
     # Initialize a new draw image element object.
     def initialize()
-      @elementHash = Hash.new
+      @elementHash = {}
       @elementHash[:elementtype] = :drawimage
     end
 
@@ -1080,7 +1080,7 @@ module MovingImages
     # to crop the source image.
     # @param sourceRect [Hash] A rectangle see {MIShapes.make_rectangle}
     # @return [Hash] The representation of the draw image command
-    def set_sourcerectangle(sourceRect)
+    def sourcerectangle=(sourceRect)
       @elementHash[:sourcerectangle] = sourceRect
     end
 
@@ -1091,7 +1091,7 @@ module MovingImages
     # possible values.
     # @param interpolationQuality [String] An interpolation quality value.
     # @return [Hash] The representation of the draw image command
-    def set_interpolationquality(interpolationQuality)
+    def interpolationquality(interpolationQuality)
       @elementHash[:interpolationquality] = interpolationQuality
     end
   

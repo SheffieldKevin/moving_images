@@ -203,7 +203,7 @@ module MovingImages
         drawImageElement.contexttransformations = contextTransformations
         drawImageElement.destinationrectangle = destinationRect
         interpQual = Utility.get_cginterpolation(theOpts[:interpqual])
-        drawImageElement.set_interpolationquality(interpQual)
+        drawImageElement.interpolationquality = interpQual
         scaleImageCommand = CommandModule.make_drawelement(bitmapObject,
                                           drawinstructions: drawImageElement)
         theCommands.add_command(scaleImageCommand)

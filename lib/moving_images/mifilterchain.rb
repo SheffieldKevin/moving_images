@@ -397,7 +397,7 @@ module MovingImages
     # Add a source rectangle to the render hash
     # @param sourceRect [Hash] A hash representing a rectangle
     # @return [Hash] the render hash
-    def set_sourcerectangle(sourceRect)
+    def sourcerectangle=(sourceRect)
       @renderHash[:sourcerectangle] = sourceRect
     end
 

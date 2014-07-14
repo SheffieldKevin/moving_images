@@ -444,7 +444,7 @@ module MovingImages
     # @return [ObjectCommand] The get pixel data command
     def self.make_getpixeldata(receiverObject, rectangle: nil,
                                resultstype: :jsonfile, savelocation: nil)
-      raise "Rectangle not specified" if rectangle.nil?
+      fail "Rectangle not specified" if rectangle.nil?
       theCommand = ObjectCommand.new(:getpixeldata, receiverObject)
       theCommand.add_option(key: :saveresultstype, value: resultstype)
       theCommand.add_option(key: :saveresultsto, value: savelocation)
@@ -603,7 +603,7 @@ module MovingImages
       def make_createbitmapcontext(size: nil, addtocleanup: true,
                                         preset: "AlphaPreMulFirstRGB8bpcInt",
                                         name: nil)
-        raise "No dimensions provided" if size.nil?
+        fail "No dimensions provided" if size.nil?
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         bitmapObject = SmigIDHash.make_objectid(objectname: theName,
@@ -625,7 +625,7 @@ module MovingImages
       # @return [Command] The command to create a window context
       def make_createwindowcontext(rect: nil, addtocleanup: true,
                                       borderlesswindow: false, name: nil)
-        raise "No window rectangle provided" if rect.nil?
+        fail "No window rectangle provided" if rect.nil?
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         windowObject = SmigIDHash.make_objectid(objectname: theName,
@@ -654,8 +654,8 @@ module MovingImages
       # @return [Hash] The pdf context object id, to refer to the context
       def make_createpdfcontext(size: nil, addtocleanup: true, filepath: nil, 
                                                                      name: nil)
-        raise "No dimensions provided" if size.nil?
-        raise "No path provided" if filepath.nil?
+        fail "No dimensions provided" if size.nil?
+        fail "No path provided" if filepath.nil?
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         pdfObject = SmigIDHash.make_objectid(objectname: theName,

@@ -34,7 +34,7 @@ module MovingImages
     # @param fileList [Array] List of paths to scale
     # @return [void]
     def self.scale_files_uselanczos(theOpts, fileList)
-      raise "No output directory specified." if theOpts[:outputdir].nil?
+      fail "No output directory specified." if theOpts[:outputdir].nil?
       outputDirectory = File.expand_path(theOpts[:outputdir])
       FileUtils.mkdir_p(outputDirectory)
 
@@ -51,7 +51,7 @@ module MovingImages
       # the fileType from the first file as well.
       fileType = SpotlightCommand.get_imagefiletype(firstItem)
       if dimensions.size.zero?
-        raise "Spotlight couldn't get dimensions from image file: "
+        fail "Spotlight couldn't get dimensions from image file: "
       end
       
       # Calculated the dimensions of the scaled image
@@ -163,9 +163,9 @@ module MovingImages
     # @param async [true, false] Should processing happen asynchronously.
     # @return [void]
     def self.scale_files_usequartz(theOpts, fileList, async: false)
-      raise "No output directory specified." if theOpts[:outputdir].nil?
+      fail "No output directory specified." if theOpts[:outputdir].nil?
       outputDirectory = File.expand_path(theOpts[:outputdir])
-      raise "No files to scale." if fileList.size.zero?
+      fail "No files to scale." if fileList.size.zero?
 
       # make the output directory. The p version of mkdir will make all
       # directories to ensure path is complete. It will also not generate
@@ -180,7 +180,7 @@ module MovingImages
       dimensions = SpotlightCommand.get_imagedimensions(firstItem)
       # The export file type is the same as the input file type
       fileType = SpotlightCommand.get_imagefiletype(firstItem)
-      raise "Couldn't get dimensions from image file: " if dimensions.size.zero?
+      fail "Couldn't get dimensions from image file: " if dimensions.size.zero?
       scaledWidth = dimensions[:width].to_f * theOpts[:scalex]
       scaledHeight = dimensions[:height].to_f * theOpts[:scaley]
       bitmapObject = theCommands.make_createbitmapcontext(addtocleanup: true,

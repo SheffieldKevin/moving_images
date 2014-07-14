@@ -22,7 +22,7 @@ module MovingImages
       @@exitstring = ""
       @@exitvalue = status.exitstatus
       @@exitstring = result unless result.nil?
-      raise "Method #{method} failed." unless @@exitvalue.zero?
+      fail "Method #{method} failed." unless @@exitvalue.zero?
     end
 
     public

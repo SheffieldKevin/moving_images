@@ -2,7 +2,8 @@
 module MovingImages
   # == A collection of methods for creating and modifying simple shapes
   module MIShapes
-    # Make a point hash
+    # Make a point hash    
+    # Do not create a point with equations, add the equation afterwards.
     # @param x [Float, #to_f] The horizontal position of the point.
     # @param y [Float, #to_f] The vertical position of the point
     # @return [Hash] A point hash containing the x, y coordinates.
@@ -10,12 +11,19 @@ module MovingImages
       { :x => x.to_f, :y => y.to_f }
     end
 
-    # Modify a points location by adding to the coordinates.
+    # Modify a points location by adding to the coordinates.    
+    # Will raise an exception if point attributes are not floats
     # @param thePoint [Hash] A previously created point hash to be modified.
     # @param x [Float, #to_f] The amount to modify the horizontal position by.
     # @param y [Float, #to_f] The amount to modify the vertical position by.
     # @return [Hash] The modified point hash.
     def self.point_addxy(thePoint, x: 0.0, y: 0.0)
+      unless thePoint[:x].is_a?(Float)
+        fail "can't add when :x attribute is not a float"
+      end
+      unless thePoint[:y].is_a?(Float)
+        fail "can't add when :y attribute is not a float"
+      end
       thePoint[:x] += x.to_f
       thePoint[:y] += y.to_f
       thePoint
@@ -47,12 +55,18 @@ module MovingImages
       return { :width => width.to_f, :height => height.to_f }
     end
 
-    # Modify a size hash by adding the size and width
+    # Modify a size hash by adding the width and height
     # @param theSize [Hash] A previously created size hash to be modified
     # @param width [Float, #to_f] The amount to add to the width
     # @param height [Float, #to_f] The amount to add to height of the size hash
     # @return [Hash] The modified size hash.
     def self.size_addwidthheight(theSize, width: 0.0, height: 0.0)
+      unless theSize[:width].is_a?(Float)
+        fail "can't add when :width attribute is not a float"
+      end
+      unless theSize[:height].is_a?(Float)
+        fail "can't add when :height attribute is not a float"
+      end
       theSize[:width] += width.to_f
       theSize[:height] += height.to_f
       theSize
@@ -464,8 +478,8 @@ module MovingImages
     # Add a triangle shape to the path.
     # @param points [Array<Hash>] A list of 3 points
     def add_triangle(points: nil)
-      raise "Needs an array of 3 points" if points.nil?
-      raise "Needs an array of 3 points" unless points.length.eql? 3
+      fail "Needs an array of 3 points" if points.nil?
+      fail "Needs an array of 3 points" unless points.length.eql? 3
 
       self.add_moveto(points[0])
       self.add_lineto(points[1])
@@ -690,7 +704,7 @@ module MovingImages
     # @return [Hash] The hash of the draw element object
     def add_drawelement_toarrayofelements(drawElement)
       unless @elementHash[:elementtype].intern.eql? :arrayofelements
-        raise "Can only add a drawElement to \"elementtype\"" +
+        fail "Can only add a drawElement to \"elementtype\"" +
               " \"arrayofelements\""
       end
       if drawElement.respond_to? "elementhash"
@@ -712,7 +726,7 @@ module MovingImages
       unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
                (@elementHash[:elementtype].intern.eql? :fillpath) ||
                (@elementHash[:elementtype].intern.eql? :fillandstrokepath)
-        raise "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
+        fail "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
       end
       thePath = thePath.patharray if thePath.respond_to? "patharray"
       @elementHash[:arrayofpathelements] = thePath
@@ -838,7 +852,7 @@ module MovingImages
     # @return [Hash] The representation of the draw element object.
     def set_arrayoflocations_andarrayofcolors(locations, colors)
       if locations.length != colors.length
-        raise "Linear gradient fill needs a color for each location."
+        fail "Linear gradient fill needs a color for each location."
       end
       @elementHash[:arrayoflocations] = locations
       @elementHash[:arrayofcolors] = colors

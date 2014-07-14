@@ -3,12 +3,13 @@ module MovingImages
   # == A collection of methods for creating and modifying simple shapes
   module MIShapes
     # Make a point hash    
-    # Do not create a point with equations, add the equation afterwards.
-    # @param x [Float, #to_f] The horizontal position of the point.
-    # @param y [Float, #to_f] The vertical position of the point
+    # Can be created from Floats, integers or string. Strings will represent
+    # equations and {#point_addxy} will not work and will raise an exception.
+    # @param x [Float, Fixnum, String] The horizontal position of the point.
+    # @param y [Float, Fixnum, String] The vertical position of the point
     # @return [Hash] A point hash containing the x, y coordinates.
     def self.make_point(x, y)
-      { :x => x.to_f, :y => y.to_f }
+      { :x => x, :y => y }
     end
 
     # Modify a points location by adding to the coordinates.    
@@ -18,10 +19,10 @@ module MovingImages
     # @param y [Float, #to_f] The amount to modify the vertical position by.
     # @return [Hash] The modified point hash.
     def self.point_addxy(thePoint, x: 0.0, y: 0.0)
-      unless thePoint[:x].is_a?(Float)
+      unless thePoint[:x].is_a?(Numeric)
         fail "can't add when :x attribute is not a float"
       end
-      unless thePoint[:y].is_a?(Float)
+      unless thePoint[:y].is_a?(Numeric)
         fail "can't add when :y attribute is not a float"
       end
       thePoint[:x] += x.to_f
@@ -47,12 +48,13 @@ module MovingImages
       thePoint
     end
 
-    # Make a size hash
-    # @param width [Float, #to_f] The width to assign to the size hash.
-    # @param height [Float, #to_f] The height to assign to the size hash.
+    # Make a size hash    
+    # If strings are assigned then width/height will represent an equation.
+    # @param width [Float, Fixnum, String] The width to assign to the size hash.
+    # @param height [Float, Fixnum, String] Height to assign to the size hash
     # @return [Hash] The created size hash containing the width and height.
     def self.make_size(width, height)
-      return { :width => width.to_f, :height => height.to_f }
+      return { :width => width, :height => height }
     end
 
     # Modify a size hash by adding the width and height
@@ -61,10 +63,10 @@ module MovingImages
     # @param height [Float, #to_f] The amount to add to height of the size hash
     # @return [Hash] The modified size hash.
     def self.size_addwidthheight(theSize, width: 0.0, height: 0.0)
-      unless theSize[:width].is_a?(Float)
+      unless theSize[:width].is_a?(Numeric)
         fail "can't add when :width attribute is not a float"
       end
-      unless theSize[:height].is_a?(Float)
+      unless theSize[:height].is_a?(Numeric)
         fail "can't add when :height attribute is not a float"
       end
       theSize[:width] += width.to_f
@@ -235,13 +237,13 @@ module MovingImages
       return transformations
     end
 
-    # Make an affine transform.
-    # @param m11 [Float] The value for the m11 component of affine transform.
-    # @param m12 [Float] The value for the m12 component of affine transform.
-    # @param m21 [Float] The value for the m21 component of affine transform.
-    # @param m22 [Float] The value for the m22 component of affine transform.
-    # @param tX [Float] The value for the tX component of affine transform.
-    # @param tY [Float] The value for the tY component of affine transform.
+    # Make an affine transform    
+    # @param m11 [Float] The m11 component of affine transform.
+    # @param m12 [Float] The m12 component of affine transform.
+    # @param m21 [Float] The m21 component of affine transform.
+    # @param m22 [Float] The m22 component of affine transform.
+    # @param tX [Numeric] The tX component of affine transform.
+    # @param tY [Numeric] The tY component of affine transform.
     # @return [Hash] The created affine transform.
     def self.make_affinetransform(m11: 1.0, m12: 0.0, m21: 0.0,
                                   m22: 1.0,  tX: 0.0,  tY: 0.0)

@@ -348,12 +348,10 @@ module MovingImages
   # method rather than trying to guess where the current point might have
   # finished.
   class MIPath
-    # The array of path elements owned by each each MIPath object
-    @pathArray
-  
     # Initialize a MIPath object which sets @pathArray to an empty list
     # @return [MIPath]
     def initialize()
+      # The path array containing all the path elements.
       @pathArray = []
     end
 
@@ -466,23 +464,23 @@ module MovingImages
     # Add a triangle shape to the path.
     # @param points [Array<Hash>] A list of 3 points
     def add_triangle(points: nil)
-      if !(points.nil?) && (points.length == 3)
-        self.add_moveto(points[0])
-        self.add_lineto(points[1])
-        self.add_lineto(points[2])
-        self.add_lineto(points[0])
-        self.add_closesubpath()
-      end
+      raise RuntimeError "Needs an array of 3 points" if points.nil?
+      raise RuntimeError "Needs an array of 3 points" if points.length.eql? 3
+
+      self.add_moveto(points[0])
+      self.add_lineto(points[1])
+      self.add_lineto(points[2])
+      self.add_lineto(points[0])
+      self.add_closesubpath()
     end
   end
 
   # == MIShadow objects describe the form a shadow takes. Applied to drawing.
   class MIShadow
-    # The shadow hash, holding all the properties of the shadow
-    @shadowHash
   
     # Initialize a MIShadow object, basically setting @shadownHash
     def initialize()
+      # The shadow hash, holding all the properties of the shadow
       @shadowHash = {}
     end
   
@@ -518,13 +516,12 @@ module MovingImages
   # class are, drawing of images, drawing of text, drawing of linear color
   # gradients.
   class MIDrawElement
-    # The hash should contain all the information needed to do the drawing 
-    @elementHash
-  
+    
     # Initialize a new MIDrawElement object with the element type.
     # @param elementType [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
     def initialize(elementType)
+      # The hash should contain all the information needed to do the drawing 
       @elementHash = { :elementtype => elementType }
     end
 
@@ -781,10 +778,9 @@ module MovingImages
   # the line, array of path elements, the start point for the array of path
   # elements, an array of locations on the line, and the colors to go with them.
   class MILinearGradientFillElement
-    # The hash that will contain all the information needed to do the drawing 
-    @elementHash
 
     def initialize()
+      # The hash that will contain all the information needed to do the drawing 
       @elementHash = {}
       @elementHash[:elementtype] = :lineargradientfill
       # Assign the start point for the array of path elements which defines
@@ -882,11 +878,10 @@ module MovingImages
   # size, or by setting the user interface font. There are a number of optional
   # properties that can be set to configure how the text should be drawn.
   class MIDrawBasicStringElement
-    # The hash that will contain all the information needed to do the drawing 
-    @elementHash
   
     # Initialize a new draw string element object
     def initialize()
+      # The hash that will contain all the information needed to do the drawing 
       @elementHash = {}
       @elementHash[:elementtype] = :drawbasicstring
     end
@@ -1037,11 +1032,10 @@ module MovingImages
   # the destination rectangle. Options info is the source image, blend mode,
   # and interpolation quality.
   class MIDrawImageElement
-    # The hash that will contain all the information needed to do the drawing 
-    @elementHash
 
     # Initialize a new draw image element object.
     def initialize()
+      # The hash that will contain all the information needed to do the drawing 
       @elementHash = {}
       @elementHash[:elementtype] = :drawimage
     end

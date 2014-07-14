@@ -59,7 +59,7 @@ module MovingImages
       puts "Debug commands"
       begin
         theCommands = commands[:commands]
-        theCommands.each { |command|
+        theCommands.each do |command|
           newCommandList = CommandModule::SmigCommands.new
           newCommandList.commands = [ command ]
           # newCommandList.set_saveresultstype("lastcommandresult")
@@ -70,9 +70,7 @@ module MovingImages
             fileName = SecureRandom.uuid + ".json"
             fullPath = File.join(tempDir, fileName)
             begin
-              open(fullPath, 'w') { |f|
-                f.puts jsonString
-              }
+              open(fullPath, 'w') { |f| f.puts jsonString }
               result, exitVal = Open3.capture2(Smig, "performcommand",
                                             "-jsonfile", fullPath)
             ensure
@@ -85,11 +83,11 @@ module MovingImages
           self.raiseexception_unlesstatuszero(
                           method: "Smig.perform_debugcommands",
                           status: exitVal, result: result)
-        }
+        end
         ""
-      rescue Exception => e
+      rescue RuntimeError => e
         puts e.message
-        puts "With error code #{@@exitvalue.to_s} and output : #{@@exitstring} "
+        puts "With error code #{@@exitvalue} and output : #{@@exitstring} "
       ensure
         # now perform the cleanup commands.
         cleanupCommands = commands[:cleanupcommands]
@@ -116,9 +114,7 @@ module MovingImages
         fileName = SecureRandom.uuid + ".json"
         fullPath = File.join(tempDir, fileName)
         begin
-          open(fullPath, 'w') { |f|
-            f.puts jsonString
-          }
+          open(fullPath, 'w') { |f| f.puts jsonString }
           result, exitVal = Open3.capture2(Smig, "performcommand",
                                         "-jsonfile", fullPath)
         ensure
@@ -163,7 +159,7 @@ module MovingImages
         theCommand = theCommand.commandhash
       end
       commandWrapper = { :commands => [ theCommand ] }
-      result, exitVal = Open3.capture2(Smig, "performcommand",
+      result, _ = Open3.capture2(Smig, "performcommand",
                                       "-jsonstring", commandWrapper.to_json)
       return result
     end
@@ -175,7 +171,7 @@ module MovingImages
       if commands.respond_to? "commandshash"
         commands = commands.commandshash
       end
-      result, exitVal = Open3.capture2(Smig, "performcommand",
+      result, _ = Open3.capture2(Smig, "performcommand",
                                       "-jsonstring", commands.to_json)
       return result
     end

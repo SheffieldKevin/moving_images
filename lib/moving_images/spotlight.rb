@@ -39,7 +39,6 @@ module MovingImages
     # essentially a private module method, though I've not found a easy solution 
     # to hide private methods.
     def self.make_contenttypepartofquery(fileType)
-      contentTypeQueryPart = nil
       typesHash = { :"public.jpeg" => "public.jpeg",
                   :"public.png" => "public.png",
                   :"public.tiff" => "public.tiff",

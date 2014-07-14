@@ -93,7 +93,7 @@ module MovingImages
                                           filterChain, addtocleanup: true)
 
       # Now iterate through each file in the list and process the file.
-      fileList.each { |filePath|
+      fileList.each do |filePath|
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         # Set up the draw image element
@@ -150,7 +150,7 @@ module MovingImages
         # Close the importer
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
-      }
+      end
       # The full command list has been built up. Nothing has been run yet.
       # Smig.perform_commands sends the commands to MovingImages, and will
       # wait for the commands to be completed in this case.
@@ -194,7 +194,7 @@ module MovingImages
       scale = MIShapes.make_point(theOpts[:scalex], theOpts[:scaley])
       MITransformations.add_scaletransform(contextTransformations, scale)
 
-      fileList.each { |filePath|
+      fileList.each do |filePath|
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
@@ -240,7 +240,7 @@ module MovingImages
         theCommands.add_command(exportCommand)
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
-      }
+      end
       # The full command list has been built up. Nothing has been run yet.
       # Smig.perform_commands sends the commands to MovingImages, and if
       # running the commands synchronously then will wait for the commands

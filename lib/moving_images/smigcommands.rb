@@ -7,12 +7,13 @@ module MovingImages
   # performed immediately by calling Smig.perform_command(...) with the
   # command as the argument.
   module CommandModule
+
     # == The base class for defining commands
     class Command
-      @commandHash
       
       # The constructor for a MovingImages::Command object
       def initialize(theCommand)
+        # The command hash containing the configuration options and command list
         @commandHash = { :command => theCommand }
       end
     
@@ -434,11 +435,15 @@ module MovingImages
     # @param resultstype [:jsonfile, :propertyfile, :dictionaryobject]
     # @param savelocation [String, nil] path, required if resultstypes is a file
     # @return [ObjectCommand] The get pixel data command
-    def self.make_getpixeldata(receiverObject, rectangle: {},
+    def self.make_getpixeldata(receiverObject, rectangle: nil,
                                resultstype: :jsonfile, savelocation: nil)
+      raise "Rectangle not specified" if rectangle.nil?
       theCommand = ObjectCommand.new(:getpixeldata, receiverObject)
       theCommand.add_option(key: :saveresultstype, value: resultstype)
       theCommand.add_option(key: :saveresultsto, value: savelocation)
+      
+      theCommand.add_option(key: :getdatatype, value: :dictionaryobject)
+      theCommand.add_option(key: :propertyvalue, value: rectangle)
       theCommand
     end
     
@@ -459,11 +464,9 @@ module MovingImages
     # attempting to close all the possible objects that could have been created 
     # from other commands.
     class SmigCommands
-      # The command hash containing the configuration options and command list
-      @commandsHash
-  
       # Initialize the SmigCommands object.
       def initialize()
+        # The command hash containing the configuration options and command list
         @commandsHash = {}
       end
 
@@ -828,10 +831,10 @@ module MovingImages
 
       theCommands = CommandModule::SmigCommands.new
       drawImageElement = if drawimageelement.nil?
-                          MIDrawImageElement.new
-                        else
-                          drawimageelement
-                        end
+                           MIDrawImageElement.new
+                         else
+                           drawimageelement
+                         end
       drawImageElement.destinationrectangle = destinationrect
       imageImporterName = SecureRandom.uuid
       createImageImporterCommand = CommandModule.make_createimporter(

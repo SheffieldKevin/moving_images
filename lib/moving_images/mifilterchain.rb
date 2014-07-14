@@ -32,7 +32,7 @@ module MovingImages
     # @return [Hash] The vector filter property hash.
     def self.make_civectorproperty_fromstring(key: "inputExtent",
                                               value: "[ 0 0 100 100 ]")
-      return { :cifilterkey => key, :cifiltervalue => stringVal,
+      return { :cifilterkey => key, :cifiltervalue => value,
                 :cifiltervalueclass => "CIVector" }
     end
 
@@ -43,9 +43,7 @@ module MovingImages
     def self.make_civectorproperty_fromarray(key: "inputCenter",
                                                   value: [50.0, 50.0])
       stringVal = "["
-      value.each { |item|
-        stringVal += " " + item.to_s
-      }
+      value.each { |item| stringVal += " " + item.to_s }
       stringVal += " ]"
       return self.make_civectorproperty_fromstring(key: key, value: stringVal)
     end
@@ -72,14 +70,14 @@ module MovingImages
     def self.make_cicolorproperty_fromarray(key: "inputColor", value: [0,0,0,1])
       stringVal = ""
       isFirst = true
-      arrayVal.each { |item|
+      value.each do |item|
         if isFirst
           stringVal = item.to_s
           isFirst = false
         else
           stringVal = " " + item.to_s
         end
-      }
+      end
       return self.make_cicolorproperty_fromstring(key: key, value: stringVal)
     end
 
@@ -280,20 +278,19 @@ module MovingImages
   # whether the filter chain should work in the srgb color space instead of the
   # generic linear color space which is its default.
   class MIFilterChain
-    # The hash containing all the properties of the render filter chain.
-    @filterChainHash
 
     # Initialize the filter chain object
     # @param renderDestination [Hash] Destination object {SmigIDHash}
     # @param filterList [Array<Hash>] optional list of filters in filter chain
     # @return [MIFilterChain]
     def initialize(renderDestination, filterList: nil)
+      # The hash containing all the properties of the render filter chain.
       @filterChainHash = { :cirenderdestination => renderDestination }
       @filterChainHash[:cifilterlist] = filterList unless filterList.nil?
     end
 
     # Add a filter definition to the filter chain
-    # @param filterObject [Hash] The filter definition to add to the filter chain
+    # @param filterObject [Hash] Filter definition to add to the filter chain
     # @return [Hash] The filter chain hash
     def add_filter_tofilterchain(filterObject: {})
       if @filterChainHash[:cifilterlist].nil?
@@ -386,11 +383,10 @@ module MovingImages
   # the render destination object. The filter properties allow the properties of
   # the filters to be modified immediately before the filter chain is rendered.
   class MIFilterChainRender
-    # The render hash that holds the configuration options for the render
-    @renderHash
 
     # Assign the render hash to an empty hash object.
     def initialize()
+      # The render hash that holds the configuration options for the render
       @renderHash = {}
     end
 

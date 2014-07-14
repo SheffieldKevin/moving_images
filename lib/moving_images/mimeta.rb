@@ -26,6 +26,7 @@ module MovingImages
     end
 
     public
+
     # Get exit value from the last failed smig call. Call in exception handler.
     # @return [Fixnum] The error value.
     def self.exitvalue
@@ -56,7 +57,7 @@ module MovingImages
     # @return [Fixnum] The time actually set
     def self.idletime=(idletime: 10)
       result, exitVal = Open3.captures(smig, "setproperty", "-property", 
-                                        "idletime", idleTime.to_s)
+                                        "idletime", idletime.to_s)
       self.raiseexception_unlesstatuszero(method: "MIMeta.idletime",
                                       status: exitVal, result: result)
       return result
@@ -149,9 +150,9 @@ module MovingImages
       SetPropertyCommand, SetPropertiesCommand, CloseObjectCommand,
                                             AddImageCommand, ExportCommand ],
       ImageFilterChainType => [ GetPropertyCommand, GetPropertiesCommand,
-              SetPropertyCommand, CloseObjectCommand, RenderFilterChainCommand ],
+            SetPropertyCommand, CloseObjectCommand, RenderFilterChainCommand ],
       WindowContextType => [ GetPropertyCommand, GetPropertiesCommand,
-                        CloseObjectCommand, DrawElementCommand, SnapShotCommand ],
+                      CloseObjectCommand, DrawElementCommand, SnapShotCommand ],
       PDFContextType => [ GetPropertyCommand, GetPropertiesCommand,
                                        CloseObjectCommand, DrawElementCommand ]
     }

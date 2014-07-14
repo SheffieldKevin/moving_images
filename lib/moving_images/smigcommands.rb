@@ -117,7 +117,14 @@ module MovingImages
       theCommand
     end
 
-    # Make a create bitmap context command
+    # Make a create bitmap context command    
+    # The preset can be any of:    
+    # AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
+    # AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
+    # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
+    # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
+    # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
+    # CMYK16bpcInt CMYK32bpcFloat
     # @param width [Fixnum, Float] The width of the bitmap context to be created
     # @param height [Fixnum, Float] Height of the bitmap context to be created.
     # @param size [Hash] A size hash. Size of bitmap. See {MIShapes.make_size}
@@ -581,7 +588,13 @@ module MovingImages
       # SmigCommands list and performed as one then you want to make sure
       # objects you created & no longer need get closed. Adding
       # close object commands that take the object id to the list of clean up
-      # commands ensures these objects will be closed.
+      # commands ensures these objects will be closed.    
+      # AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
+      # AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
+      # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
+      # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
+      # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
+      # CMYK16bpcInt CMYK32bpcFloat
       # @param size [Hash] The size of the context to create.
       # @param addtocleanup [true, false] Should created context be closed
       # @param preset [String, Symbol] Used to define type of bitmap to create

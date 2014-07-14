@@ -339,7 +339,7 @@ module MovingImages
   end
 
   # == Wrap an array of path elements
-  # A core graphics works with the concept of the current point. When a path
+  # As core graphics works with the concept of the current point, when a path
   # is first started a point is supplied which is the starting point for the
   # path. From then on with the addition of each path component the current
   # point moves to the end point of the last path element added. After adding
@@ -464,8 +464,8 @@ module MovingImages
     # Add a triangle shape to the path.
     # @param points [Array<Hash>] A list of 3 points
     def add_triangle(points: nil)
-      raise RuntimeError "Needs an array of 3 points" if points.nil?
-      raise RuntimeError "Needs an array of 3 points" if points.length.eql? 3
+      raise "Needs an array of 3 points" if points.nil?
+      raise "Needs an array of 3 points" unless points.length.eql? 3
 
       self.add_moveto(points[0])
       self.add_lineto(points[1])

@@ -222,21 +222,21 @@ module MovingImages
     # Get the list of presets that can be used to create a bitmap context.
     # @return [String] A space delimited string with the list of presets.
     def self.listofpresets
-      return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
-                                         property: "presets")
+      return Smig.get_classtypeproperty(objecttype: BitmapContextType,
+                                        property: :presets)
     end
 
     # Get the list of blend modes for drawing into a context.
     # @return [String] A space delimited string with the list of blend modes.
     def self.cgblendmodes
-      return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
+      return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                           property: "blendmodes")
     end
 
     # Get the list of the available user interface fonts.
     # @return [String] A space delimited string of user interface fonts
     def self.listofuserinterfacefonts
-      return Smig.get_objecttypeproperty(objecttype: BitmapContextType,
+      return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                          property: "userinterfacefonts")
     end
   end

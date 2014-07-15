@@ -857,7 +857,7 @@ module MovingImages
                                               :imageimporter, imageImporterName)
       theCommands.add_command(createImageImporterCommand)
       theCommands.add_tocleanupcommands_closeobject(imageImporterObject)
-      drawImageElement.set_imagesource(sourceObject: imageImporterObject,
+      drawImageElement.set_imagesource(source_object: imageImporterObject,
                                       imageIndex: imageindex)
       drawImageCommand = CommandModule.make_drawelement(
                                 destination, drawInstructions: drawImageElement)

@@ -98,7 +98,7 @@ module MovingImages
                                                             addtocleanup: false)
         # Set up the draw image element
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(sourceObject: importerObject,
+        drawImageElement.set_imagesource(source_object: importerObject,
                                          imageIndex: 0)
         drawImageElement.destinationrectangle = destinationRect
         # Create the draw image command
@@ -198,7 +198,7 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(sourceObject: importerObject, 
+        drawImageElement.set_imagesource(source_bject: importerObject, 
                                          imageIndex: 0)
         drawImageElement.contexttransformations = contextTransformations
         drawImageElement.destinationrectangle = destinationRect

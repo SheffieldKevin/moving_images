@@ -201,7 +201,7 @@ end
 # This is not even close to being complete. I've implemented enough so that the
 # common part to the 3 other types of draw element objects can be refactored 
 # into a common abstract base class.
-class TestMIDrawLinearGradientFillElement
+class TestMIDrawLinearGradientFillElement < MiniTest::Unit::TestCase
   def test_drawlinear_basics
     draw_lineargradientelement = MILinearGradientFillElement.new
     draw_lineargradientelement.blendmode = :kCGBlendModeColorDodge
@@ -212,8 +212,10 @@ class TestMIDrawLinearGradientFillElement
     draw_lineargradientelement.affinetransform = affine_transform
     new_json = draw_lineargradientelement.to_json
     old_jsn = '{"elementtype":"lineargradientfill","startpoint":{"x":0,"y":0},'\
-    '"blendmode":"kCGBlendModeColorDodge","affinetransform":'\
-    '{"m11":1.0,"m12":0.0,"m21":0.0,"m22":2.0,"tX":0.0,"tY":0.0}}'
+    '"blendmode":"kCGBlendModeColorDodge","variables":'\
+    '{"widthoffset":"5.0 + 3 * $widthadjust","redcolorcomponent":'\
+    '"0.2 + 2 * $redcolorcomponentadjust"},"affinetransform":{"m11":1.0,'\
+    '"m12":0.0,"m21":0.0,"m22":2.0,"tX":0.0,"tY":0.0}}'
     assert new_json.eql?(old_jsn), 'MILinearGradientFillElement json different'
   end
   # Need further tests
@@ -223,19 +225,19 @@ class TestMIDrawLinearGradientFillElement
   # * Specifying context transformations
 end
 
-class TestMIDrawBasicStringElement
+class TestMIDrawBasicStringElement < MiniTest::Unit::TestCase
   def test_drawbasicstring_basics
     draw_basicstringelement = MIDrawBasicStringElement.new
     draw_basicstringelement.stringtext = "This is the text to draw"
-    draw_basicstringelement.point_texttodrawfrom = MIShapes.make_point(20, 20)
+    draw_basicstringelement.point_textdrawnfrom = MIShapes.make_point(20, 20)
     draw_basicstringelement.userinterfacefont = :kCTFontUIFontMiniSystem
     transformations = MITransformations.make_contexttransformation
     MITransformations.add_rotatetransform(transformations, -0.78)
     draw_basicstringelement.contexttransformations = transformations
     element_hash = draw_basicstringelement.elementhash
     new_json = element_hash.to_json
-    old_json = '{"elementtype":"drawbasicstring",'\
-    '"stringtext":"This is the text to draw",'\
+    old_json = '{"elementtype":"drawbasicstring","stringtext":'\
+    '"This is the text to draw","point":{"x":20,"y":20},'\
     '"userinterfacefont":"kCTFontUIFontMiniSystem",'\
     '"contexttransformation":[{"transformationtype":"rotate",'\
     '"rotation":-0.78}]}'
@@ -251,21 +253,23 @@ end
 
 # This is not close to being complete. I've implement enough to test that
 # refactoring by moving common methods into an abstract draw base class.
-class TestMIDrawImageElement
+class TestMIDrawImageElement < MiniTest::Unit::TestCase
   def test_drawimage_basics
     draw_imageelement = MIDrawImageElement.new
-    smigid = { objecttype: :bitmapcontext, objectname: :TestMIDrawImageElement }
-    draw_imageelement.set_imagesource(smigid)
+    smigid = { objecttype: :bitmapcontext,
+               objectname: :TestMIDrawImageElement }
+    draw_imageelement.set_imagesource(sourceObject: smigid)
     origin = MIShapes.make_point(0, 0)
     size = MIShapes.make_size(1280, 1024)
     rectangle = MIShapes.make_rectangle(origin: origin, size: size)
     draw_imageelement.destinationrectangle = rectangle
     draw_imageelement.blendmode = :kCGBlendModeNormal
-    old_json = '{"elementtype":"drawimage","destinationrectangle":'\
-    '{"origin":{"x":0,"y":0},"size":{"width":1280,"height":1024}},'\
-    '"blendmode":"kCGBlendModeNormal"}'
     new_json = draw_imageelement.elementhash.to_json
-    assert new_json.eql?(old_jsn), 'MIDrawImageElement json different'
+    old_json = '{"elementtype":"drawimage","sourceobject":{"objecttype"'\
+    ':"bitmapcontext","objectname":"TestMIDrawImageElement"},'\
+    '"destinationrectangle":{"origin":{"x":0,"y":0},'\
+    '"size":{"width":1280,"height":1024}},"blendmode":"kCGBlendModeNormal"}'
+    assert new_json.eql?(old_json), 'MIDrawImageElement json different'
   end
   # Need further tests
   # * Specifying affine and context transformations

@@ -531,20 +531,16 @@ module MovingImages
     end
   end
 
-  # == Objects of the draw element class manage basic drawing
-  # All shape drawing including drawing of path objects is done through objects
-  # of the MIDrawElement class. Objects of this class also manage the drawing
-  # of an array of draw elements. Drawing that is not managed by objects of this
-  # class are, drawing of images, drawing of text, drawing of linear color
-  # gradients.
-  class MIDrawElement
-    
+  # == Abstract draw element class
+  # Root of the draw element class hierarchy
+  # Implements a small collection of methods common to all draw element classes
+  class MIAbstractDrawElement
     # Initialize a new MIDrawElement object with the element type.
     # @param elementType [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
-    def initialize(elementType)
+    def initialize(element_type)
       # The hash should contain all the information needed to do the drawing 
-      @elementHash = { :elementtype => elementType }
+      @elementHash = { :elementtype => element_type }
     end
 
     # reset the element type, most useful when you want to use the same element
@@ -557,6 +553,18 @@ module MovingImages
       @elementHash[:elementtype] = elementType
     end
 
+    # Get the draw element hash
+    # @return [Hash] The hash of the draw element object.
+    def elementhash
+      return @elementHash
+    end
+
+    # Convert the draw element hash to a json string.
+    # @return [String] A json string representing the hash.
+    def to_json
+      return @elementHash.to_json
+    end
+
     # Set the variables property of the drawing instruction to variablesHash
     # The property keys for the input variables hash are variable names, and 
     # the property values are the values to be assigned to the variables.
@@ -564,46 +572,6 @@ module MovingImages
     # @return [Hash] The updated hash with variables assigned.
     def variables=(theVariables)
       @elementHash[:variables] = theVariables
-    end
-
-    # Convert the draw element hash to a json string.
-    # @return [String] A json string representing the hash.
-    def to_json
-      @elementHash.to_json
-    end
-
-    # Get the draw element hash
-    # @return [Hash] The hash of the draw element object.
-    def elementhash
-      @elementHash
-    end
-
-    # Set the rectangle
-    # @param theRect [Hash] Assign a rectangle for draw rect and oval elements
-    # @return [Hash] The hash of the draw element object
-    def rectangle=(theRect)
-      @elementHash[:rect] = theRect
-    end
-  
-    # Set the fill color used in draw fill element commands
-    # @param fillColor [Hash] A hash representation of a color see {MIColor}
-    # @return [Hash] The hash of the draw element object
-    def fillcolor=(fillColor)
-      @elementHash[:fillcolor] = fillColor
-    end
-
-    # Set the stroke color used in draw stroke element commands
-    # @param strokeColor [Hash] A hash representation of a color see {MIColor}
-    # @return [Hash] The hash of the draw element object
-    def strokecolor=(strokeColor)
-      @elementHash[:strokecolor] = strokeColor
-    end
-
-    # Set the line used used in draw stroke element commands
-    # @param lineWidth [Float, String] The stroke draw width
-    # @return [Hash] The hash of the draw element object
-    def linewidth=(lineWidth)
-      @elementHash[:linewidth] = lineWidth
     end
 
     # Set the shadow to be applied to the drawing.
@@ -646,6 +614,56 @@ module MovingImages
     def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
+    end
+
+    # Set the drawing blend mode
+    # @param blendMode [String] see {MIMeta.cgblendmodes} for list of values
+    # @return [Hash] The hash of the draw element object
+    def blendmode=(blendMode)
+      @elementHash[:blendmode] = blendMode
+    end
+  end
+
+  # == Objects of the draw element class manage basic drawing
+  # All shape drawing including drawing of path objects is done through objects
+  # of the MIDrawElement class. Objects of this class also manage the drawing
+  # of an array of draw elements. Drawing that is not managed by objects of this
+  # class are, drawing of images, drawing of text, drawing of linear color
+  # gradients.
+  class MIDrawElement < MIAbstractDrawElement
+    # Initialize a new MIDrawElement object with the element type.
+    # @param elementType [String] The type of draw element command
+    # @return [MIDrawElement] the newly created object
+    def initialize(element_type)
+      super
+    end
+
+    # Set the rectangle
+    # @param theRect [Hash] Assign a rectangle for draw rect and oval elements
+    # @return [Hash] The hash of the draw element object
+    def rectangle=(theRect)
+      @elementHash[:rect] = theRect
+    end
+  
+    # Set the fill color used in draw fill element commands
+    # @param fillColor [Hash] A hash representation of a color see {MIColor}
+    # @return [Hash] The hash of the draw element object
+    def fillcolor=(fillColor)
+      @elementHash[:fillcolor] = fillColor
+    end
+
+    # Set the stroke color used in draw stroke element commands
+    # @param strokeColor [Hash] A hash representation of a color see {MIColor}
+    # @return [Hash] The hash of the draw element object
+    def strokecolor=(strokeColor)
+      @elementHash[:strokecolor] = strokeColor
+    end
+
+    # Set the line used used in draw stroke element commands
+    # @param lineWidth [Float, String] The stroke draw width
+    # @return [Hash] The hash of the draw element object
+    def linewidth=(lineWidth)
+      @elementHash[:linewidth] = lineWidth
     end
 
     # Assign a line hash to the draw element hash
@@ -747,13 +765,6 @@ module MovingImages
       @elementHash[:startpoint] = startPoint
     end
 
-    # Set the drawing blend mode
-    # @param blendMode [String] see {MIMeta.cgblendmodes} for list of values
-    # @return [Hash] The hash of the draw element object
-    def blendmode=(blendMode)
-      @elementHash[:blendmode] = blendMode
-    end
-
   # Class methods follow
 
     # Get the list of draw element types
@@ -795,29 +806,14 @@ module MovingImages
   # needed to draw a linear gradient fill in a context. Required properties are
   # the line, array of path elements, the start point for the array of path
   # elements, an array of locations on the line, and the colors to go with them.
-  class MILinearGradientFillElement
-
+  class MILinearGradientFillElement < MIAbstractDrawElement
     def initialize()
-      # The hash that will contain all the information needed to do the drawing 
-      @elementHash = {}
-      @elementHash[:elementtype] = :lineargradientfill
+      super(:lineargradientfill)
       # Assign the start point for the array of path elements which defines
       # the shape within which the gradient fill is drawn. If the list of 
       # path elements is a single item like a rectangle, or oval etc. then
       # it would be nice to have a default starting point.
       @elementHash[:startpoint] = MIShapes.make_point(0, 0)
-    end
-
-    # Get the draw element hash
-    # @return [Hash] The hash of the draw element object.
-    def elementhash
-      return @elementHash
-    end
-
-    # Convert the draw element linear gradient hash to a json string.
-    # @return [String] A json string representing the hash.
-    def to_json
-      return @elementHash.to_json
     end
 
     # Assign a line hash to the draw element hash
@@ -861,31 +857,6 @@ module MovingImages
       @elementHash[:arrayoflocations] = locations
       @elementHash[:arrayofcolors] = colors
     end
-
-    # Set the blend mode to draw the gradient fill
-    # @param blendMode [String] A blend mode, one of {MIMeta.cgblendmodes}
-    # @return [Hash] The representation of the draw element object.
-    def blendmode=(blendMode)
-      @elementHash[:blendmode] = blendMode
-    end
-
-    # Set the context transformation to draw the gradient fill. Scrubs any
-    # possible defined affine transform.
-    # @param transformation [Array<Hash>] Ordered array of transforms
-    # @return [Hash] The representation of the draw element object.
-    def contexttransformations=(transformation)
-      @elementHash.delete(:affinetransform)
-      @elementHash[:contexttransformation] = transformation
-    end
-
-    # Set the affine transform to draw the gradient fill. Scrubs any
-    # possible defined context transformation.
-    # @param affineTransform [Hash] The affine transform representation
-    # @return [Hash] The representation of the draw element object.
-    def affinetransform=(affineTransform)
-      @elementHash.delete(:contexttransformation)
-      @elementHash[:affinetransform] = affineTransform
-    end
   end
 
 
@@ -895,25 +866,11 @@ module MovingImages
   # size can either be defined by setting the postscript font name and font
   # size, or by setting the user interface font. There are a number of optional
   # properties that can be set to configure how the text should be drawn.
-  class MIDrawBasicStringElement
+  class MIDrawBasicStringElement < MIAbstractDrawElement
   
     # Initialize a new draw string element object
     def initialize()
-      # The hash that will contain all the information needed to do the drawing 
-      @elementHash = {}
-      @elementHash[:elementtype] = :drawbasicstring
-    end
-
-    # Get the draw element hash
-    # @return [Hash] The hash of the draw element object.
-    def elementhash
-      return @elementHash
-    end
-
-    # Convert the draw element hash to a json string.
-    # @return [String] A json string representing the hash.
-    def to_json
-      return @elementHash.to_json
+      super(:drawbasicstring)
     end
   
     # Set the text to be drawn. Required.
@@ -1008,66 +965,17 @@ module MovingImages
     def stringstrokewidth=(stringStrokeWidth)
       @elementHash[:stringstrokewidth] = stringStrokeWidth.to_f
     end
-
-    # Set the blend mode for drawing the text.
-    # @param blendMode [String] See {MIMeta.cgblendmodes} for possible modes
-    # @return [Hash] The representation of the draw string command
-    def blendmode=(blendMode)
-      @elementHash[:blendmode] = blendMode
-    end
-
-    # Set the shadow to be applied to the drawn text.
-    # @param theShadow [Hash, #shadowhash] The shadow to apply.
-    def shadow=(theShadow)
-      if theShadow.respond_to? "shadowhash"
-        theShadow = theShadow.shadowhash
-      end
-      @elementHash[:shadow] = theShadow
-    end
-
-    # Set the context transformation when drawing the text. Allows you to scale,
-    # or rotate or position the text when drawing. See {MITransformations}.
-    # Only one of context transformation, or affine transform is allowed.
-    # @param transformation [Array<Hash>] A list of ordered context transforms.
-    # @return [Hash] The representation of the draw string command
-    def contexttransformations=(transformation)
-      @elementHash.delete(:affinetransform)
-      @elementHash[:contexttransformation] = transformation
-    end
-
-    # Set the affine transform when drawing the text. See {MITransformations}
-    # Only one of context transformations, or affine transforms is allowed.
-    # @param affineTransform [Hash] The affine transform to be set.
-    # @return [Hash] The representation of the draw string command
-    def affinetransform=(affineTransform)
-      @elementHash.delete(:contexttransformation)
-      @elementHash[:affinetransform] = affineTransform
-    end
   end
 
   # Objects of the draw image element class contain the information needed to
   # draw an image into a context. Required info is the image source and
   # the destination rectangle. Options info is the source image, blend mode,
   # and interpolation quality.
-  class MIDrawImageElement
+  class MIDrawImageElement < MIAbstractDrawElement
 
     # Initialize a new draw image element object.
     def initialize()
-      # The hash that will contain all the information needed to do the drawing 
-      @elementHash = {}
-      @elementHash[:elementtype] = :drawimage
-    end
-
-    # Get the draw element hash
-    # @return [Hash] The hash of the draw element object.
-    def elementhash
-      return @elementHash
-    end
-
-    # Convert the draw element hash to a json string.
-    # @return [String] A json string representing the hash.
-    def to_json
-      return @elementHash.to_json
+      super(:drawimage)
     end
 
     # Set the object from which to source the image and optionally provide 
@@ -1075,8 +983,9 @@ module MovingImages
     # @param sourceObject [Hash] The source object, see {SmigIDHash} methods
     # @param imageIndex [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
-    def set_imagesource(sourceObject: {}, imageIndex: nil)
-      @elementHash[:sourceobject] = sourceObject
+    def set_imagesource(source_object: nil, imageIndex: nil)
+      fail "source object needs to be specified" if source_object.nil?
+      @elementHash[:sourceobject] = source_object
       @elementHash[:imageindex] = imageIndex unless imageIndex.nil?
     end
 
@@ -1106,44 +1015,9 @@ module MovingImages
     def interpolationquality(interpolationQuality)
       @elementHash[:interpolationquality] = interpolationQuality
     end
-  
-    # Set the blend mode for drawing the image.
-    # @param blendMode [String] See {MIMeta.cgblendmodes} for possible modes
-    # @return [Hash] The representation of the draw string command
-    def blendmode=(blendMode)
-      @elementHash[:blendmode] = blendMode
-    end
 
-    # Set the shadow to be applied to the drawing.
-    # @param theShadow [Hash, #shadowhash] The shadow to apply
-    def shadow=(theShadow)
-      if theShadow.respond_to? "shadowhash"
-        theShadow = theShadow.shadowhash
-      end
-      @elementHash[:shadow] = theShadow
-    end
+    # Class method
 
-    # Set context transformation when drawing the image. Allows you to scale,
-    # or rotate or position the text when drawing. See {MITransformations}.
-    # Only one of context transformation, or affine transform is allowed.
-    # @param transformation [Array<Hash>] A list of ordered context transforms.
-    # @return [Hash] The representation of the draw string command
-    def contexttransformations=(transformation)
-      @elementHash.delete(:affinetransform)
-      @elementHash[:contexttransformation] = transformation
-    end
-
-    # Set the affine transform when drawing the image. See {MITransformations}
-    # Only one of context transformations, or affine transforms is allowed.
-    # @param affineTransform [Hash] The affine transform to be set.
-    # @return [Hash] The representation of the draw string command
-    def affinetransform=(affineTransform)
-      @elementHash.delete(:contexttransformation)
-      @elementHash[:affinetransform] = affineTransform
-    end
-  
-    # Class methods.
-  
     # Return the list of interpolation quality strings.
     # @return [Array<String>] A list of interpolation quality strings.
     def self.listofinterpolationqualityoptions
@@ -1152,5 +1026,4 @@ module MovingImages
                 'kCGInterpolationHigh']
     end
   end
-
 end

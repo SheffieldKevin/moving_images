@@ -258,7 +258,7 @@ class TestMIDrawImageElement < MiniTest::Unit::TestCase
     draw_imageelement = MIDrawImageElement.new
     smigid = { objecttype: :bitmapcontext,
                objectname: :TestMIDrawImageElement }
-    draw_imageelement.set_imagesource(sourceObject: smigid)
+    draw_imageelement.set_imagesource(source_object: smigid)
     origin = MIShapes.make_point(0, 0)
     size = MIShapes.make_size(1280, 1024)
     rectangle = MIShapes.make_rectangle(origin: origin, size: size)

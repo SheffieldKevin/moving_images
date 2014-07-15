@@ -984,7 +984,7 @@ module MovingImages
     # @param imageIndex [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
     def set_imagesource(source_object: nil, imageIndex: nil)
-      fail "source object needs to be specified" if source_object.nil?
+      fail 'source object needs to be specified' if source_object.nil?
       @elementHash[:sourceobject] = source_object
       @elementHash[:imageindex] = imageIndex unless imageIndex.nil?
     end

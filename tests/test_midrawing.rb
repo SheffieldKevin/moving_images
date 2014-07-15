@@ -131,7 +131,7 @@ class TestMIShadow < MiniTest::Unit::TestCase
     assert shadow.shadowhash.is_a?(Hash), 'The shadow is not a hash'
     assert shadow.shadowhash.size.eql?(0), 'The shadow hash it not zero length'
     shadow.color = MIColor.make_rgbacolor(0.6, 0.3, 0.1)
-    shadow.offset = MIShapes.make_size(6, "4 + $verticalshadowoffset")
+    shadow.offset = MIShapes.make_size(6, '4 + $verticalshadowoffset')
     shadow.blur = 12
     old_json = '{"fillcolor":{"red":0.6,"green":0.3,"blue":0.1,"alpha":1.0,'\
     '"colorcolorprofilename":"kCGColorSpaceSRGB"},'\
@@ -140,11 +140,13 @@ class TestMIShadow < MiniTest::Unit::TestCase
   end
 end
 
+# Test class for draw element
 class TestMIDrawElement < MiniTest::Unit::TestCase
+  # Test that a draw fill rectangle element produces correct json
   def test_make_drawfillrectangleelement
     draw_element = MIDrawElement.new(:fillrectangle)
     draw_element.fillcolor = MIColor.make_rgbacolor(0, 0, 0)
-    draw_element.elementdebugname = "TestMIDrawElement.fillrectangle"
+    draw_element.elementdebugname = 'TestMIDrawElement.fillrectangle'
     size = MIShapes.make_size(200, 200)
     origin = MIShapes.make_point(100, 100)
     draw_element.rectangle = MIShapes.make_rectangle(origin: origin, size: size)
@@ -161,21 +163,22 @@ class TestMIDrawElement < MiniTest::Unit::TestCase
     assert new_json.eql?(old_json), 'MIDrawElement fillrectangle json different'
   end
 
+  # Test that a draw stroke oval element produces correct json
   def test_make_drawstrokeovalelement
     draw_element = MIDrawElement.new(:strokeoval)
     draw_element.strokecolor = MIColor.make_rgbacolor(0.2, 0, 1)
-    draw_element.elementdebugname = "TestMIDrawElement.strokeoval"
+    draw_element.elementdebugname = 'TestMIDrawElement.strokeoval'
     size = MIShapes.make_size(182.1, 352.25)
     origin = MIShapes.make_point(200, 300)
     draw_element.rectangle = MIShapes.make_rectangle(origin: origin, size: size)
     transformations = MITransformations.make_contexttransformation
-    MITransformations.add_scaletransform(transformations, 
+    MITransformations.add_scaletransform(transformations,
                                          MIShapes.make_point(0.5, 0.5))
     draw_element.contexttransformations = transformations
     draw_element.linewidth = 10
     shadow = MIShadow.new
     shadow.color = MIColor.make_rgbacolor(0.6, 0.3, 0.1)
-    shadow.offset = MIShapes.make_size(6, "4 + $verticalshadowoffset")
+    shadow.offset = MIShapes.make_size(6, '4 + $verticalshadowoffset')
     shadow.blur = 10
     draw_element.shadow = shadow
     old_json = '{"elementtype":"strokeoval","strokecolor":{"red":0.2,'\
@@ -199,14 +202,15 @@ class TestMIDrawElement < MiniTest::Unit::TestCase
 end
 
 # This is not even close to being complete. I've implemented enough so that the
-# common part to the 3 other types of draw element objects can be refactored 
+# common part to the 3 other types of draw element objects can be refactored
 # into a common abstract base class.
 class TestMIDrawLinearGradientFillElement < MiniTest::Unit::TestCase
+  # Test that a draw linear gradient fill produces correct json
   def test_drawlinear_basics
     draw_lineargradientelement = MILinearGradientFillElement.new
     draw_lineargradientelement.blendmode = :kCGBlendModeColorDodge
-    variables = { widthoffset: "5.0 + 3 * $widthadjust",
-                  redcolorcomponent: "0.2 + 2 * $redcolorcomponentadjust" }
+    variables = { widthoffset: '5.0 + 3 * $widthadjust',
+                  redcolorcomponent: '0.2 + 2 * $redcolorcomponentadjust' }
     draw_lineargradientelement.variables = variables
     affine_transform = MITransformations.make_affinetransform(m22: 2.0)
     draw_lineargradientelement.affinetransform = affine_transform
@@ -225,10 +229,14 @@ class TestMIDrawLinearGradientFillElement < MiniTest::Unit::TestCase
   # * Specifying context transformations
 end
 
+# This is not close to being complete. I've completed enough to to test that
+# refactoring by moving common methods into an abstract base class works.
+# Tests that draw basic string element produces correct json.
 class TestMIDrawBasicStringElement < MiniTest::Unit::TestCase
+  # Test that a draw basic string produces the correct json output
   def test_drawbasicstring_basics
     draw_basicstringelement = MIDrawBasicStringElement.new
-    draw_basicstringelement.stringtext = "This is the text to draw"
+    draw_basicstringelement.stringtext = 'This is the text to draw'
     draw_basicstringelement.point_textdrawnfrom = MIShapes.make_point(20, 20)
     draw_basicstringelement.userinterfacefont = :kCTFontUIFontMiniSystem
     transformations = MITransformations.make_contexttransformation
@@ -254,6 +262,7 @@ end
 # This is not close to being complete. I've implement enough to test that
 # refactoring by moving common methods into an abstract draw base class.
 class TestMIDrawImageElement < MiniTest::Unit::TestCase
+  # Test that the draw image element produces correct json output.
   def test_drawimage_basics
     draw_imageelement = MIDrawImageElement.new
     smigid = { objecttype: :bitmapcontext,

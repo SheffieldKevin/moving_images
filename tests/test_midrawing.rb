@@ -52,6 +52,9 @@ class TestMIShapes < MiniTest::Unit::TestCase
     json = '{"origin":{"x":200,"y":150},"size":{"width":250.0,"height":250.0}}'
     assert my_rect.to_json.eql?(json), '2.0 JSON rectangle different'
   end
+
+  # test needed for inset rect for stroking
+  # test needed for making a line.
 end
 
 # Test class for transformation hashes
@@ -90,4 +93,183 @@ class TestMIColor < MiniTest::Unit::TestCase
               '"colorcolorprofilename":"kCGColorSpaceSRGB"}'
     assert color.to_json.eql?(the_json), 'JSON Colors diff' + color.to_json
   end
+  # tests needed for setting color components to equations.
+  # tests needed for making grayscale and cmyk colors
+end
+
+# Test class for path hashes
+class TestMIPath < MiniTest::Unit::TestCase
+  def test_make_mipath
+    path = MIPath.new
+    assert path.patharray.is_a?(Array), 'The path is not an array'
+    assert path.patharray.length.eql?(0), 'The length of the array is not 0'
+    size = MIShapes.make_size(200, 350.25)
+    origin = MIShapes.make_point(100.23, 120)
+    rect = MIShapes.make_rectangle(origin: origin, size: size)
+    radiuses = [32, 12, 2, 12]
+    path.add_roundedrectangle_withradiuses(rect, radiuses: radiuses)
+    origin2 = MIShapes.make_point(310, 470)
+    rect2 = MIShapes.make_rectangle(origin: origin2, size: size)
+    path.add_rectangle(rect2)
+    old_json = '[{"elementtype":"pathroundedrectangle",'\
+    '"rect":{"origin":{"x":100.23,"y":120},'\
+    '"size":{"width":200,"height":350.25}},"radiuses":[32,12,2,12]},'\
+    '{"elementtype":"pathrectangle","rect":{"origin":{"x":310,"y":470},'\
+    '"size":{"width":200,"height":350.25}}}]'
+    assert path.patharray.to_json.eql?(old_json), 'MIPath json different'
+  end
+  # tests needed for adding bezier and quadratic curves
+  # tests needed for lines and triangles
+  # tests needed for closesubpath and move_to
+  # tests needed for adding ovals and a rounded rectangle.
+end
+
+# Test class for shadow hashes
+class TestMIShadow < MiniTest::Unit::TestCase
+  def test_make_shadow
+    shadow = MIShadow.new
+    assert shadow.shadowhash.is_a?(Hash), 'The shadow is not a hash'
+    assert shadow.shadowhash.size.eql?(0), 'The shadow hash it not zero length'
+    shadow.color = MIColor.make_rgbacolor(0.6, 0.3, 0.1)
+    shadow.offset = MIShapes.make_size(6, "4 + $verticalshadowoffset")
+    shadow.blur = 12
+    old_json = '{"fillcolor":{"red":0.6,"green":0.3,"blue":0.1,"alpha":1.0,'\
+    '"colorcolorprofilename":"kCGColorSpaceSRGB"},'\
+    '"offset":{"width":6,"height":"4 + $verticalshadowoffset"},"blur":12}'
+    assert shadow.shadowhash.to_json.eql?(old_json), 'MIShadow json different'
+  end
+end
+
+class TestMIDrawElement < MiniTest::Unit::TestCase
+  def test_make_drawfillrectangleelement
+    draw_element = MIDrawElement.new(:fillrectangle)
+    draw_element.fillcolor = MIColor.make_rgbacolor(0, 0, 0)
+    draw_element.elementdebugname = "TestMIDrawElement.fillrectangle"
+    size = MIShapes.make_size(200, 200)
+    origin = MIShapes.make_point(100, 100)
+    draw_element.rectangle = MIShapes.make_rectangle(origin: origin, size: size)
+    affine_transform = MITransformations.make_affinetransform(m22: 2.0)
+    draw_element.affinetransform = affine_transform
+    draw_element.blendmode = :kCGBlendModeColorDodge
+    old_json = '{"elementtype":"fillrectangle","fillcolor":{"red":0,"green":0,'\
+    '"blue":0,"alpha":1.0,"colorcolorprofilename":"kCGColorSpaceSRGB"},'\
+    '"elementdebugname":"TestMIDrawElement.fillrectangle",'\
+    '"rect":{"origin":{"x":100,"y":100},"size":{"width":200,"height":200}},'\
+    '"affinetransform":{"m11":1.0,"m12":0.0,"m21":0.0,"m22":2.0,'\
+    '"tX":0.0,"tY":0.0},"blendmode":"kCGBlendModeColorDodge"}'
+    new_json = draw_element.elementhash.to_json
+    assert new_json.eql?(old_json), 'MIDrawElement fillrectangle json different'
+  end
+
+  def test_make_drawstrokeovalelement
+    draw_element = MIDrawElement.new(:strokeoval)
+    draw_element.strokecolor = MIColor.make_rgbacolor(0.2, 0, 1)
+    draw_element.elementdebugname = "TestMIDrawElement.strokeoval"
+    size = MIShapes.make_size(182.1, 352.25)
+    origin = MIShapes.make_point(200, 300)
+    draw_element.rectangle = MIShapes.make_rectangle(origin: origin, size: size)
+    transformations = MITransformations.make_contexttransformation
+    MITransformations.add_scaletransform(transformations, 
+                                         MIShapes.make_point(0.5, 0.5))
+    draw_element.contexttransformations = transformations
+    draw_element.linewidth = 10
+    shadow = MIShadow.new
+    shadow.color = MIColor.make_rgbacolor(0.6, 0.3, 0.1)
+    shadow.offset = MIShapes.make_size(6, "4 + $verticalshadowoffset")
+    shadow.blur = 10
+    draw_element.shadow = shadow
+    old_json = '{"elementtype":"strokeoval","strokecolor":{"red":0.2,'\
+    '"green":0,"blue":1,"alpha":1.0,'\
+    '"colorcolorprofilename":"kCGColorSpaceSRGB"},'\
+    '"elementdebugname":"TestMIDrawElement.strokeoval",'\
+    '"rect":{"origin":{"x":200,"y":300},'\
+    '"size":{"width":182.1,"height":352.25}},'\
+    '"contexttransformation":[{"transformationtype":"scale",'\
+    '"scale":{"x":0.5,"y":0.5}}],"linewidth":10,'\
+    '"shadow":{"fillcolor":{"red":0.6,"green":0.3,'\
+    '"blue":0.1,"alpha":1.0,"colorcolorprofilename":"kCGColorSpaceSRGB"},'\
+    '"offset":{"width":6,"height":"4 + $verticalshadowoffset"},"blur":10}}'
+    new_json = draw_element.elementhash.to_json
+    assert new_json.eql?(old_json), 'MIDrawElement stroke oval json different'
+  end
+  # Need further tests for
+  # * line drawing, linecap, linejoin, miter
+  # * lines drawing
+  # * arrayofelements
+end
+
+# This is not even close to being complete. I've implemented enough so that the
+# common part to the 3 other types of draw element objects can be refactored 
+# into a common abstract base class.
+class TestMIDrawLinearGradientFillElement
+  def test_drawlinear_basics
+    draw_lineargradientelement = MILinearGradientFillElement.new
+    draw_lineargradientelement.blendmode = :kCGBlendModeColorDodge
+    variables = { widthoffset: "5.0 + 3 * $widthadjust",
+                  redcolorcomponent: "0.2 + 2 * $redcolorcomponentadjust" }
+    draw_lineargradientelement.variables = variables
+    affine_transform = MITransformations.make_affinetransform(m22: 2.0)
+    draw_lineargradientelement.affinetransform = affine_transform
+    new_json = draw_lineargradientelement.to_json
+    old_jsn = '{"elementtype":"lineargradientfill","startpoint":{"x":0,"y":0},'\
+    '"blendmode":"kCGBlendModeColorDodge","affinetransform":'\
+    '{"m11":1.0,"m12":0.0,"m21":0.0,"m22":2.0,"tX":0.0,"tY":0.0}}'
+    assert new_json.eql?(old_jsn), 'MILinearGradientFillElement json different'
+  end
+  # Need further tests
+  # * Specifying the clipping path.
+  # * Specifying array of locations and colors
+  # * Specifying the line
+  # * Specifying context transformations
+end
+
+class TestMIDrawBasicStringElement
+  def test_drawbasicstring_basics
+    draw_basicstringelement = MIDrawBasicStringElement.new
+    draw_basicstringelement.stringtext = "This is the text to draw"
+    draw_basicstringelement.point_texttodrawfrom = MIShapes.make_point(20, 20)
+    draw_basicstringelement.userinterfacefont = :kCTFontUIFontMiniSystem
+    transformations = MITransformations.make_contexttransformation
+    MITransformations.add_rotatetransform(transformations, -0.78)
+    draw_basicstringelement.contexttransformations = transformations
+    element_hash = draw_basicstringelement.elementhash
+    new_json = element_hash.to_json
+    old_json = '{"elementtype":"drawbasicstring",'\
+    '"stringtext":"This is the text to draw",'\
+    '"userinterfacefont":"kCTFontUIFontMiniSystem",'\
+    '"contexttransformation":[{"transformationtype":"rotate",'\
+    '"rotation":-0.78}]}'
+    assert new_json.eql?(old_json), 'MIDrawBasicStringElement json different'
+  end
+  # Need further test
+  # * Postscript font names
+  # * font size
+  # * stroke fonts
+  # * stroke and fill fonts
+  # * text drawn within shapes.
+end
+
+# This is not close to being complete. I've implement enough to test that
+# refactoring by moving common methods into an abstract draw base class.
+class TestMIDrawImageElement
+  def test_drawimage_basics
+    draw_imageelement = MIDrawImageElement.new
+    smigid = { objecttype: :bitmapcontext, objectname: :TestMIDrawImageElement }
+    draw_imageelement.set_imagesource(smigid)
+    origin = MIShapes.make_point(0, 0)
+    size = MIShapes.make_size(1280, 1024)
+    rectangle = MIShapes.make_rectangle(origin: origin, size: size)
+    draw_imageelement.destinationrectangle = rectangle
+    draw_imageelement.blendmode = :kCGBlendModeNormal
+    old_json = '{"elementtype":"drawimage","destinationrectangle":'\
+    '{"origin":{"x":0,"y":0},"size":{"width":1280,"height":1024}},'\
+    '"blendmode":"kCGBlendModeNormal"}'
+    new_json = draw_imageelement.elementhash.to_json
+    assert new_json.eql?(old_jsn), 'MIDrawImageElement json different'
+  end
+  # Need further tests
+  # * Specifying affine and context transformations
+  # * Specifying source rect
+  # * Specifying interpolation quality values
+  # * Specifying a shadow
 end

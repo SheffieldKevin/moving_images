@@ -205,32 +205,38 @@ module MovingImages
       return []
     end
 
-    # Add a translation transform to the context transformation
+    # Add a translation transform to the context transformation    
+    # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add translate to
     # @param point [Hash] A point to translate the context by.
     # @return [Array] The transformation array with translation transform added
     def self.add_translatetransform(transformations, point)
+      fail "transformations is not an array" unless transformations.is_a?(Array)
       translate = { :transformationtype => "translate",
                       :translation => point }
       transformations.push(translate)
       return transformations
     end
 
-    # Add a scale transform to the context transformations
+    # Add a scale transform to the context transformations    
+    # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add transform to
     # @param scaleXY [Hash] A point hash to scale the context by.
     # @return [Array] The transformation array with translation transform added
     def self.add_scaletransform(transformations, scaleXY)
+      fail "transformations is not an array" unless transformations.is_a?(Array)
       scale = { :transformationtype => "scale", :scale => scaleXY }
       transformations.push(scale)
       return transformations
     end
 
-    # Add a rotate transform to the context transformations
+    # Add a rotate transform to the context transformations    
+    # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add rotate transform
     # @param rotation [Float] The rotation in radians to rotate the context by.
     # @return [Array] The transformation array with rotation transform added
     def self.add_rotatetransform(transformations, rotation)
+      fail "transformations is not an array" unless transformations.is_a?(Array)
       rotate = { :transformationtype => "rotate",
                   :rotation => rotation }
       transformations.push(rotate)
@@ -380,7 +386,7 @@ module MovingImages
     # Add a rectangle to the list of path elements.
     # @param theRect [Hash] A hash representation of a rectangle.
     # @return [Array<Hash>] list of path elements
-    def add_rect(theRect)
+    def add_rectangle(theRect)
       pathElement = { :elementtype => "pathrectangle", :rect => theRect }
       @pathArray.push(pathElement)
       @pathArray
@@ -562,7 +568,7 @@ module MovingImages
 
     # Convert the draw element hash to a json string.
     # @return [String] A json string representing the hash.
-    def to_json()
+    def to_json
       @elementHash.to_json
     end
 
@@ -753,11 +759,7 @@ module MovingImages
     # Get the list of draw element types
     # @return [Array<String>] The list of possible draw element types
     def self.elementtype_list
-      return ['fillrectangle', 'strokerectangle', 'filloval', 'strokeoval',
-                'drawline', 'drawlines', 'fillroundedrectangle',
-                'strokeroundedrectangle', 'fillpath', 'strokepath',
-                'fillandstrokepath', 'drawbasicstring', 'lineargradientfill',
-                'drawimage', 'arrayofelements']
+      MIMeta.listdrawelements
     end
 
     # Get the list of path element types
@@ -814,7 +816,7 @@ module MovingImages
 
     # Convert the draw element linear gradient hash to a json string.
     # @return [String] A json string representing the hash.
-    def to_json()
+    def to_json
       return @elementHash.to_json
     end
 
@@ -910,7 +912,7 @@ module MovingImages
 
     # Convert the draw element hash to a json string.
     # @return [String] A json string representing the hash.
-    def to_json()
+    def to_json
       return @elementHash.to_json
     end
   
@@ -1064,7 +1066,7 @@ module MovingImages
 
     # Convert the draw element hash to a json string.
     # @return [String] A json string representing the hash.
-    def to_json()
+    def to_json
       return @elementHash.to_json
     end
 

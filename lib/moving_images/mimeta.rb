@@ -175,6 +175,16 @@ module MovingImages
                RenderFilterChainCommand ]
     end
 
+    DrawElementList = [:arrayofelements, :fillrectangle, :strokerectangle,
+                   :filloval, :strokeoval, :drawline, :drawlines,
+                   :fillroundedrectangle, :strokeroundedrectangle,
+                   :fillpath, :strokepath, :fillandstrokepath,
+                   :drawbasicstring, :lineargradientfill, :drawimage]
+
+    def self.listdrawelements
+      DrawElementList
+    end
+
     # Get a list of the commands handled by classes of type.
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] The array of commands as as ruby symbols

@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-Please see the [documentation for MovingImages]((https://gitlab.com/ktam/using-movingimages/wikis/Contents).
+Please see the [documentation for MovingImages](https://gitlab.com/ktam/using-movingimages/wikis/Contents).
 
 ## Contributing
 

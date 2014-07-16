@@ -1,4 +1,3 @@
-
 # The all encompassing MovingImages module
 module MovingImages
   # == The command module. Houston, all your commands are belong to us.
@@ -329,7 +328,8 @@ module MovingImages
     # If setting property values for images in an image exporter object then it
     # may also be necessary to add a image index option to specify a specific 
     # image in the exporter. The image index defaults to 0 if unspecified.    
-    # setImagePropertyCommand.add_option(key: :imageindex, value: imageIndex)
+    # set_imagepropertycommand.add_option(key: :imageindex,
+    #                                     value: image_index)
     # @param receiverObject [Hash] The object to set the property of
     # @param propertykey [String, Symbol] The property to be set.
     # @param propertyvalue [String,Symbol,Fixnum,Float,Hash] Value to be
@@ -396,13 +396,13 @@ module MovingImages
     # Make a addimage command
     # @param receiverObject [Hash] Object that will handle the add image command
     # @param imageSource [Hash] Object from which to get the image from.
-    # @param imageIndex [Fixnum] the image index from object to get image from.
+    # @param image_index [Fixnum] the image index from object to get image from.
     # @return [ObjectCommand] The addimage command.
-    def self.make_addimage(receiverObject, imageSource, imageIndex: nil)
-      theCommand = ObjectCommand.new(:addimage, receiverObject)
-      theCommand.add_option(key: :secondaryobject, value: imageSource)
-      unless imageIndex.nil?
-        theCommand.add_option(key: :secondaryimageindex, value: imageIndex)
+    def self.make_addimage(receiver_object, image_source, image_index: nil)
+      theCommand = ObjectCommand.new(:addimage, receiver_object)
+      theCommand.add_option(key: :secondaryobject, value: image_source)
+      unless image_index.nil?
+        theCommand.add_option(key: :secondaryimageindex, value: image_index)
       end
       theCommand
     end
@@ -858,7 +858,7 @@ module MovingImages
       theCommands.add_command(createImageImporterCommand)
       theCommands.add_tocleanupcommands_closeobject(imageImporterObject)
       drawImageElement.set_imagesource(source_object: imageImporterObject,
-                                      imageIndex: imageindex)
+                                       image_index: imageindex)
       drawImageCommand = CommandModule.make_drawelement(
                                 destination, drawInstructions: drawImageElement)
       theCommands.add_command(drawImageCommand)

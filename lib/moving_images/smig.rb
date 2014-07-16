@@ -1,4 +1,3 @@
-
 require 'Open3'
 require 'JSON'
 require 'tmpdir'
@@ -202,17 +201,17 @@ module MovingImages
     end
 
     # Get a property of an object    
-    # The optional imageIndex parameter provides an option to get the property 
+    # The optional image_index parameter provides an option to get the property 
     # of an image at a particular image index, in for example an image importer
     # object.
     # @param object [Hash] An object identifier.
     # @param propertyKey [String] The property to be requested of the object.
-    # @param imageIndex [Fixnum] The image index.
+    # @param image_index [Fixnum] The image index.
     # @return [String] The property value
-    def self.get_objectproperty(object, propertyKey, imageIndex: nil)
+    def self.get_objectproperty(object, propertyKey, image_index: nil)
       commandHash = { :command => "getproperty", :receiverobject => object,
                           :propertykey => propertyKey }
-      commandHash[:imageindex] = imageIndex unless imageIndex.nil?
+      commandHash[:imageindex] = image_index unless image_index.nil?
       return self.perform_commands( { :commands => [ commandHash ] } )
     end
 

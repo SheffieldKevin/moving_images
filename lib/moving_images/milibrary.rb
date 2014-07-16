@@ -99,7 +99,7 @@ module MovingImages
         # Set up the draw image element
         drawImageElement = MIDrawImageElement.new
         drawImageElement.set_imagesource(source_object: importerObject,
-                                         imageIndex: 0)
+                                         image_index: 0)
         drawImageElement.destinationrectangle = destinationRect
         # Create the draw image command
         drawImageCommand = CommandModule.make_drawelement(
@@ -199,7 +199,7 @@ module MovingImages
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
         drawImageElement.set_imagesource(source_bject: importerObject, 
-                                         imageIndex: 0)
+                                         image_index: 0)
         drawImageElement.contexttransformations = contextTransformations
         drawImageElement.destinationrectangle = destinationRect
         interpQual = Utility.get_cginterpolation(theOpts[:interpqual])

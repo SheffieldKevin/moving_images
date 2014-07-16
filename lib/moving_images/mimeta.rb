@@ -175,12 +175,16 @@ module MovingImages
                RenderFilterChainCommand ]
     end
 
+    # The list of draw elements. These are values for the elementtype
+    # key which define the type of drawing to be done.
     DrawElementList = [:arrayofelements, :fillrectangle, :strokerectangle,
                    :filloval, :strokeoval, :drawline, :drawlines,
                    :fillroundedrectangle, :strokeroundedrectangle,
                    :fillpath, :strokepath, :fillandstrokepath,
                    :drawbasicstring, :lineargradientfill, :drawimage]
 
+    # Get the list of draw elements.
+    # @return [Array<Symbols>] List of draw element types.
     def self.listdrawelements
       DrawElementList
     end

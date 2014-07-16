@@ -4,7 +4,7 @@ module MovingImages
   module MIShapes
     # Make a point hash    
     # Can be created from Floats, integers or string. Strings will represent
-    # equations and {#point_addxy} will not work and will raise an exception.
+    # equations and {point_addxy} will not work and will raise an exception.
     # @param x [Float, Fixnum, String] The horizontal position of the point.
     # @param y [Float, Fixnum, String] The vertical position of the point
     # @return [Hash] A point hash containing the x, y coordinates.
@@ -536,7 +536,7 @@ module MovingImages
   # Implements a small collection of methods common to all draw element classes
   class MIAbstractDrawElement
     # Initialize a new MIDrawElement object with the element type.
-    # @param elementType [String] The type of draw element command
+    # @param element_type [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
     def initialize(element_type)
       # The hash should contain all the information needed to do the drawing 
@@ -632,7 +632,7 @@ module MovingImages
   # gradients.
   class MIDrawElement < MIAbstractDrawElement
     # Initialize a new MIDrawElement object with the element type.
-    # @param elementType [String] The type of draw element command
+    # @param element_type [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
     def initialize(element_type)
       super
@@ -980,13 +980,13 @@ module MovingImages
 
     # Set the object from which to source the image and optionally provide 
     # an image index.
-    # @param sourceObject [Hash] The source object, see {SmigIDHash} methods
-    # @param imageIndex [Fixnum, nil] Optional index into a list of images.
+    # @param source_object [Hash] The source object, see {SmigIDHash} methods
+    # @param image_index [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
-    def set_imagesource(source_object: nil, imageIndex: nil)
+    def set_imagesource(source_object: nil, image_index: nil)
       fail 'source object needs to be specified' if source_object.nil?
       @elementHash[:sourceobject] = source_object
-      @elementHash[:imageindex] = imageIndex unless imageIndex.nil?
+      @elementHash[:imageindex] = image_index unless image_index.nil?
     end
 
     # Set the destination rectangle within  coordinate system of the context's

@@ -61,4 +61,29 @@ end
 
 # The CommandModule module methods need to be tested.
 # The SmigHelper methods need to be tested.
-# The creation of all sort of command objects needs to be created.
+
+# The creation of all sort of command objects.
+class TestObjectCommands < MiniTest::Unit::TestCase
+  def test_making_objectcommands
+    receiver_object = { objecttype: :imageimporter, objectname: 'test.object' }
+    close_command = CommandModule.make_close(receiver_object)
+    new_json = close_command.commandhash.to_json
+    old_json = '{"command":"close","receiverobject":'\
+    '{"objecttype":"imageimporter","objectname":"test.object"}}'
+    assert new_json.eql?(old_json), 'CommandModule.make_close different JSON'
+    export_command = CommandModule.make_export(receiver_object)
+    new_json = export_command.commandhash.to_json
+    old_json = '{"command":"export","receiverobject":'\
+    '{"objecttype":"imageimporter","objectname":"test.object"}}'
+    assert new_json.eql?(old_json), 'CommandModule.make_export different JSON'
+    makesnapshot_command = CommandModule.make_snapshot(
+                                        receiver_object,
+                                        snapshottype: :takesnapshot)
+    new_json = makesnapshot_command.commandhash.to_json
+    old_json = '{"command":"snapshot","receiverobject":{"objecttype"'\
+    ':"imageimporter","objectname":"test.object"},'\
+    '"snapshotaction":"takesnapshot"}'
+    assert new_json.eql?(old_json), 'CommandModule.make_snapshot different JSON'
+  end
+  # This is no way complete
+end

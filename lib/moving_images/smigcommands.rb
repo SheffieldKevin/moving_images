@@ -123,28 +123,37 @@ module MovingImages
     # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
     # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
     # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
-    # CMYK16bpcInt CMYK32bpcFloat
+    # CMYK16bpcInt CMYK32bpcFloat    
+    # The color profile must match the color space, rgb profiles for a rgb
+    # color space, and a grayscale profile for a grayscale color space.
+    # The default rgb profile name is: kCGColorSpaceSRGB and a common
+    # alternative is: kCGColorSpaceGenericRGB
     # @param width [Fixnum, Float] The width of the bitmap context to be created
     # @param height [Fixnum, Float] Height of the bitmap context to be created.
     # @param size [Hash] A size hash. Size of bitmap. See {MIShapes.make_size}
     # @param preset [String, Symbol] Preset used to create the bitmap context.
+    # @param profile [nil, String, Symbol] Name of a color profile to use.
     # @param name [String] The name of the object to be created.
     # @return [Command] The command to create the bitmap object
     def self.make_createbitmapcontext(width: 800, height: 600,
                                       size: nil,
-                                      preset: "AlphaPreMulFirstRGB8bpcInt", 
+                                      preset: :AlphaPreMulFirstRGB8bpcInt,
+                                      profile: nil,
                                       name: nil)
-      theCommand = Command.new(:create)
-      theCommand.add_option(key: :objecttype, value: :bitmapcontext)
-      theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      the_command = Command.new(:create)
+      the_command.add_option(key: :objecttype, value: :bitmapcontext)
+      the_command.add_option(key: :objectname, value: name) unless name.nil?
       if size.nil?
-        theCommand.add_option(key: :width, value: width)
-        theCommand.add_option(key: :height, value: height)
+        the_command.add_option(key: :width, value: width)
+        the_command.add_option(key: :height, value: height)
       else
-        theCommand.add_option(key: :size, value: size)
+        the_command.add_option(key: :size, value: size)
       end
-      theCommand.add_option(key: :preset, value: preset)
-      theCommand
+      unless profile.nil?
+        the_command.add_option(key: :colorprofile, value: profile)
+      end
+      the_command.add_option(key: :preset, value: preset)
+      the_command
     end
 
     # Make a create window context command
@@ -394,8 +403,8 @@ module MovingImages
     end
 
     # Make a addimage command
-    # @param receiverObject [Hash] Object that will handle the add image command
-    # @param imageSource [Hash] Object from which to get the image from.
+    # @param receiver_object [Hash] Object that will handle add image command
+    # @param image_source [Hash] Object from which to get the image from.
     # @param image_index [Fixnum] the image index from object to get image from.
     # @return [ObjectCommand] The addimage command.
     def self.make_addimage(receiver_object, image_source, image_index: nil)
@@ -594,14 +603,18 @@ module MovingImages
       # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
       # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
       # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
-      # CMYK16bpcInt CMYK32bpcFloat
+      # CMYK16bpcInt CMYK32bpcFloat    
+      # The default color profile for a rgb space is kCGColorSpaceSRGB.
+      # Alternatives are: kCGColorSpaceGenericRGBLinear, kCGColorSpaceGenericRGB
       # @param size [Hash] The size of the context to create.
       # @param addtocleanup [true, false] Should created context be closed
       # @param preset [String, Symbol] Used to define type of bitmap to create
+      # @param profile [String] A named color profile to use. 
       # @param name [String, nil] Object name identifier.
       # @return [Hash] The bitmap context object id, to refer to the context
       def make_createbitmapcontext(size: nil, addtocleanup: true,
                                         preset: "AlphaPreMulFirstRGB8bpcInt",
+                                        profile: nil,
                                         name: nil)
         fail "No dimensions provided" if size.nil?
         theName = SecureRandom.uuid if name.nil?

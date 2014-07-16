@@ -210,6 +210,28 @@ module MovingImages
       return CommandsForObjectsOfClasses[bytype]
     end
 
+    # Get a list of named rgb color profiles. Default kCGColorSpaceSRGB
+    # @return [Array<Symbol>] A list of the named rgb color profiles.
+    def self.listrgbprofiles
+      [:kCGColorSpaceGenericRGB, :kCGColorSpaceGenericRGBLinear,
+        :kCGColorSpaceAdobeRGB1998, :kCGColorSpaceSRGB]
+    end
+
+    # Get a list of named grayscale profiles. Default: kCGColorSpaceGenericGray
+    # @return [Array<Symbol>] A list of the named grayscale color profiles.
+    def self.listgrayscaleprofiles
+      [:kCGColorSpaceGenericGray, :kCGColorSpaceGenericGrayGamma2_2]
+    end
+
+    # Get a list of all the named profiles.
+    # @return [Array<Symbol>] A list of all the named color profiles.
+    def self.listallprofiles
+      profiles = self.listrgbprofiles
+      profiles += self.listgrayscaleprofiles
+      profiles.push(:kCGColorSpaceGenericCMYK)
+      profiles
+    end
+
     # Get the list of filters that can be part of an image filter chain object.
     # If no category is specified (default) then return a list of all filters
     # @param category [String] The category to get the list of filters from.

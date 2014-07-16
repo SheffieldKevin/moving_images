@@ -70,7 +70,7 @@ module MovingImages
       # setting addtocleanup to true means when commands have been completed
       # the exporter object will be closed in cleanup.
       exporterObject = theCommands.make_createexporter("~/placeholder.jpg",
-                                    exportType: fileType, addtocleanup: true)
+                                    export_type: fileType, addtocleanup: true)
 
       # Make the intermediate bitmap context into which the original image
       # will be drawn into without scaling. This context will provide an
@@ -187,7 +187,7 @@ module MovingImages
                                     size: { :width => scaledWidth.to_i,
                                             :height => scaledHeight.to_i })
       exporterObject = theCommands.make_createexporter("~/placeholder.jpg",
-                                      exportType: fileType, addtocleanup: true)
+                                      export_type: fileType, addtocleanup: true)
 
       destinationRect = MIShapes.make_rectangle(size: dimensions)
       contextTransformations = MITransformations.make_contexttransformation()

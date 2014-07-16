@@ -185,15 +185,15 @@ module MovingImages
 
     # Make a create image exporter object command
     # @param exportFilePath [String] Path to the file where image exported to
-    # @param exportType [String] The uti export file type.
+    # @param export_type [String] The uti export file type.
     # @param name [String] The name of the image exporter object to create.
     # @return [Command] The command to create an image exporter object
-    def self.make_createexporter(exportFilePath, exportType: "public.jpeg",
-                                      name: nil)
+    def self.make_createexporter(exportFilePath, export_type: "public.jpeg",
+                                 name: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :imageexporter)
       theCommand.add_option(key: :file, value: exportFilePath)
-      theCommand.add_option(key: :utifiletype, value: exportType)
+      theCommand.add_option(key: :utifiletype, value: export_type)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
       theCommand
     end
@@ -689,24 +689,24 @@ module MovingImages
       # that objects you created & no longer need get closed. Adding
       # close object commands that take the object id to the list of clean up
       # commands ensures these objects will be closed.
-      # @param exportFilePath [String] Path to file where to export to.
-      # @param exportType [String, Symbol] The export file type.
+      # @param export_filepath [String] Path to file where to export to.
+      # @param export_type [String, Symbol] The export file type.
       # @param name [String] The name of the exporter to be created. optional.
       # @param addtocleanup [true, false] Should created context be closed.
       # @return [Hash] Object id, a reference to refer to a created object.
-      def make_createexporter(exportFilePath, exportType: :"public.jpeg" ,
+      def make_createexporter(export_filepath, export_type: :"public.jpeg" ,
                                                 addtocleanup: true, name: nil)
-        theName = SecureRandom.uuid if name.nil?
-        theName = name unless name.nil?
-        exporterObject = SmigIDHash.make_objectid(objectname: theName,
-                                                  objecttype: :imageexporter)
-        createExporter = CommandModule.make_createexporter(exportFilePath,
-                                      exportType: exportType, name: theName)
-        self.add_command(createExporter)
+        the_name = SecureRandom.uuid if name.nil?
+        the_name = name unless name.nil?
+        exporter_object = SmigIDHash.make_objectid(objectname: the_name,
+                                                   objecttype: :imageexporter)
+        create_exporter = CommandModule.make_createexporter(export_filepath,
+                                  export_type: export_type, name: the_name)
+        self.add_command(create_exporter)
         if addtocleanup
-          self.add_tocleanupcommands_closeobject(exporterObject)
+          self.add_tocleanupcommands_closeobject(exporter_object)
         end
-        exporterObject
+        exporter_object
       end
 
       # Make a create image filter chain command and add it to list of commands    
@@ -775,8 +775,8 @@ module MovingImages
       commands = CommandModule::SmigCommands.new
       exporterName = SecureRandom.uuid
       createExporterCommand = CommandModule.make_createexporter(pathtofile,
-                                                           exportType: filetype,
-                                                           name: exporterName)
+                                                         export_type: filetype,
+                                                         name: exporterName)
       commands.add_command(createExporterCommand)
       exporterObject = { :objectname => exporterName,
                           :objecttype => :imageexporter }

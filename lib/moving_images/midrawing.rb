@@ -981,12 +981,12 @@ module MovingImages
     # Set the object from which to source the image and optionally provide 
     # an image index.
     # @param source_object [Hash] The source object, see {SmigIDHash} methods
-    # @param image_index [Fixnum, nil] Optional index into a list of images.
+    # @param imageindex [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
-    def set_imagesource(source_object: nil, image_index: nil)
+    def set_imagesource(source_object: nil, imageindex: nil)
       fail 'source object needs to be specified' if source_object.nil?
       @elementHash[:sourceobject] = source_object
-      @elementHash[:imageindex] = image_index unless image_index.nil?
+      @elementHash[:imageindex] = imageindex unless imageindex.nil?
     end
 
     # Set the destination rectangle within  coordinate system of the context's

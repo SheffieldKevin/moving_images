@@ -254,7 +254,7 @@ module MovingImages
     # @param property [String, Symbol] The property to get.
     # @param type [String, Symbol, nil] Optional class type to get property from
     # @return [Command] The get non object property command.
-    def self.make_getnonobjectproperty(property: :numberofobjects, type: nil)
+    def self.make_get_nonobjectproperty(property: :numberofobjects, type: nil)
       theCommand = Command.new(:getproperty)
       theCommand.add_option(key: :propertykey, value: property)
       theCommand.add_option(key: :objecttype, value: type) unless type.nil?
@@ -338,7 +338,7 @@ module MovingImages
     # may also be necessary to add a image index option to specify a specific 
     # image in the exporter. The image index defaults to 0 if unspecified.    
     # set_imagepropertycommand.add_option(key: :imageindex,
-    #                                     value: image_index)
+    #                                     value: imageindex)
     # @param receiverObject [Hash] The object to set the property of
     # @param propertykey [String, Symbol] The property to be set.
     # @param propertyvalue [String,Symbol,Fixnum,Float,Hash] Value to be
@@ -405,13 +405,13 @@ module MovingImages
     # Make a addimage command
     # @param receiver_object [Hash] Object that will handle add image command
     # @param image_source [Hash] Object from which to get the image from.
-    # @param image_index [Fixnum] the image index from object to get image from.
+    # @param imageindex [Fixnum] the image index from object to get image from.
     # @return [ObjectCommand] The addimage command.
-    def self.make_addimage(receiver_object, image_source, image_index: nil)
+    def self.make_addimage(receiver_object, image_source, imageindex: nil)
       theCommand = ObjectCommand.new(:addimage, receiver_object)
       theCommand.add_option(key: :secondaryobject, value: image_source)
-      unless image_index.nil?
-        theCommand.add_option(key: :secondaryimageindex, value: image_index)
+      unless imageindex.nil?
+        theCommand.add_option(key: :secondaryimageindex, value: imageindex)
       end
       theCommand
     end
@@ -871,7 +871,7 @@ module MovingImages
       theCommands.add_command(createImageImporterCommand)
       theCommands.add_tocleanupcommands_closeobject(imageImporterObject)
       drawImageElement.set_imagesource(source_object: imageImporterObject,
-                                       image_index: imageindex)
+                                       imageindex: imageindex)
       drawImageCommand = CommandModule.make_drawelement(
                                 destination, drawInstructions: drawImageElement)
       theCommands.add_command(drawImageCommand)

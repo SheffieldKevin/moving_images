@@ -233,7 +233,11 @@ module MovingImages
     end
 
     # Get the list of filters that can be part of an image filter chain object.
-    # If no category is specified (default) then return a list of all filters
+    # If no category is specified (default) then return a list of all filters.
+    # Apple provides a list of categories in its developer documentation, but
+    # since Apple changes its developer documentation layout this link to
+    # stack overflow is likely to remain not stale for longest.
+    # http://t.co/I5eFlTVHyX
     # @param category [String] The category to get the list of filters from.
     # @return [String] A space delimited string with the list of filter names.
     def self.get_listoffilters(category: nil)
@@ -274,6 +278,20 @@ module MovingImages
     def self.listofuserinterfacefonts
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                          property: "userinterfacefonts")
+    end
+    
+    # Get the list of available image file exporter types
+    # @return [String] A space delimited string of export uti file types
+    def self.listofimageexporttypes
+      return Smig.get_classtypeproperty(objecttype: ImageExporterType,
+                                        property: :imageexporttypes)
+    end
+
+    # Get the list of available image file importer types
+    # @return [String] A space delimited string of import uti file types
+    def self.listofimageimporttypes
+      return Smig.get_classtypeproperty(objecttype: ImageImporterType,
+                                        property: :imageimporttypes)
     end
   end
 end

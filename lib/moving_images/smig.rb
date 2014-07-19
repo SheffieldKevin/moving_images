@@ -12,9 +12,9 @@ module MovingImages
   # properties @@exitvalue, and @@exitstring if smig returns an error.
   # The no throw version of the perform_command method ignores the return value
   # and are useful within the rescue and ensure sections of a begin - end block.    
-  # To create a smig command see {CommandModule::Command} and its subclasses. To
+  # To create a smig command see {CommandModule} and its classes. To
   # create a list of smig commands and configure how they are run see
-  # {CommandModule::Command}
+  # {CommandModule::SmigCommands}
   module Smig
     # The command line tool used to communicate with MovingImages.
     Smig = "smig" # Scripting MovingImaGes
@@ -201,20 +201,28 @@ module MovingImages
     end
 
     # Get a property of an object    
-    # The optional image_index parameter provides an option to get the property 
+    # The optional imageindex parameter provides an option to get the property 
     # of an image at a particular image index, in for example an image importer
     # object.
     # @param object [Hash] An object identifier.
     # @param propertyKey [String] The property to be requested of the object.
-    # @param image_index [Fixnum] The image index.
+    # @param imageindex [Fixnum] The image index.
     # @return [String] The property value
-    def self.get_objectproperty(object, propertyKey, image_index: nil)
+    def self.get_objectproperty(object, propertyKey, imageindex: nil)
       commandHash = { :command => "getproperty", :receiverobject => object,
                           :propertykey => propertyKey }
-      commandHash[:imageindex] = image_index unless image_index.nil?
+      commandHash[:imageindex] = imageindex unless imageindex.nil?
       return self.perform_commands( { :commands => [ commandHash ] } )
     end
 
+    # Close the object with object id.
+    # @param object_id [Hash] The object identifier.
+    # @return [void] No valid result.
+    def self.close_object(object_id)
+      close_command = CommandModule.make_close(object)
+      Smig.perform_command(close_command)
+    end
+    
     # Close all MovingImages objects    
     # This is a bit dangerous, if moving images is responding to more than
     # one scripts concurrently then this command will close all the objects,
@@ -229,5 +237,4 @@ module MovingImages
       return self.perform_commands_nothrow( { :commands => [ commandHash ] } )
     end
   end
-
 end

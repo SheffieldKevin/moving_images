@@ -64,26 +64,56 @@ end
 
 # The creation of all sort of command objects.
 class TestObjectCommands < MiniTest::Unit::TestCase
-  def test_making_objectcommands
-    receiver_object = { objecttype: :imageimporter, objectname: 'test.object' }
-    close_command = CommandModule.make_close(receiver_object)
+  def test_making_objectcommands1
+    importer_object = { objecttype: :imageimporter, objectname: 'test.object' }
+    exporter_object = { objecttype: :imageexporter,
+                        objectname: 'export.object' }
+    general_object = { objectreference: 0 }
+    close_command = CommandModule.make_close(importer_object)
     new_json = close_command.commandhash.to_json
     old_json = '{"command":"close","receiverobject":'\
     '{"objecttype":"imageimporter","objectname":"test.object"}}'
     assert new_json.eql?(old_json), 'CommandModule.make_close different JSON'
-    export_command = CommandModule.make_export(receiver_object)
+    export_command = CommandModule.make_export(exporter_object)
     new_json = export_command.commandhash.to_json
     old_json = '{"command":"export","receiverobject":'\
-    '{"objecttype":"imageimporter","objectname":"test.object"}}'
+    '{"objecttype":"imageexporter","objectname":"export.object"}}'
     assert new_json.eql?(old_json), 'CommandModule.make_export different JSON'
     makesnapshot_command = CommandModule.make_snapshot(
-                                        receiver_object,
+                                        general_object,
                                         snapshottype: :takesnapshot)
     new_json = makesnapshot_command.commandhash.to_json
-    old_json = '{"command":"snapshot","receiverobject":{"objecttype"'\
-    ':"imageimporter","objectname":"test.object"},'\
+    old_json = '{"command":"snapshot","receiverobject":{"objectreference":0},'\
     '"snapshotaction":"takesnapshot"}'
     assert new_json.eql?(old_json), 'CommandModule.make_snapshot different JSON'
   end
   # This is no way complete
+  
+  def test_make_addimagecommand
+    exporter_object = { objecttype: :imageexporter,
+                        objectname: 'exporter.object' }
+    importer_object = { objecttype: :imageimporter,
+                        objectname: 'importer.object' }
+    context_object = { objectreference: 0 }
+    addimage_command = CommandModule.make_addimage(exporter_object,
+                                                   importer_object,
+                                                   imageindex: 1,
+                                                   grabmetadata: true)
+    new_json = addimage_command.commandhash.to_json
+    old_json = '{"command":"addimage","receiverobject":'\
+    '{"objecttype":"imageexporter","objectname":"exporter.object"},'\
+    '"secondaryobject":{"objecttype":"imageimporter",'\
+    '"objectname":"importer.object"},"secondaryimageindex":1,'\
+    '"grabmetadata":true}'
+    assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
+    
+    # test simpler case where image comes from a context, no index, no metadata.
+    addimage_command = CommandModule.make_addimage(exporter_object, 
+                                                   context_object)
+    new_json = addimage_command.commandhash.to_json
+    old_json = '{"command":"addimage","receiverobject":'\
+    '{"objecttype":"imageexporter","objectname":"exporter.object"},'\
+    '"secondaryobject":{"objectreference":0}}'
+    assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
+  end
 end

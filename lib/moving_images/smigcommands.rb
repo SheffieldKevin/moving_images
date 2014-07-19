@@ -402,16 +402,29 @@ module MovingImages
       theCommand
     end
 
-    # Make a addimage command
+    # Make a addimage command    
+    # The image can be sourced from an image importer object, if so you can
+    # optionally supply an image index and assign the grabmetadata attribute
+    # with a value of true if you want to copy the original images metadata
+    # to be included with the added image when the image file is saved. If
+    # the image is sourced from any of the contexts (bitmap, pdf, window) then
+    # both the image index and grab metadata options will be ignored if
+    # specified.
     # @param receiver_object [Hash] Object that will handle add image command
     # @param image_source [Hash] Object from which to get the image from.
-    # @param imageindex [Fixnum] the image index from object to get image from.
+    # @param imageindex [Fixnum] the image index into source object to get image
+    # @param grabmetadata [true, false] Default:false. Copy metadata from source
     # @return [ObjectCommand] The addimage command.
-    def self.make_addimage(receiver_object, image_source, imageindex: nil)
+    def self.make_addimage(receiver_object, image_source, imageindex: nil,
+                           grabmetadata: nil)
       theCommand = ObjectCommand.new(:addimage, receiver_object)
       theCommand.add_option(key: :secondaryobject, value: image_source)
       unless imageindex.nil?
         theCommand.add_option(key: :secondaryimageindex, value: imageindex)
+      end
+      
+      unless grabmetadata.nil?
+        theCommand.add_option(key: :grabmetadata, value: grabmetadata)
       end
       theCommand
     end

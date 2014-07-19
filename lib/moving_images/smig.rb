@@ -219,8 +219,8 @@ module MovingImages
     # @param object_id [Hash] The object identifier.
     # @return [void] No valid result.
     def self.close_object(object_id)
-      close_command = CommandModule.make_close(object)
-      Smig.perform_command(close_command)
+      close_command = CommandModule.make_close(object_id)
+      self.perform_command(close_command)
     end
     
     # Close all MovingImages objects    

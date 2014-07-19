@@ -116,4 +116,28 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     '"secondaryobject":{"objectreference":0}}'
     assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
   end
+  
+  def test_make_getpropertiescommand
+    object = SmigIDHash.make_objectid(objecttype: :imageimporter,
+                                      objectname: 'test.importer.object')
+    jsonfile = '~/imageproperties.json'
+    getproperties_command = CommandModule.make_get_objectproperties(
+                                                     object,
+                                                     imageindex: 0,
+                                                     saveresultstype: :jsonfile,
+                                                     saveresultsto: jsonfile)
+    new_json = getproperties_command.commandhash.to_json
+    old_json = '{"command":"getproperties","receiverobject":'\
+    '{"objecttype":"imageimporter","objectname":"test.importer.object"},'\
+    '"imageindex":0,"saveresultstype":"jsonfile",'\
+    '"saveresultsto":"~/imageproperties.json"}'
+    assert new_json.eql?(old_json), '1#make_get_objectproperties different JSON'
+    pdf_object = SmigIDHash.make_objectid(objecttype: :pdfcontext,
+                                          objectname: 'test.pdfcontext.object')
+    getproperties_command = CommandModule.make_get_objectproperties(pdf_object)
+    new_json = getproperties_command.commandhash.to_json
+    old_json = '{"command":"getproperties","receiverobject":{"objecttype":'\
+    '"pdfcontext","objectname":"test.pdfcontext.object"}}'
+    assert new_json.eql?(old_json), '2#make_get_objectproperties different JSON'
+  end
 end

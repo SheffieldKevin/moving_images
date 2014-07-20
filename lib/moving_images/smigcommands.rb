@@ -325,8 +325,8 @@ module MovingImages
     # Make a get object properties command.
     # @param receiverObject [Hash] The object to get the properties from
     # @param imageindex [Fixnum, nil] The image index, optional.
-    # @param saveresultstype [String, Symbol] :dictionary, :jsonstring, 
-    # :jsonfile, :propertyfile, :dictionaryobject
+    # @param saveresultstype [String, Symbol] :dictionary, :jsonstring, :jsonfile, :propertyfile, :dictionaryobject
+    # @param saveresultsto [String] The path to json or property list file.
     # @return [ObjectCommand] The get object properties command.
     def self.make_get_objectproperties(receiverObject,
                                        imageindex: nil,

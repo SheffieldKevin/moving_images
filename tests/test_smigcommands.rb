@@ -137,7 +137,8 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     getproperties_command = CommandModule.make_get_objectproperties(pdf_object)
     new_json = getproperties_command.commandhash.to_json
     old_json = '{"command":"getproperties","receiverobject":{"objecttype":'\
-    '"pdfcontext","objectname":"test.pdfcontext.object"}}'
+    '"pdfcontext","objectname":"test.pdfcontext.object"},'\
+    '"saveresultstype":"jsonstring"}'
     assert new_json.eql?(old_json), '2#make_get_objectproperties different JSON'
   end
 end

@@ -105,6 +105,7 @@ module MovingImages
       if commands.respond_to? "commandshash"
         commands = commands.commandshash
       end
+      fail "commands not a commandshash" unless commands.kind_of?(Hash)
 
       return self.perform_debugcommands(commands) if debug
       jsonString = commands.to_json
@@ -205,12 +206,13 @@ module MovingImages
     # of an image at a particular image index, in for example an image importer
     # object.
     # @param object [Hash] An object identifier.
-    # @param propertyKey [String] The property to be requested of the object.
+    # @param property [String, Symbol] The property to be requested.
     # @param imageindex [Fixnum] The image index.
     # @return [String] The property value
-    def self.get_objectproperty(object, propertyKey, imageindex: nil)
+    def self.get_objectproperty(object, property: :numberofimages,
+                                imageindex: nil)
       commandHash = { :command => "getproperty", :receiverobject => object,
-                          :propertykey => propertyKey }
+                          :propertykey => property }
       commandHash[:imageindex] = imageindex unless imageindex.nil?
       return self.perform_commands( { :commands => [ commandHash ] } )
     end

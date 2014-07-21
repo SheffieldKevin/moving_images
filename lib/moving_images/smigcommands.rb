@@ -322,65 +322,90 @@ module MovingImages
       theCommand
     end
 
-    # Make a get object properties command.
+    # Make a get object properties command
     # @param receiverObject [Hash] The object to get the properties from
     # @param imageindex [Fixnum, nil] The image index, optional.
-    # @param saveresultstype [String, Symbol] :dictionary, :jsonstring, :jsonfile, :propertyfile, :dictionaryobject
+    # @param saveresultstype [String, Symbol] :jsonstring, :jsonfile, :propertyfile, :dictionaryobject
     # @param saveresultsto [String] The path to json or property list file.
     # @return [ObjectCommand] The get object properties command.
     def self.make_get_objectproperties(receiverObject,
                                        imageindex: nil,
-                                       saveresultstype: nil,
+                                       saveresultstype: :jsonstring,
                                        saveresultsto: nil)
       theCommand = ObjectCommand.new(:getproperties, receiverObject)
       unless imageindex.nil?
         theCommand.add_option(key: :imageindex, value: imageindex)
       end
 
-      unless saveresultstype.nil?
-        theCommand.add_option(key: :saveresultstype, value: saveresultstype)
-        # The saveresultsto option is only relevant if saveresultstype is set
-        # and set to one of :jsonfile or :propertyfile.
-        unless saveresultsto.nil?
-          theCommand.add_option(key: :saveresultsto, value: saveresultsto)
-        end
+      theCommand.add_option(key: :saveresultstype, value: saveresultstype)
+      # The saveresultsto option is only relevant if saveresultstype is set
+      # to one of :jsonfile or :propertyfile.
+      unless saveresultsto.nil?
+        theCommand.add_option(key: :saveresultsto, value: saveresultsto)
       end
       theCommand
     end
 
     # Make a set property command.    
     # If setting property values for images in an image exporter object then it
-    # may also be necessary to add a image index option to specify a specific 
+    # will also be necessary to add a image index option to specify a specific 
     # image in the exporter. The image index defaults to 0 if unspecified.    
     # set_imagepropertycommand.add_option(key: :imageindex,
     #                                     value: imageindex)
-    # @param receiverObject [Hash] The object to set the property of
+    # @param receiver_object [Hash] The object to set the property of
     # @param propertykey [String, Symbol] The property to be set.
-    # @param propertyvalue [String,Symbol,Fixnum,Float,Hash] Value to be
+    # @param propertyvalue [String,Symbol,Fixnum,Float,Hash] Value to be set
+    # @param imageindex [nil, Fixnum] nil means no index.
     # @return [ObjectCommand] The set property object command.
-    def self.make_set_objectproperty(receiverObject, propertykey: nil,
-                                     propertyvalue: nil)
-      theCommand = ObjectCommand.new(:setproperty, receiverObject)
+    def self.make_set_objectproperty(receiver_object, propertykey: nil,
+                                     propertyvalue: nil, imageindex: nil)
+      theCommand = ObjectCommand.new(:setproperty, receiver_object)
       unless propertykey.nil?
         theCommand.add_option(key: :propertykey, value: propertykey)
       end
       unless propertyvalue.nil? 
         theCommand.add_option(key: :propertyvalue, value: propertyvalue)
+        if propertyvalue.is_a?(Hash)
+          theCommand.add_option(key: :getdatatype, value: :dictionaryobject)
+        end
+      end
+      unless imageindex.nil?
+        theCommand.add_option(key: :imageindex, value: imageindex)
       end
       theCommand
     end
 
-    # Make an add metadata command.    
+    # Make a set properties command.    
+    # If setting preoperties for images in an image exporter object then it
+    # will also be necessary to add a image index option to specify a specific 
+    # image in the exporter. The image index defaults to 0 if unspecified.
+    # @param receiver_object [Hash] The object to set the properties of
+    # @param properties [Hash] hash object to be assigned
+    # @param imageindex [nil, Fixnum] nil means no index
+    # @return [ObjectCommand] The set property object command.
+    def self.make_set_objectproperties(receiver_object, properties,
+                                       imageindex: nil)
+      fail "properties needs to be a hash" unless properties.is_a?(Hash)
+      the_command = ObjectCommand.new(:setproperties, receiver_object)
+      the_command.add_option(key: :getdatatype, value: :dictionaryobject)
+      the_command.add_option(key: :inputdata, value: properties)
+      unless imageindex.nil?
+        the_command.add_option(key: :imageindex, value: imageindex)
+      end
+      the_command
+    end
+
+    # Make a copy metadata command.    
     # Copy metadata from an image importer for an image at index to the
     # image in the exporter receiver object.
-    # @param receiverObject [Hash] The object to set the property of
+    # @param receiver_object [Hash] The object to set the property of
     # @param importersource [Hash] The image importer object
     # @param importerimageindex [Fixnum] The image index in the image importer
     # @param imageindex [Fixnum] The exporter image index to receive metadata
     # @return [ObjectCommand] The copy metadata command.
-    def self.make_add_metadata(receiverObject, importersource: nil, 
+    def self.make_copymetadata(receiver_object, importersource: nil, 
                                 importerimageindex: 0, imageindex: 0)
-      theCommand = ObjectCommand.new(:setproperties, receiverObject)
+      theCommand = ObjectCommand.new(:setproperties, receiver_object)
       unless imageindex.nil?
         theCommand.add_option(key: :imageindex, value: imageindex)
       end
@@ -398,21 +423,21 @@ module MovingImages
     # If you want to set the draw instructions after making the draw 
     # element command then call drawinstructions= on the draw element
     # object.
-    # @param receiverObject [Hash] Object handling the draw element command
+    # @param receiver_object [Hash] Object handling the draw element command
     # @param drawinstructions [Hash, #elementhash] The draw instructions.
     # @return [DrawElementCommand] The draw element command object.
-    def self.make_drawelement(receiverObject, drawinstructions: nil)
-      theCommand = DrawElementCommand.new(receiverObject,
+    def self.make_drawelement(receiver_object, drawinstructions: nil)
+      theCommand = DrawElementCommand.new(receiver_object,
                                           drawinstructions: drawinstructions)
       theCommand
     end
     
     # Make a render filter chain command object
-    # @param receiverObject [Hash] filter chain object that handles render
+    # @param receiver_object [Hash] filter chain object that handles render
     # @param renderinstructions [Hash] Render instructions and filter properties
     # @return [RenderFilterChainCommand] The newly created command
-    def self.make_renderfilterchain(receiverObject, renderinstructions: nil)
-      theCommand = RenderFilterChainCommand.new(receiverObject, 
+    def self.make_renderfilterchain(receiver_object, renderinstructions: nil)
+      theCommand = RenderFilterChainCommand.new(receiver_object, 
                                                instructions: renderinstructions)
       theCommand
     end
@@ -445,27 +470,27 @@ module MovingImages
     end
 
     # Make an Export images to a image file command.
-    # @param receiverObject [Hash] Object that receives the export message
+    # @param receiver_object [Hash] Object that receives the export message
     # @return [ObjectCommand] The export command.
-    def self.make_export(receiverObject)
-      theCommand = ObjectCommand.new(:export, receiverObject)
+    def self.make_export(receiver_object)
+      theCommand = ObjectCommand.new(:export, receiver_object)
       theCommand
     end
 
     # Make a close object command
-    # @param receiverObject [Hash] Object to handle the close command
+    # @param receiver_object [Hash] Object to handle the close command
     # @return [ObjectCommand] The close command
-    def self.make_close(receiverObject)
-      theCommand = ObjectCommand.new(:close, receiverObject)
+    def self.make_close(receiver_object)
+      theCommand = ObjectCommand.new(:close, receiver_object)
       theCommand
     end
 
     # Make a snap shot command    
-    # @param receiverObject [Hash] Object that will handle the snap shot command
+    # @param receiver_object [Hash] Object that will handle snap shot command
     # @param snapshottype [:takesnapshot, :drawsnapshot, :clearsnapshot]
     # @return [ObjectCommand] The snap shot command.
-    def self.make_snapshot(receiverObject, snapshottype: :takesnapshot)
-      theCommand = ObjectCommand.new(:snapshot, receiverObject)
+    def self.make_snapshot(receiver_object, snapshottype: :takesnapshot)
+      theCommand = ObjectCommand.new(:snapshot, receiver_object)
       theCommand.add_option(key: :snapshotaction, value: snapshottype)
       theCommand
     end
@@ -474,18 +499,21 @@ module MovingImages
     # If the savelocation is not initially specified and resultstype is set to
     # jsonfile or propertyfile then the save location will need to be set using
     # add_option before the get pixel data command is sent.
-    # @param receiverObject [Hash] Object that handles the getpixeldata command
+    # @param receiver_object [Hash] Object that handles the getpixeldata command
     # @param rectangle [Hash] Representing the area to get pixel data from
     # @param resultstype [:jsonfile, :propertyfile, :dictionaryobject]
     # @param savelocation [String, nil] path, required if resultstypes is a file
     # @return [ObjectCommand] The get pixel data command
-    def self.make_getpixeldata(receiverObject, rectangle: nil,
+    def self.make_getpixeldata(receiver_object, rectangle: nil,
                                resultstype: :jsonfile, savelocation: nil)
       fail "Rectangle not specified" if rectangle.nil?
-      theCommand = ObjectCommand.new(:getpixeldata, receiverObject)
+      theCommand = ObjectCommand.new(:getpixeldata, receiver_object)
       theCommand.add_option(key: :saveresultstype, value: resultstype)
-      theCommand.add_option(key: :saveresultsto, value: savelocation)
-      
+
+      unless savelocation.nil?
+        theCommand.add_option(key: :saveresultsto, value: savelocation)
+      end
+
       theCommand.add_option(key: :getdatatype, value: :dictionaryobject)
       theCommand.add_option(key: :propertyvalue, value: rectangle)
       theCommand
@@ -493,7 +521,7 @@ module MovingImages
     
     # Make a finalize page and start new page command    
     # This command is handled by an object with class type pdfcontext.
-    # @param receiverObject [Hash] Object that handles finalize pdf page command
+    # @param receiver_object [Hash] pdfcontext handles finalize pdf page command
     # @return [ObjectCommand] The finalize page and start new command.
     def self.make_finalizepdfpage_startnew(receiverObject)
       theCommand = ObjectCommand.new(:finalizepage, receiverObject)
@@ -634,7 +662,7 @@ module MovingImages
       # CMYK16bpcInt CMYK32bpcFloat    
       # The default color profile for a rgb space is kCGColorSpaceSRGB.
       # Alternatives are: kCGColorSpaceGenericRGBLinear, kCGColorSpaceGenericRGB
-      # @param size [Hash] The size of the context to create.
+      # @param size [Hash] The size of the context to create. Default: 800x600
       # @param addtocleanup [true, false] Should created context be closed
       # @param preset [String, Symbol] Used to define type of bitmap to create
       # @param profile [String] A named color profile to use. 
@@ -644,13 +672,14 @@ module MovingImages
                                         preset: "AlphaPreMulFirstRGB8bpcInt",
                                         profile: nil,
                                         name: nil)
-        fail "No dimensions provided" if size.nil?
+        size = MIShapes.make_size(800, 600) if size.nil?
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         bitmapObject = SmigIDHash.make_objectid(objectname: theName,
                                                     objecttype: :bitmapcontext)
         createBitmapContext = CommandModule.make_createbitmapcontext(
-                                      size: size, name: theName, preset: preset)
+                                      size: size, name: theName, preset: preset,
+                                      profile: profile)
         self.add_command(createBitmapContext)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(bitmapObject)

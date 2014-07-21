@@ -135,7 +135,7 @@ module MovingImages
         
         # If requested copy the metadata from original file to scaled file.
         if theOpts[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_add_metadata(
+          copyImagePropertiesCommand = CommandModule.make_copymetadata(
                                               exporterObject,
                                               importersource: importerObject,
                                               importerimageindex: 0,
@@ -219,7 +219,7 @@ module MovingImages
                                                       bitmapObject)
         theCommands.add_command(addImageCommand)
         if theOpts[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_add_metadata(
+          copyImagePropertiesCommand = CommandModule.make_copymetadata(
                                               exporterObject,
                                               importersource: importerObject,
                                               importerimageindex: 0,

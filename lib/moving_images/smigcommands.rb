@@ -523,8 +523,8 @@ module MovingImages
     # This command is handled by an object with class type pdfcontext.
     # @param receiver_object [Hash] pdfcontext handles finalize pdf page command
     # @return [ObjectCommand] The finalize page and start new command.
-    def self.make_finalizepdfpage_startnew(receiverObject)
-      theCommand = ObjectCommand.new(:finalizepage, receiverObject)
+    def self.make_finalizepdfpage_startnew(receiver_object)
+      theCommand = ObjectCommand.new(:finalizepage, receiver_object)
       theCommand
     end
 

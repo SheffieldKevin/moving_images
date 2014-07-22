@@ -79,13 +79,16 @@ module MovingImages
                                     size: dimensions, addtocleanup: true)
 
       # Now building up the image filter chain to scale the image.
-      theFilter = MIFilter.makefilter(filter: :CILanczosScaleTransform,
-                                inputImage: intermediateBitmapObject)
+      theFilter = MIFilter.new(:CILanczosScaleTransform)
+#      theFilter = MIFilter.makefilter(filter: :CILanczosScaleTransform,
+#                                inputImage: intermediateBitmapObject)
       scaleProperty = MIFilterProperty.make_cinumberproperty(key: :inputScale,
                                                     value: theOpts[:scalex])
-      MIFilter.addproperty_tocifilter(filterObject: theFilter,
-                                      theProperty: scaleProperty)
-      filterChain = MIFilterChain.new(bitmapObject, filterList: [ theFilter ])
+      theFilter.add_property(scaleProperty)
+#      MIFilter.addproperty_tocifilter(filterObject: theFilter,
+#                                      theProperty: scaleProperty)
+      filterChain = MIFilterChain.new(bitmapObject,
+                                      filterList: [ theFilter.filterhash ])
 
       # filterChain description has been created. Now make a create image
       # filter chain command.

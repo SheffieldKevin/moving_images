@@ -157,14 +157,14 @@ module MovingImages
     end
 
     # Make an affine transform filter property.
-    # @param key [String] The filter property to be assigned the affine transform.
-    # @param m11 [Float] The value for the m11 component of the affine transform.
-    # @param m12 [Float] The value for the m12 component of the affine transform.
-    # @param m21 [Float] The value for the m21 component of the affine transform.
-    # @param m22 [Float] The value for the m22 component of the affine transform.
-    # @param tX [Float] The value for the tX component of the affine transform.
-    # @param tY [Float] The value for the tY component of the affine transform.
-    # @return [Hash] The core image filter property representing the transform.
+    # @param key [String] Filter property to be assigned the affine transfor
+    # @param m11 [Float] The value for the m11 component of the affine transform
+    # @param m12 [Float] The value for the m12 component of the affine transform
+    # @param m21 [Float] The value for the m21 component of the affine transform
+    # @param m22 [Float] The value for the m22 component of the affine transform
+    # @param tX [Float] The value for the tX component of the affine transform
+    # @param tY [Float] The value for the tY component of the affine transform
+    # @return [Hash] The core image filter property representing the transform
     def self.make_affinetransformproperty(key: "inputTransform",
                                           m11: 1.0,
                                           m12: 0.0,
@@ -179,92 +179,59 @@ module MovingImages
     end
   end
 
-  # ==The MIFilter module is used for making filter hash objects
+  # ==The MIFilter class
   # A filter is made up of a filter name which is the core image name for the
   # filter to be created, an optional name id, which is used to identify the 
   # filter so that it can be linked to from later filters in the filter chain.
-  module MIFilter
-    # Assign a list of filter properties to the filter object hash.
-    # @param filterObject [Hash] The filter object hash to assign properties to.
-    # @param theProperties [Array<Hash>] The properties to be assigned
-    # @return [Hash] The core image filter object hash.
-    def self.assignproperties_tocifilter(filterObject: {}, theProperties: [])
-      filterObject[:cifilterproperties] = theProperties
-      filterObject
+  # Filters also take a list of input properties. Different filters take 
+  # different inputs.
+  class MIFilter
+    # Initialize a filter object with the filter name and a name identifier
+    # @param filter [String, Symbol] The core image filter name.
+    # @param identifier [String] The name of this filter for identification.
+    def initialize(filter, identifier: nil)
+      @filter_hash = { cifiltername: filter }
+      @filter_hash[:mifiltername] = identifier unless identifier.nil?
     end
 
-    # Add a property to the list of filter properties in the filter object hash.
-    # If the filter property list doesn't yet exist, then a new property list
-    # will be created, otherwise the filter property will be added to the 
-    # already existing list of properties.
-    # @param filterObject [Hash] The filter object hash to assign property to
-    # @param theProperty [Hash] The property to be assigned {MIFilterProperty}
-    # @return [Hash] The core image filter object hash.
-    def self.addproperty_tocifilter(filterObject: {}, theProperty: {})
-      if filterObject[:cifilterproperties].nil?
-        filterObject[:cifilterproperties] = [ theProperty ]
+    # Return the filter hash representation of the filter object
+    # @return [Hash] The hash representation of the filter
+    def filterhash
+      @filter_hash
+    end
+
+    # Add a property to the filters list of input properties
+    # @param filter_property [Hash] Representation of the filter property.
+    # @return void
+    def add_property(filter_property)
+      if @filter_hash[:cifilterproperties].nil?
+        @filter_hash[:cifilterproperties] = [ filter_property ]
       else
-        filterObject[:cifilterproperties].push(theProperty)
+        @filter_hash[:cifilterproperties].push(filter_property)
       end
-      filterObject
     end
 
-    # Add properties to the list of filter properties in the filter object hash.
-    # If the filter property list doesn't yet exist, a new property list will
-    # be created, otherwise the filter property will be added to the already
-    # existing list of properties.
-    # @param filterObject [Hash] The filter object hash to assign properties to.
-    # @param theProperties [Array<Hash>] The properties to be assigned
-    # @return [Hash] The core image filter object hash.
-    def self.addproperties_tocifilter(filterObject: {}, theProperties: [])
-      if filterObject[:cifilterproperties].nil?
-        filterObject[:cifilterproperties] = theProperties
+    # Add a list of properties to the filters list of input properties
+    # @param filter_properties [Array<Hash>] Array of filter property hashes.
+    # @return void
+    def add_properties(filter_properties)
+      if @filter_hash[:cifilterproperties].nil?
+        @filter_hash[:cifilterproperties] = filter_properties
       else
-        filterObject[:cifilterproperties] += theProperties
+        @filter_hash[:cifilterproperties] += filter_properties
       end
-      filterObject
     end
 
-    # Make a filter object which has no inputs.
-    # A small number of core image filters require no properties. They can
-    # therefore be defined solely by their core image filter name, and a filter
-    # name identifier.
-    # @param filter [String] The core image name of the filter to be created.
-    # @param filterIdentifier [String] Filter identifier for the filter chain.
-    # @return [Hash] The core image filter object hash.
-    def self.makefilter_noinputs(filter: "CIRandomGenerator",
-                                  filterIdentifier: "")
-      filterHash = { :cifiltername => filter, :cifilterproperties => [] }
-      filterHash[:mifiltername] = filterIdentifier unless filterIdentifier.nil?
-      filterHash
+    # Remove the filter property list
+    def clear_properties
+      @filter_hash.delete(:cifilterproperties)
     end
 
-    # Make a filter object with an input image.
-    # @param filter [String] The core image name of the filter to be created.
-    # @param filterIdentifier [String] Filter identifier for the filter chain.
-    # @param inputImage [Hash] The object identifier hash, see {SmigIDHash}
-    # @return [Hash] The core image filter object hash.
-    def self.makefilter(filter: "CIComicEffect", filterIdentifier: "",
-                                                    inputImage: {} )
-      inputImageProp = { :cifilterkey => "inputImage",
-                          :cifiltervalueclass => "CIImage",
-                          :cifiltervalue => inputImage }
-      filterHash = { :cifiltername => filter, :mifiltername => filterIdentifier,
-                      :cifilterproperties => [ inputImageProp ] }
-      return filterHash
-    end
-
-    # Make a filter object with a list of filter properties.
-    # @param filter [String] The core image name of the filter to be created.
-    # @param filterIdentifier [String] Filter identifier for the filter chain.
-    # @param theProperties [Array<Hash>] List of filter properties.
-    # @return [Hash] The core image filter object hash.
-    def self.makefilter_withproperties(filter: "CIFlashTransition",
-                              filterIdentifier: nil, theProperties: [] )
-      filterHash = { :cifiltername => filter,
-                    :cifilterproperties => theProperties }
-      filterHash[:mifiltername] = filterIdentifier unless filterIdentifier.nil?
-      filterHash
+    # Replace any previously assigned filter properties
+    # @param filter_properties [Array<Hash>] List of filter property hashes
+    # @return void
+    def set_properties(filter_properties)
+      @filter_hash[:cifilterproperties] = filter_properties
     end
   end
 
@@ -290,13 +257,14 @@ module MovingImages
     end
 
     # Add a filter definition to the filter chain
-    # @param filterObject [Hash] Filter definition to add to the filter chain
+    # @param filter [Hash, #filterhash] Filter to add to the filter chain
     # @return [Hash] The filter chain hash
-    def add_filter_tofilterchain(filterObject: {})
+    def add_filter(filter)
+      filter = filter.filterhash if filter.respond_to? "filterhash"
       if @filterChainHash[:cifilterlist].nil?
-        @filterChainHash[:cifilterlist] = [ filterObject ]
+        @filterChainHash[:cifilterlist] = [ filter ]
       else
-        @filterChainHash[:cifilterlist].push(filterObject)
+        @filterChainHash[:cifilterlist].push(filter)
       end
       return @filterChainHash
     end

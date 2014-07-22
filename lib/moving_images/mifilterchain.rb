@@ -310,15 +310,15 @@ module MovingImages
     # Create a filter property with a name identifier.
     # @param key [String] the filter property to be set.
     # @param value [String, Float, Fixnum] The value the filter property set to.
-    # @param filterNameID [String] Identifier for filter in filter chain.
+    # @param filtername_id [String] Identifier for filter in filter chain.
     # @param valueClass [String, nil] The CoreImage class name to assign
     # @return [Hash] The created render property.
     def self.make_renderproperty_withfilternameid(key: "inputLevel",
                                                   value: 10.0,
-                                                  filterNameID: "blurfilter",
+                                                  filtername_id: "blurfilter",
                                                   valueClass: nil)
       renderProp =  { :cifilterkey => key, :cifiltervalue => value,
-                      :mifiltername => filterNameID }
+                      :mifiltername => filtername_id }
       renderProp[:cifiltervalueclass] = valueClass unless valueClass.nil?
       return renderProp
     end

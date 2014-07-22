@@ -42,10 +42,10 @@ module MovingImages
     end
 
     # Make a filter identifier for a filter in a filter chain.
-    # @param filterNameID [String] The name of the filter in the filter chain.
+    # @param filtername_id [String] The name of the filter in the filter chain.
     # @return [Hash] A ruby hash identifying a filter in a filter chain.
-    def self.makeid_withfilternameid(filterNameID)
-      return { :mifiltername => filterNameID }
+    def self.makeid_withfilternameid(filtername_id)
+      return { :mifiltername => filtername_id }
     end
 
     # Make a filter identifier for a filter in a filter chain.

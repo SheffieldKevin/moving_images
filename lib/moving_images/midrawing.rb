@@ -617,7 +617,7 @@ module MovingImages
     end
 
     # Set the drawing blend mode
-    # @param blendMode [String] see {MIMeta.cgblendmodes} for list of values
+    # @param blendMode [String] see {MIMeta.listcgblendmodes} for list of values
     # @return [Hash] The hash of the draw element object
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
@@ -902,7 +902,7 @@ module MovingImages
 
     # Set the user interface to draw the text with. A user interface font also
     # defines a font size, but this can be over riden by setting the font size.
-    # Use {MIMeta.listofuserinterfacefonts} to get user interface font list
+    # Use {MIMeta.listuserinterfacefonts} to get user interface font list
     # @param userInterfaceFont [String] The user interface font to draw the text
     # @return [Hash] The representation of the draw string command
     def userinterfacefont=(userInterfaceFont)

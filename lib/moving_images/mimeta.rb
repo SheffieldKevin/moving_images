@@ -192,7 +192,7 @@ module MovingImages
     # Get a list of the commands handled by classes of type.
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] The array of commands as as ruby symbols
-    def self.listofclasscommands(bytype: BitmapContextType)
+    def self.listclasscommands(bytype: BitmapContextType)
       if (bytype.eql? BitmapContextType) || (bytype.eql? PDFContextType) ||
                                              (bytype.eql? WindowContextType)
         return [ CreateObjectCommand, GetPropertyCommand, 
@@ -206,7 +206,7 @@ module MovingImages
     # Get a list of the commands handled by objects of class type.
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] A list of commands handled by objects of type.
-    def self.listofobjectcommands(bytype: BitmapContextType)
+    def self.listobjectcommands(bytype: BitmapContextType)
       return CommandsForObjectsOfClasses[bytype]
     end
 
@@ -240,7 +240,7 @@ module MovingImages
     # http://t.co/I5eFlTVHyX
     # @param category [String] The category to get the list of filters from.
     # @return [String] A space delimited string with the list of filter names.
-    def self.get_listoffilters(category: nil)
+    def self.listfilters(category: nil)
       commandHash = { :command => "getproperty",
                         :objecttype => "imagefilterchain",
                         :propertykey => "imagefilters" }
@@ -251,7 +251,7 @@ module MovingImages
     # Get a list of the commands handled by objects of class type.
     # @param filtername [String] The type to get list of commands from.
     # @return [String] A JSON object describing the filter attributes
-    def self.get_filterattributes(filtername: "CIBoxBlur")
+    def self.filterattributes(filtername: "CIBoxBlur")
       commandHash = { :command => "getproperty",
                       :objecttype => "imagefilterchain",
                       :propertykey => "filterattributes",
@@ -261,35 +261,35 @@ module MovingImages
 
     # Get the list of presets that can be used to create a bitmap context.
     # @return [String] A space delimited string with the list of presets.
-    def self.listofpresets
+    def self.listpresets
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                         property: :presets)
     end
 
     # Get the list of blend modes for drawing into a context.
     # @return [String] A space delimited string with the list of blend modes.
-    def self.cgblendmodes
+    def self.listcgblendmodes
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                           property: "blendmodes")
     end
 
     # Get the list of the available user interface fonts.
     # @return [String] A space delimited string of user interface fonts
-    def self.listofuserinterfacefonts
+    def self.listuserinterfacefonts
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                          property: "userinterfacefonts")
     end
     
     # Get the list of available image file exporter types
     # @return [String] A space delimited string of export uti file types
-    def self.listofimageexporttypes
+    def self.listimageexporttypes
       return Smig.get_classtypeproperty(objecttype: ImageExporterType,
                                         property: :imageexporttypes)
     end
 
     # Get the list of available image file importer types
     # @return [String] A space delimited string of import uti file types
-    def self.listofimageimporttypes
+    def self.listimageimporttypes
       return Smig.get_classtypeproperty(objecttype: ImageImporterType,
                                         property: :imageimporttypes)
     end

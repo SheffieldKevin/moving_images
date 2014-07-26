@@ -866,7 +866,7 @@ module MovingImages
     end
 
     # Create a bitmap context and return the bitmap context object.
-    # @see MIMeta.listofpresets for a list of bitmap context presets.
+    # @see MIMeta.listpresets for a list of bitmap context presets.
     # @param width [Fixnum, Float] The bitmap content width to be created
     # @param height [Fixnum, Float] The bitmap content height to be created
     # @param preset [String, Symbol] The preset used to create the bitmap with.

@@ -166,7 +166,7 @@ module MovingImages
 
     # Get a list of all the commands handled by MovingImages.
     # @return [Array<Symbol>] The array of commands as ruby symbols
-    def self.listofallcommands
+    def self.listallcommands
       return [ GetPropertyCommand, SetPropertyCommand, GetPropertiesCommand,
                SetPropertiesCommand, CreateObjectCommand, CloseObjectCommand,
                CloseAllObjectsCommand, AddImageCommand, ExportCommand,

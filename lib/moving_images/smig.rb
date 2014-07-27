@@ -224,7 +224,16 @@ module MovingImages
       close_command = CommandModule.make_close(object_id)
       self.perform_command(close_command)
     end
-    
+
+
+    # Close without raising an exception the object with object id.
+    # @param object_id [Hash] The object identifier.
+    # @return [void] No valid result.
+    def self.close_object_nothrow(object_id)
+      close_command = CommandModule.make_close(object_id)
+      self.perform_command_nothrow(close_command)
+    end
+
     # Close all MovingImages objects    
     # This is a bit dangerous, if moving images is responding to more than
     # one scripts concurrently then this command will close all the objects,

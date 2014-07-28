@@ -3,16 +3,9 @@ require 'optparse'
 require 'pp'
 require 'JSON'
 
-# require_relative 'midrawing'
-# require_relative 'mifilterchain'
-# require_relative 'smigcommands'
-# require_relative 'smig'
-# require_relative 'smigobjectid'
-# require_relative 'spotlight'
-
 module MovingImages
   # A library of functions that do actual stuff
-  module Library
+  module MILibrary
     # A collection of utility functions.
     module Utility
       # Translate option into a CoreGraphics option    
@@ -26,6 +19,59 @@ module MovingImages
                            :high => "kCGInterpolationHigh" }
         # verboseputs(interpdict[@@options[:interpqual]])
         return interpdict[interp.to_sym]
+      end
+
+      # Display a dialog asking the user to select a folder.    
+      # Return the full path to the selected folder
+      # @param message [String] The message to display in the choose folder
+      #   dialog
+      # @return [String] The path to the folder
+      def self.select_a_folder(message: "Select a folder with images:")
+        applescript = "POSIX path of (choose folder with prompt \"#{message}\")"
+        the_command = "osascript -e \'#{applescript}\'"
+        the_path = `#{the_command}`
+        the_path.chomp!
+      end
+
+      # Display a dialog asking the user to select a file.    
+      # Return the full path to the selected file.
+      # @param message [String] The message to display in the choose file dialog
+      # @return [String] The path to the file
+      def self.request_a_file(message: "Select a file:")
+        applescript = "POSIX path of (choose file with prompt \"#{message}\")"
+        the_command = "osascript -e \'#{applescript}\'"
+        the_path = `#{the_command}`
+        the_path.chomp!
+      end
+
+      # Save the metadata about an image from an image file as a json
+      # or plist file. Will throw on failure.
+      # @param imagefile_path [String] Path to the file containing images
+      # @param imageindex [Fixnum] The index of the image in the image file
+      # @param savemetadataformat [:jsonfile, :plistfile]
+      # @param savemetadatato [String, nil] Path to file to save metadata to. If
+      #   the path is nil then the metadata will be saved in the same directory
+      #   as the original file.
+      # @return [void]
+      def self.save_imagemetadata(imagefile_path, imageindex: 0,
+                                  savemetadataformat: :jsonfile,
+                                  savemetadatato: nil)
+        filename = File.basename(imagefile_path, ".*")
+        
+        extension = ".json"
+        extension = ".plist" if savemetadataformat.to_sym.eql?(:plistfile)
+        if savemetadatato.nil?
+          parent_folder = File.dirname(imagefile_path)
+          savemetadatato = File.join(parent_folder, filename + extension)
+        end
+        smig_commands = CommandModule::SmigCommands.new
+        importer_object = smig_commands.make_createimporter(imagefile_path)
+        get_properties_command = CommandModule.make_get_objectproperties(
+                                    importer_object, imageindex: 0,
+                                    saveresultstype: savemetadataformat,
+                                    saveresultsto: savemetadatato)
+        smig_commands.add_command(get_properties_command)
+        Smig.perform_commands(smig_commands)
       end
     end
 
@@ -252,6 +298,6 @@ module MovingImages
       # MovingImages will process the images asynchronously.
       Smig.perform_commands(theCommands)
     end # #scale_images
-  end # Library
+  end # MILibrary
 end # MovingImages
 

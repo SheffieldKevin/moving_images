@@ -147,6 +147,7 @@ module MovingImages
       if theCommand.respond_to? "commandhash"
         theCommand = theCommand.commandhash
       end
+      fail "theCommand is not a hash" unless theCommand.is_a?(Hash)
       commandWrapper = { :commands => [ theCommand ] }
       self.perform_commands(commandWrapper)
     end

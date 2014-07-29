@@ -540,7 +540,7 @@ module MovingImages
     # @return [MIDrawElement] the newly created object
     def initialize(element_type)
       # The hash should contain all the information needed to do the drawing 
-      @elementHash = { :elementtype => element_type }
+      @elementHash = { :elementtype => element_type.to_sym }
     end
 
     # reset the element type, most useful when you want to use the same element
@@ -550,7 +550,7 @@ module MovingImages
     # @param elementType [String] The type of draw element command.
     # @return [Hash] The draw element hash
     def elementtype=(elementType)
-      @elementHash[:elementtype] = elementType
+      @elementHash[:elementtype] = elementType.to_sym
     end
 
     # Get the draw element hash
@@ -729,7 +729,7 @@ module MovingImages
     # @param drawElement [Hash] The element to be added to the list of elements.
     # @return [Hash] The hash of the draw element object
     def add_drawelement_toarrayofelements(drawElement)
-      unless @elementHash[:elementtype].intern.eql? :arrayofelements
+      unless @elementHash[:elementtype].eql? :arrayofelements
         fail "Can only add a drawElement to \"elementtype\"" +
               " \"arrayofelements\""
       end
@@ -749,9 +749,9 @@ module MovingImages
     # @param thePath [Array<Hash>] The array of path elements defining the path.
     # @return [Array] The array of path elements assign draw element.
     def arrayofpathelements=(thePath)
-      unless (@elementHash[:elementtype].intern.eql? :strokepath) ||
-               (@elementHash[:elementtype].intern.eql? :fillpath) ||
-               (@elementHash[:elementtype].intern.eql? :fillandstrokepath)
+      unless (@elementHash[:elementtype].eql? :strokepath) ||
+               (@elementHash[:elementtype].eql? :fillpath) ||
+               (@elementHash[:elementtype].eql? :fillandstrokepath)
         fail "Allowed elementtype are: strokepath, fillpath, fillandstrokepath"
       end
       thePath = thePath.patharray if thePath.respond_to? "patharray"

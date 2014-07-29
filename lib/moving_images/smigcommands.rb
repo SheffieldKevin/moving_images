@@ -471,9 +471,14 @@ module MovingImages
 
     # Make an Export images to a image file command.
     # @param receiver_object [Hash] Object that receives the export message
-    # @return [ObjectCommand] The export command.
-    def self.make_export(receiver_object)
+    # @param runasynchronously [bool, nil] Default is false. Export the images
+    #   asynchronously.
+    # @return [ObjectCommand] The export command
+    def self.make_export(receiver_object, runasynchronously: nil)
       theCommand = ObjectCommand.new(:export, receiver_object)
+      unless runasynchronously.nil?
+        theCommand.add_option(key: :runasynchronously, value: runasynchronously)
+      end
       theCommand
     end
 

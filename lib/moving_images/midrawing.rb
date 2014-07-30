@@ -1012,7 +1012,7 @@ module MovingImages
     # possible values.
     # @param interpolationQuality [String] An interpolation quality value.
     # @return [Hash] The representation of the draw image command
-    def interpolationquality(interpolationQuality)
+    def interpolationquality=(interpolationQuality)
       @elementHash[:interpolationquality] = interpolationQuality
     end
 

@@ -22,7 +22,10 @@ module MovingImages
       end
 
       # Display a dialog asking the user to select a folder.    
-      # Return the full path to the selected folder
+      # Return the full path to the selected folder.    
+      # Never use this method in production scripts. This is just a convenience
+      # method to use for documentation scripts and while developing scripts. 
+      # There are issues with the dialog that is displayed.
       # @param message [String] The message to display in the choose folder
       #   dialog
       # @return [String] The path to the folder
@@ -34,7 +37,10 @@ module MovingImages
       end
 
       # Display a dialog asking the user to select a file.    
-      # Return the full path to the selected file.
+      # Return the full path to the selected file.    
+      # Never use this method in production scripts. This is just a convenience
+      # method to use for documentation scripts and while developing scripts.
+      # There are issues with the display dialog.
       # @param message [String] The message to display in the choose file dialog
       # @return [String] The path to the file
       def self.request_a_file(message: "Select a file:")

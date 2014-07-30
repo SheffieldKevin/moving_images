@@ -13,32 +13,45 @@ module MovingImages
   # image can be used as an input image for another filter in the same filter
   # filter chain.
   module SmigIDHash
-    # Make an object identifier taking an object type and a name
-    # @param type [String, Symbol] The type of object to refer to
-    # @param name [String] The name of the object to refer to.
-    # @return [Hash] A ruby hash identifying a MovingImages object.
-    def self.makeid_withobjecttypeandname(type, name)
-      return { :objecttype => type, :objectname => name }
-    end
-
     # Makes an object identifier using named paramters.
     # Since there is a preferred order to identify objects, this method tries to
     # create an object identifier in the preferred order based on which named
-    # parameters have been assigned values that are not nil.
-    # @param objectreference [Fixnum, #to_i] Reference returned when created
-    # @param objecttype [String, Symbol] One half of a pair to identify object
+    # parameters have been assigned values that are not nil. If a required
+    # combination of parameters are not supplied it will throw.
+    # @param objectreference [Fixnum, #to_i, nil] Reference returned when object
+    #   was created
+    # @param objecttype [String, Symbol] One half of a pair to identify object.
+    #   If objecttype is defined then one of objectname, objectindex is required
     # @param objectname [String] Paired with objecttype for referencing object
-    # @param objectindex [Fixnum] Paired with objecttype for referencing object
+    # @param objectindex [Fixnum, nil] Paired with objecttype for
+    #   referencing the object
+    # @param imageindex [Fixnum, nil] Used when this object reference is used
+    #   as the value for a filter property.
     # @return [Hash] An object identifier
     def self.make_objectid(objectreference: nil, objecttype: nil,
-                           objectname: nil, objectindex: nil)
-      return { :objectreference => objectreference } unless objectreference.nil?
-      return nil if objecttype.nil?
-      return { :objecttype => objecttype,
-                              :objectname => objectname } unless objectname.nil?
-      return { :objecttype => objecttype,
-                          :objectindex => objectindex } unless objectindex.nil?
-      return nil
+                           objectname: nil, objectindex: nil,
+                           imageindex: nil)
+      objectid = {}
+      unless imageindex.nil?
+        objectid[:imageindex] = imageindex
+      end
+      
+      unless objectreference.nil?
+        objectid[:objectreference] = objectreference
+        return objectid
+      end
+
+      fail "objecttype and objectreference both nil" if objecttype.nil?
+
+      objectid[:objecttype] = objecttype
+      unless objectname.nil?
+        objectid[:objectname] = objectname
+        return objectid
+      end
+
+      fail "objectname and objectindex both nil" if objectindex.nil?
+      objectid[:objectindex] = objectindex
+      objectid
     end
 
     # Make a filter identifier for a filter in a filter chain.

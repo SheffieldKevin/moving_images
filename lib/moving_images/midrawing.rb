@@ -927,7 +927,8 @@ module MovingImages
     end
 
     # Set the path within which the text will be drawn.
-    # @param pathElements [Array<Hash>] Array of path elements. See {MIPath}
+    # @param pathElements [Array<Hash>, #patharray] Array of path elements.
+    #   See {MIPath}
     # @return [Hash] The representation of the draw string command
     def arrayofpathelements=(pathElements)
       arrayOfPathElements = pathElements

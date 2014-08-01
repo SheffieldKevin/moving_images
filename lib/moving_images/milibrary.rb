@@ -30,10 +30,11 @@ module MovingImages
       #   dialog
       # @return [String] The path to the folder
       def self.select_a_folder(message: "Select a folder with images:")
-        applescript = "POSIX path of (choose folder with prompt \"#{message}\")"
-        the_command = "osascript -e \'#{applescript}\'"
-        the_path = `#{the_command}`
-        the_path.chomp!
+        result, _ = Open3.capture2('osascript',
+                  '-e','tell application "System Events" to activate', 
+                  '-e',"tell application \"System Events\" to return " \
+                  "POSIX path of (choose folder with prompt \"#{message}\")")
+        result.chomp
       end
 
       # Display a dialog asking the user to select a file.    
@@ -44,10 +45,11 @@ module MovingImages
       # @param message [String] The message to display in the choose file dialog
       # @return [String] The path to the file
       def self.request_a_file(message: "Select a file:")
-        applescript = "POSIX path of (choose file with prompt \"#{message}\")"
-        the_command = "osascript -e \'#{applescript}\'"
-        the_path = `#{the_command}`
-        the_path.chomp!
+        result, _ = Open3.capture2('osascript',
+                  '-e','tell application "System Events" to activate', 
+                  '-e',"tell application \"System Events\" to return " \
+                  "POSIX path of (choose file with prompt \"#{message}\")")
+        result.chomp
       end
 
       # Save the metadata about an image from an image file as a json

@@ -1,0 +1,19 @@
+--title 'MovingImages Documentation'
+--readme README.md
+--markup markdown
+--markup-provider redcarpet
+--output-dir ./documentation
+-
+LICENSE.txt
+using_movingimages/AsynchronousCommands
+using_movingimages/Contents
+using_movingimages/CreatingObjects
+using_movingimages/Drawing
+using_movingimages/home
+using_movingimages/ImageFilterChains
+using_movingimages/ImageMetadata
+using_movingimages/Introduction
+using_movingimages/JSONandPropertyLists
+using_movingimages/PlayingWithObjects
+using_movingimages/Scripts
+

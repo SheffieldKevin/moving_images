@@ -86,12 +86,12 @@ module MovingImages
     # @param width [Fixnum] Find image files which are wider than width.
     # @param height [Fixnum] Find image files which are taller than height.
     # @param fileType [String] Find image files with file type fileType
-    # @param onlyInDirPath [String] Option directory to find files within.
+    # @param onlyin_dirpath [String] Option directory to find files within.
     # @return [Array<String>] A list of paths, one path per result.
     def self.find_imagefiles_largerthan(width: 800, height: 600,
-                                  fileType: "public.image", onlyInDirPath: nil)
+                                  fileType: "public.image", onlyin_dirpath: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyInDirPath) unless onlyInDirPath.nil?
+      theCommand.push('-onlyin', onlyInDirPath) unless onlyin_dirpath.nil?
       query = self.make_contenttypepartofquery(fileType) + " && "
       query += "kMDItemPixelWidth >= #{width} && "
       query += "kMDItemPixelHeight >= #{height}"
@@ -101,15 +101,15 @@ module MovingImages
     # Find image files created monthsAgo number of months ago.
     # @param monthsAgo [Fixnum] How long ago in months an image file was created
     # @param fileType [String] Find image files with type. Default is any
-    # @param onlyInDirPath  [String] Option directory to find files within.
+    # @param onlyin_dirpath  [String] Option directory to find files within.
     # @return [Array<String>] A list of path, one path per result.
     def self.find_imagefilescreated(monthsAgo: 3, fileType: "public.image",
-                                      onlyInDirPath: nil)
+                                      onlyin_dirpath: nil)
       monthsAgo = - monthsAgo
       monthsAgoP1 = monthsAgo + 1
 
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyInDirPath) unless onlyInDirPath.nil?
+      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
 
       query = self.make_contenttypepartofquery(fileType) + " && "
       query += "kMDItemContentCreationDate > $time.this_month(#{(monthsAgo)})" +
@@ -127,9 +127,9 @@ module MovingImages
     # @param onlyInDirPath  [String] Option directory to find files within
     # @return [Array<String>] A list of path, one path per result
     def self.find_imagefilescreatedsince(daysAgo: 20, fileType: nil, 
-                                                        onlyInDirPath: nil)
+                                                        onlyin_dirpath: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyInDirPath) unless onlyInDirPath.nil?
+      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
       query = self.make_contenttypepartofquery(fileType) + " && "
       query += "kMDItemContentCreationDate >= $time.today(#{(-daysAgo)})"
       theCommand.push(query)

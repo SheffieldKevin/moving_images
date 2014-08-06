@@ -69,14 +69,14 @@ module MovingImages
     # fileType instead of a value like "public.jpeg".
     # @param width [Fixnum] The width of the image
     # @param height [Fixnum] The height of the image
-    # @param fileType [Fixnum] The image uti file type
-    # @param onlyInDirPath [String] Option directory to find files within.
+    # @param filetype [String, Symbol] The image uti file type
+    # @param onlyin_dirpath [nil, String] Option directory to find files within.
     # @return [Array<String>] An array of paths, one path per result.
     def self.find_imagefiles(width: 800, height: 600,
-                             fileType: "public.image", onlyInDirPath: nil)
+                             filetype: "public.image", onlyin_dirpath: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyInDirPath) unless onlyInDirPath.nil?
-      query = self.make_contenttypepartofquery(fileType) + " && "
+      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
+      query = self.make_contenttypepartofquery(filetype) + " && "
       query += "kMDItemPixelWidth == #{width} && "
       query += "kMDItemPixelHeight == #{height}"
       self.runquerycommand(theCommand.push(query))

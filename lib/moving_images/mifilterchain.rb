@@ -309,33 +309,37 @@ module MovingImages
   module MIFilterRenderProperty
     # Create a filter property with a name identifier.
     # @param key [String] the filter property to be set.
-    # @param value [String, Float, Fixnum] The value the filter property set to.
+    # @param value [String, Float, Fixnum, Hash] The value the filter property
+    #   will be assigned to. CIVector and CIColor filter class can both have
+    #   a hash as their value.
     # @param filtername_id [String] Identifier for filter in filter chain.
-    # @param valueClass [String, nil] The CoreImage class name to assign
+    # @param value_class [String, nil] The CoreImage class name to assign
     # @return [Hash] The created render property.
     def self.make_renderproperty_withfilternameid(key: "inputLevel",
                                                   value: 10.0,
                                                   filtername_id: "blurfilter",
-                                                  valueClass: nil)
+                                                  value_class: nil)
       renderProp =  { :cifilterkey => key, :cifiltervalue => value,
                       :mifiltername => filtername_id }
-      renderProp[:cifiltervalueclass] = valueClass unless valueClass.nil?
+      renderProp[:cifiltervalueclass] = value_class unless value_class.nil?
       return renderProp
     end
 
     # Create a filter property with a filter index.
     # @param key [String] the filter property to be set.
-    # @param value [String, Float, Fixnum] The value the filter property set to.
-    # @param filterIndex [Fixnum] The filter index in the filter chain.
-    # @param valueClass [String, nil] The CoreImage class name to assign
+    # @param value [String, Float, Fixnum, Hash] The value the filter property
+    #   will be assigned to. CIVector and CIColor filter class can both have
+    #   a hash as their value.
+    # @param filter_index [Fixnum] The filter index in the filter chain.
+    # @param value_class [String, nil] The CoreImage class name to assign
     # @return [Hash] The created render property.
     def self.make_renderproperty_withfilterindex(key: "inputRadius",
                                                  value: 100.0,
-                                                 filterIndex: 1,
-                                                 valueClass: nil)
+                                                 filter_index: 1,
+                                                 value_class: nil)
       renderProp =  { :cifilterkey => key, :cifiltervalue => value,
                       :cifilterindex => filterIndex }
-      renderProp[:cifiltervalueclass] = valueClass unless valueClass.nil?
+      renderProp[:cifiltervalueclass] = value_class unless value_class.nil?
       return renderProp
     end
   end
@@ -386,7 +390,7 @@ module MovingImages
       if @renderHash[:cifilterproperties].nil?
         @renderHash[:cifilterproperties] = [ renderFilterProperty ]
       else
-        @renderHash[:cifilterproperties].push(renderFilterPropery)
+        @renderHash[:cifilterproperties].push(renderFilterProperty)
       end
     end
 

@@ -55,7 +55,8 @@ module MovingImages
     # @param commands [Hash] A ruby hash contain the list of commands to run.
     # @return [String] The result from running the commands.
     def self.perform_debugcommands(commands)
-      puts "Debug commands"
+      # puts "Debug commands"
+      commands = commands.commandshash if commands.respond_to? "commandshash"
       begin
         theCommands = commands[:commands]
         theCommands.each do |command|
@@ -96,34 +97,69 @@ module MovingImages
       end
     end
 
+    # Perform MovingImages commands already converted to json either a string or
+    #   a file. If an error occurs then then an exception is raised. One of 
+    #   jsonstring or jsonfile needs to be defined.
+    # @param jsonstring [String, nil] A json representation of the commands.
+    # @param jsonfile [String, nil] A path to a file with a json representation
+    #   of the commands.
+    # @return [String] The result from running the commands
+    def self.perform_jsoncommands(jsonstring: nil, jsonfile: nil)
+      result = ""
+      exit_val = nil
+      unless jsonstring.nil?
+        if jsonstring.length > 200000
+          temp_dir = Dir.tmpdir()
+          file_name = SecureRadom.uuid + ".json"
+          full_path = File.join(temp_dir, file_name)
+          begin
+            open(full_path, 'w') { |f| f.puts jsonstring }
+            result, exit_val = Open3.capture2(Smig, 'performcommand',
+                                              '-jsonfile', full_path)
+          ensure
+            FileUtils.rm_f(full_path)
+          end
+        else
+          result, exit_value = Open3.capture2(Smig, 'performcommand',
+                                        '-jsonstring', jsonstring)
+        end
+      end
+      
+      unless jsonfile.nil?
+        result, exit_val = Open3.capture2(Smig, 'performcommand',
+                                          '-jsonfile', jsonfile)
+      end
+      self.raiseexception_unlesstatuszero(method: "Smig.perform_jsoncommands",
+                                          status: exit_val, result: result)
+      return result
+    end
+
     # Perform MovingImages commands
     # If an error occurs then then an exception is raised
     # @param commands [Hash] A ruby hash containing the list of commands to run
     # @param debug [bool] Run the commands through self.perform_debugcommands.
     # @return [String] The result from running the commands
     def self.perform_commands(commands, debug: false)
-      if commands.respond_to? "commandshash"
-        commands = commands.commandshash
-      end
+      commands = commands.commandshash if commands.respond_to? "commandshash"
       fail "commands not a commandshash" unless commands.kind_of?(Hash)
 
       return self.perform_debugcommands(commands) if debug
-      jsonString = commands.to_json
-      if jsonString.length > 200000
+      jsonstring = commands.to_json
+      if jsonstring.length > 200000
         tempDir = Dir.tmpdir()
         fileName = SecureRandom.uuid + ".json"
         fullPath = File.join(tempDir, fileName)
         begin
-          open(fullPath, 'w') { |f| f.puts jsonString }
+          open(fullPath, 'w') { |f| f.puts jsonstring }
           result, exitVal = Open3.capture2(Smig, "performcommand",
                                         "-jsonfile", fullPath)
         ensure
           FileUtils.rm_f(fullPath)
         end
       else
-        # puts "JSON string length: " + jsonString.length.to_s
+        # puts "JSON string length: " + jsonstring.length.to_s
         result, exitVal = Open3.capture2(Smig, "performcommand",
-                                        "-jsonstring", jsonString)
+                                        "-jsonstring", jsonstring)
       end
       self.raiseexception_unlesstatuszero(method: "Smig.perform_commands",
                                           status: exitVal, result: result)
@@ -133,11 +169,11 @@ module MovingImages
     # Perform MovingImages commands and return how long the commands took to run
     # @param commands [Hash, #commandshash] The commands to be run
     # @param debug [bool] Should the commands be run one after the other.
-    # @return [String] A message informing how long the commands took to run.
+    # @return [Float] The time in seconds the commands took to run.
     def self.perform_timed_commands(commands, debug: false)
       oldTime = Time.now
       self.perform_commands(commands, debug: debug)
-      return "Time to run commands: #{Time.now - oldTime} seconds"
+      Time.now - oldTime
     end
 
     # Perform a single MovingImages command

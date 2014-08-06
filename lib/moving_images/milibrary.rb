@@ -30,10 +30,14 @@ module MovingImages
       #   dialog
       # @return [String] The path to the folder
       def self.select_a_folder(message: "Select a folder with images:")
-        result, _ = Open3.capture2('osascript',
-                  '-e','tell application "System Events" to activate', 
-                  '-e',"tell application \"System Events\" to return " \
-                  "POSIX path of (choose folder with prompt \"#{message}\")")
+        applescript = "tell application \"System Events\"\n" \
+        "set p1 to process 1 whose frontmost is true\n" \
+        "activate\n" \
+        "set f to POSIX path of (choose folder with prompt \"#{message}\")\n" \
+        "set frontmost of p1 to true\n" \
+        "return f\n" \
+        "end tell\n"
+        result, _ = Open3.capture2('osascript', '-e', applescript)
         result.chomp
       end
 
@@ -45,10 +49,14 @@ module MovingImages
       # @param message [String] The message to display in the choose file dialog
       # @return [String] The path to the file
       def self.request_a_file(message: "Select a file:")
-        result, _ = Open3.capture2('osascript',
-                  '-e','tell application "System Events" to activate', 
-                  '-e',"tell application \"System Events\" to return " \
-                  "POSIX path of (choose file with prompt \"#{message}\")")
+        applescript = "tell application \"System Events\"\n" \
+          "set p1 to process 1 whose frontmost is true\n" \
+          "activate\n" \
+          "set f to POSIX path of (choose file with prompt \"#{message}\")\n" \
+          "set frontmost of p1 to true\n" \
+          "return f\n" \
+          "end tell\n"
+        result, _ = Open3.capture2('osascript', '-e', applescript)
         result.chomp
       end
 

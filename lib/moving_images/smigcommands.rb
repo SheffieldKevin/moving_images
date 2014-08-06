@@ -700,7 +700,6 @@ module MovingImages
       # @return [Command] The command to create a window context
       def make_createwindowcontext(rect: nil, addtocleanup: true,
                                       borderlesswindow: false, name: nil)
-        fail "No window rectangle provided" if rect.nil?
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         windowObject = SmigIDHash.make_objectid(objectname: theName,

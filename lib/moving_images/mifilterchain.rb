@@ -1,7 +1,7 @@
 
 module MovingImages
 
-  # ==The MIFilterProperty module is used for making filter properties
+  # == The MIFilterProperty module is used for making filter properties    
   # Once a filter property is created, it will be added to a list of properties
   # which is part of the definition of a {MIFilter} in a {MIFilterChain}.
   module MIFilterProperty

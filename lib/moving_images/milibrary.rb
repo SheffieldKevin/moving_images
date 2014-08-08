@@ -12,13 +12,23 @@ module MovingImages
       # @param interp [String, Symbol] Interpolation default, none, low, ...
       # @return [String] String representation of core graphics value.
       def self.get_cginterpolation(interp)
-        interpdict = { :default => "kCGInterpolationDefault",
+        interp_dict = { :default => "kCGInterpolationDefault",
                            :none => "kCGInterpolationNone",
                            :low => "kCGInterpolationLow", 
                            :medium => "kCGInterpolationMedium",
                            :high => "kCGInterpolationHigh" }
         # verboseputs(interpdict[@@options[:interpqual]])
-        return interpdict[interp.to_sym]
+        return interp_dict[interp.to_sym]
+      end
+
+      # Convert a uti image file type to a file extension.
+      # @param filetype [String, Symbol] The image file type.
+      # @return [String] A file extension with the dot.
+      def self.get_extension_fromimagefiletype(filetype: 'public.jpeg')
+        filetype_dict = { :'public.jpeg' => '.jpg', :'public.png' => '.png',
+                      :'com.compuserve.gif' => '.gif',
+                      :'public.tiff' => '.tiff', :'public.jpeg-2000' => '.jp2' }
+        return filetype_dict[filetype.to_sym]
       end
 
       # Display a dialog asking the user to select a folder.    
@@ -91,7 +101,8 @@ module MovingImages
       end
     end
 
-    # Scale images using the lanczos CoreImage filter.
+    # Scale images using the lanczos CoreImage filter    
+    # Assumes all input images have the same dimensions
     # @param theOpts [Hash] Configuring options for scaling images
     # @param fileList [Array] List of paths to scale
     # @return [void]
@@ -111,7 +122,15 @@ module MovingImages
       
       # The export file type will be the same as the input file type so get
       # the fileType from the first file as well.
-      fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      if theOpts[:exportfiletype].nil?
+        # The export file type is the same as the input file type
+        fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      else
+        fileType = theOpts[:exportfiletype]
+      end
+      name_extension = Utility.get_extension_fromimagefiletype(
+                                                          filetype: fileType)
+
       if dimensions.size.zero?
         fail "Spotlight couldn't get dimensions from image file: "
       end
@@ -142,16 +161,17 @@ module MovingImages
 
       # Now building up the image filter chain to scale the image.
       theFilter = MIFilter.new(:CILanczosScaleTransform)
-#      theFilter = MIFilter.makefilter(filter: :CILanczosScaleTransform,
-#                                inputImage: intermediateBitmapObject)
       scaleProperty = MIFilterProperty.make_cinumberproperty(key: :inputScale,
                                                     value: theOpts[:scalex])
       theFilter.add_property(scaleProperty)
-#      MIFilter.addproperty_tocifilter(filterObject: theFilter,
-#                                      theProperty: scaleProperty)
+      sourceImageProperty = MIFilterProperty.make_ciimageproperty(
+                                              value: intermediateBitmapObject)
+      theFilter.add_property(sourceImageProperty)
       filterChain = MIFilterChain.new(bitmapObject,
                                       filterList: [ theFilter.filterhash ])
-
+      unless theOpts[:softwarerender].nil?
+        filterChain.softwarerender = theOpts[:softwarender]
+      end
       # filterChain description has been created. Now make a create image
       # filter chain command.
       filterChainObject = theCommands.make_createimagefilterchain(
@@ -181,8 +201,8 @@ module MovingImages
                                   renderinstructions: renderFilterChain)
         theCommands.add_command(renderFilterChainCommand)
         # Get the file name of the input file.
-        fileName = File.basename(filePath)
-        
+        fileName = File.basename(filePath, '.*') + name_extension
+
         # Combine it with the output directory.
         exportPath = File.join(theOpts[:outputdir], fileName)
         
@@ -223,11 +243,11 @@ module MovingImages
     end
 
     # Scale images using CoreGraphics transformations    
+    # Assumes all input images have the same dimensions
     # @param theOpts [Hash] Configuring options for scaling images
     # @param fileList [Array] List of paths to scale
-    # @param async [true, false] Should processing happen asynchronously.
     # @return [void]
-    def self.scale_files_usequartz(theOpts, fileList, async: false)
+    def self.scale_files_usequartz(theOpts, fileList)
       fail "No output directory specified." if theOpts[:outputdir].nil?
       outputDirectory = File.expand_path(theOpts[:outputdir])
       fail "No files to scale." if fileList.size.zero?
@@ -239,12 +259,27 @@ module MovingImages
 
       firstItem = File.expand_path(fileList.first)
 
+      # Create the smig commands object
       theCommands = CommandModule::SmigCommands.new
-      theCommands.run_asynchronously = async
+      unless theOpts[:async].nil?
+        theCommands.run_asynchronously = theOpts[:async]
+      end
+
+      unless theOpts[:savejsonfileto].nil?
+        theCommands.informationreturned = :lastcommandresult
+        theCommands.saveresultsto = theOpts[:savejsonfileto]
+        theCommands.saveresultstype = :jsonfile
+      end
 
       dimensions = SpotlightCommand.get_imagedimensions(firstItem)
-      # The export file type is the same as the input file type
-      fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      if theOpts[:exportfiletype].nil?
+        # The export file type is the same as the input file type
+        fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      else
+        fileType = theOpts[:exportfiletype]
+      end
+      name_extension = Utility.get_extension_fromimagefiletype(
+                                                        filetype: fileType)
       fail "Couldn't get dimensions from image file: " if dimensions.size.zero?
       scaledWidth = dimensions[:width].to_f * theOpts[:scalex]
       scaledHeight = dimensions[:height].to_f * theOpts[:scaley]
@@ -263,7 +298,7 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_bject: importerObject, 
+        drawImageElement.set_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.contexttransformations = contextTransformations
         drawImageElement.destinationrectangle = destinationRect
@@ -273,7 +308,7 @@ module MovingImages
                                           drawinstructions: drawImageElement)
         theCommands.add_command(scaleImageCommand)
 
-        fileName = File.basename(filePath)
+        fileName = File.basename(filePath, '.*') + name_extension
         exportPath = File.join(theOpts[:outputdir], fileName)
         setExportPathCommand = CommandModule.make_set_objectproperty(
                                                   exporterObject,
@@ -313,7 +348,27 @@ module MovingImages
       # asynchronously then perform_commands will return quickly and 
       # MovingImages will process the images asynchronously.
       Smig.perform_commands(theCommands)
-    end # #scale_images
+    end # #scale_files_usequartz
+    
+    # Scale images transformations    
+    # Assumes all input images have the same dimensions. Will pass the work
+    # to one of two scripts depending on two of the attributes of the
+    # theOpts hash. If :async is false and :interpqual is missing or set to
+    # :lanczos then scaling will use the core image lanczos filter to scale
+    # the image. Otherwise core graphics will be used to do the image scaling.
+    # @param theOpts [Hash] Configuring options for scaling images
+    # @param fileList [Array] List of paths to scale
+    # @return [void]
+    def self.scale_files(theOpts, fileList)
+      islanczos = theOpts[:interpqual].nil? || 
+                                    theOpts[:interpqual].to_sym.eql?(:lanczos)
+      islanczos = false if theOpts[:async]
+      if islanczos
+        self.scale_files_uselanczos(theOpts, fileList)
+      else
+        self.scale_files_usequartz(theOpts, fileList)
+      end
+    end # #scale_files
   end # MILibrary
 end # MovingImages
 

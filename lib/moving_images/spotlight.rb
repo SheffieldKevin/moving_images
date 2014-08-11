@@ -26,7 +26,7 @@ module MovingImages
       finalResult
     end
 
-    # Get the image file type and return as a string.
+    # Get the image file type and return as a string.    
     # @param imageFilePath [String] Path to file to get dimensions from.
     # @return [String] the image file type.
     def self.get_imagefiletype(imageFilePath)
@@ -63,8 +63,8 @@ module MovingImages
       return theOutput
     end
 
-    # Find image files using spotlight which have specific pixel dimensions, and a
-    # particular file type, with an option to limit the search to be within a
+    # Find image files using spotlight which have specific pixel dimensions, and 
+    # a particular file type, with an option to limit the search to be within a
     # directory. To allow any image file type specify "public.image" for 
     # fileType instead of a value like "public.jpeg".
     # @param width [Fixnum] The width of the image
@@ -98,7 +98,7 @@ module MovingImages
       self.runquerycommand(theCommand.push(query))
     end
 
-    # Find image files created monthsAgo number of months ago.
+    # Find image files created monthsAgo number of months ago.    
     # @param monthsAgo [Fixnum] How long ago in months an image file was created
     # @param fileType [String] Find image files with type. Default is any
     # @param onlyin_dirpath  [String] Option directory to find files within.
@@ -118,13 +118,13 @@ module MovingImages
       return self.runquerycommand(theCommand)
     end
 
-    # Find image files created since number of days daysAgo.
+    # Find image files created since number of days daysAgo.    
     # Unlike the months ago find files which finds files created within a month, 
     # this finds all files created since some day in the past until today using
     # spotlight.
     # @param daysAgo [Fixnum] How long ago in months an image file was created
     # @param fileType [String] Find image files with type. Default is any
-    # @param onlyInDirPath  [String] Option directory to find files within
+    # @param onlyin_dirpath  [String] Option directory to find files within
     # @return [Array<String>] A list of path, one path per result
     def self.find_imagefilescreatedsince(daysAgo: 20, fileType: nil, 
                                                         onlyin_dirpath: nil)

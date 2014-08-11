@@ -1,13 +1,13 @@
-# The all encompassing MovingImages module
+# The MovingImages module wraps all the moving_images gem interface
 module MovingImages
-  # == The command module. Houston, all your commands are belong to us.
+  # The command module. Houston, all your commands are belong to us.    
   # All the module methods, and these all begin with "make_" create command
   # objects. The created commands can be added to the list of commands or can be
   # performed immediately by calling Smig.perform_command(...) with the
   # command as the argument.
   module CommandModule
 
-    # == The base class for defining commands
+    # The base class for defining commands
     class Command
       
       # The constructor for a MovingImages::Command object
@@ -30,9 +30,9 @@ module MovingImages
       end
     end
 
-    # == The base class for defining commands handled by objects
+    # The base class for defining commands handled by objects
     class ObjectCommand < Command
-      # Constructor for ObjectCommand
+      # Constructor for ObjectCommand    
       # @param theCommand [String] The name of the command to be performed
       # @param receiverObject [Hash] The object that will handle the command
       # @return SmigObjectCommand command object
@@ -41,7 +41,8 @@ module MovingImages
         self.add_option(key: :receiverobject, value: receiverObject)
       end
 
-      # Set the receiver for the object. This method allows the receiver
+      # Set the receiver for the object.    
+      # This method allows the receiver
       # to be overridden at a later time. I use this when I want to send 
       # the command again but to a new object. Be careful though because if the 
       # command to the first object has not yet been performed then this can
@@ -52,9 +53,9 @@ module MovingImages
       end
     end
 
-    # == A draw element command object
+    # A draw element command object    
     class DrawElementCommand < ObjectCommand
-      # Initialize a new draw element command object
+      # Initialize a new draw element command object.    
       # @param receiverObject [Hash] Object handling the draw element command
       # @param drawinstructions [Hash, #elementhash] The draw instructions.
       # @return [DrawElementCommand] The draw element command object.
@@ -325,7 +326,8 @@ module MovingImages
     # Make a get object properties command
     # @param receiverObject [Hash] The object to get the properties from
     # @param imageindex [Fixnum, nil] The image index, optional.
-    # @param saveresultstype [String, Symbol] :jsonstring, :jsonfile, :propertyfile, :dictionaryobject
+    # @param saveresultstype [String, Symbol] :jsonstring, :jsonfile, 
+    #   :propertyfile, :dictionaryobject
     # @param saveresultsto [String] The path to json or property list file.
     # @return [ObjectCommand] The get object properties command.
     def self.make_get_objectproperties(receiverObject,
@@ -651,7 +653,7 @@ module MovingImages
         return @commandsHash
       end
 
-      # Make a create bitmap context command and add it to list of commands    
+      # Make a create bitmap context command and add it to list of commands.    
       # If no name is provided (name = nil) then automatically creates a name.    
       # Optionally add the object to be created to the list of objects to
       # be cleaned up. If all the commands to be performed are in one
@@ -822,10 +824,10 @@ module MovingImages
     end
   end
 
-  # == SmigHelpers A collection of MovingImages helper methods
+  # SmigHelpers A collection of MovingImages helper methods.    
   # Methods for doing common actions.
   module SmigHelpers
-    # Save an image from a bitmapcontext or a nsgraphicscontext (window)
+    # Save an image from a bitmapcontext or a nsgraphicscontext (window).    
     # This function will throw an exception if there's a problem.
     # @param imagesource [Hash] The bitmap or window context object.
     # @param pathtofile [String] The path to where the image will be saved.
@@ -850,7 +852,7 @@ module MovingImages
       Smig.perform_commands(commands)
     end
 
-    # Create a window and return the window object.
+    # Create a window and return the window object.    
     # @param width [Fixnum, Float] The content width of the window to be created
     # @param height [Fixnum, Float] Content height of the window to be created.
     # @param xloc [Fixnum, Float] x position of bottom left corner of window
@@ -869,7 +871,7 @@ module MovingImages
       # { :objectname => windowName, :objecttype => :nsgraphicscontext }
     end
 
-    # Create a bitmap context and return the bitmap context object.
+    # Create a bitmap context and return the bitmap context object.    
     # @see MIMeta.listpresets for a list of bitmap context presets.
     # @param width [Fixnum, Float] The bitmap content width to be created
     # @param height [Fixnum, Float] The bitmap content height to be created
@@ -893,8 +895,8 @@ module MovingImages
       Smig.perform_command(closeCommand)
     end
 
-    # Close an object and don't throw or report any error.
-    # @param theObject [Hash] A reference to the object to close.
+    # Close an object and don't throw or report any error.    
+    # @param theObject [Hash] A reference to the object to close
     # @return [void]
     def self.close_object_nothrow(theObject)
       closeCommand = CommandModule.make_close(theObject)
@@ -903,13 +905,13 @@ module MovingImages
       nil
     end
 
-    # Draw an image in a image file to the destination.
+    # Draw an image in a image file to the destination.    
     # @param destination [Hash] Destination object, bitmap or window context.
     # @param destinationrect [Hash] Where to draw. {MIShapes.make_rectangle}
     # @param imagefile [String] Path to the image file to draw
-    # @param imageindex [Fixnum] Index to image in file, optional.
-    # @param drawimageelement [MIDrawImageElement] Draw image options, optional.
-    # @return [String] Empty string on success, otherwise a message.
+    # @param imageindex [Fixnum] Index to image in file, optional
+    # @param drawimageelement [MIDrawImageElement] Draw image options, optional
+    # @return [String] Empty string on success, otherwise a message
     def self.drawimage_to_object(destination: nil, destinationrect: nil,
                         imagefile: nil, imageindex: nil, drawimageelement: nil)
       return "No image file path specified." if imagefile.nil?

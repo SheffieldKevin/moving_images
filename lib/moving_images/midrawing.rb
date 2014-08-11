@@ -1,8 +1,8 @@
 
 module MovingImages
-  # == A collection of methods for creating and modifying simple shapes
+  # A collection of methods for creating and modifying simple shapes.    
   module MIShapes
-    # Make a point hash    
+    # Make a point hash.    
     # Can be created from Floats, integers or string. Strings will represent
     # equations and {point_addxy} will not work and will raise an exception.
     # @param x [Float, Fixnum, String] The horizontal position of the point.
@@ -30,7 +30,7 @@ module MovingImages
       thePoint
     end
 
-    # Set the x coordinate to a formula.
+    # Set the x coordinate to a formula.    
     # @param thePoint [Hash] A previously created point.
     # @param theEquation [String] The equation to assign to the x-coordinate
     # @return [Hash] The modified point hash.
@@ -39,7 +39,7 @@ module MovingImages
       thePoint
     end
 
-    # Set the y coordinate to a formula.
+    # Set the y coordinate to a formula.    
     # @param thePoint [Hash] A previously created point.
     # @param theEquation [String] The equation to assign to the y-coordinate
     # @return [Hash] The modified point hash.
@@ -48,7 +48,7 @@ module MovingImages
       thePoint
     end
 
-    # Make a size hash    
+    # Make a size hash.    
     # If strings are assigned then width/height will represent an equation.
     # @param width [Float, Fixnum, String] The width to assign to the size hash.
     # @param height [Float, Fixnum, String] Height to assign to the size hash
@@ -57,7 +57,7 @@ module MovingImages
       return { :width => width, :height => height }
     end
 
-    # Modify a size hash by adding the width and height
+    # Modify a size hash by adding the width and height.    
     # @param theSize [Hash] A previously created size hash to be modified
     # @param width [Float, #to_f] The amount to add to the width
     # @param height [Float, #to_f] The amount to add to height of the size hash
@@ -74,7 +74,7 @@ module MovingImages
       theSize
     end
 
-    # Set the width dimension to a formula.
+    # Set the width dimension to a formula.    
     # @param theSize [Hash] A previously created size hash.
     # @param theEquation [String] The equation to assign to the width
     # @return [Hash] The modified size hash.
@@ -83,7 +83,7 @@ module MovingImages
       theSize
     end
 
-    # Set the height dimension to a formula.
+    # Set the height dimension to a formula.    
     # @param theSize [Hash] A previously created size hash.
     # @param theEquation [String] The equation to assign to the height
     # @return [Hash] The modified size hash.
@@ -92,13 +92,13 @@ module MovingImages
       theSize
     end
 
-    # Make a rectangle, taking origin and size, or width, height, x & y location
+    # Make a rectangle, taking origin & size, or width, height, x & y location.    
     # All the parameters are optional, if none are specified then you'll get a
     # rectangle back with the origin at [0,0] and with dimensions of [100,100].
     # If origin is specified then xloc and yloc will be ignored if they are
     # are specified. If size is specified then width and height will be ignored.
     # Any individual values can be expressed as an equation, which is why the
-    # parameters width, height, xloc and yloc can be Strings.
+    # parameters width, height, xloc and yloc can be Strings.    
     # @param origin [Hash] The location of the bottom left corner of a rectangle
     # @param size [Hash] The size of the rectangle specified
     # @param width [Float, Fixnum, String] The width of the rectangle
@@ -126,7 +126,7 @@ module MovingImages
       { :origin => theOrigin, :size => theSize }
     end
 
-    # Set the width of the rectangle to a formula.
+    # Set the width of the rectangle to a formula.    
     # @param theRect [Hash] A previously created rect hash.
     # @param theEquation [String] The equation to assign to the width
     # @return [Hash] The modified rect hash.
@@ -135,7 +135,7 @@ module MovingImages
       theRect
     end
 
-    # Set the height of the rectangle to a formula.
+    # Set the height of the rectangle to a formula.     
     # @param theRect [Hash] A previously created rect hash.
     # @param theEquation [String] The equation to assign to the height
     # @return [Hash] The modified rect hash.
@@ -144,7 +144,7 @@ module MovingImages
       theRect
     end
 
-    # Set the x location of the rectangle to a formula.
+    # Set the x location of the rectangle to a formula.    
     # @param theRect [Hash] A previously created rect hash.
     # @param theEquation [String] The equation to assign to the x co-ordinate
     # @return [Hash] The modified rect hash.
@@ -153,7 +153,7 @@ module MovingImages
       theRect
     end
 
-    # Set the y location of the rectangle to a formula.
+    # Set the y location of the rectangle to a formula.    
     # @param theRect [Hash] A previously created rect hash.
     # @param theEquation [String] The equation to assign to the y co-ordinate
     # @return [Hash] The modified rect hash.
@@ -162,7 +162,7 @@ module MovingImages
       theRect
     end
 
-    # Inset a rect for stroking so lines are drawn aligned with pixels.
+    # Inset a rect for stroking so lines are drawn aligned with pixels.    
     # When stroking rectangles in a untransformed context with a line thickness
     # of 1 pixel, the lines of the stroke will be blurred over 2 pixels. By
     # offsetting the position by half a pixel the line will be drawn pixel
@@ -188,7 +188,7 @@ module MovingImages
       return theRect
     end
 
-    # Make a line taking two previously defined points.
+    # Make a line taking two previously defined points.    
     # @param startPoint [Hash] The line start point.
     # @param endPoint [Hash] The line end point.
     # @return [Hash] A line defined by a start and an end point.
@@ -197,15 +197,15 @@ module MovingImages
     end
   end
 
-  # == A collection of methods for creating transformation hashes
+  # A collection of methods for creating transformation hashes.    
   module MITransformations
-    # Make a context transformation object ready to be added to.
+    # Make a context transformation object ready to be added to.    
     # @return [Array] An array object.
     def self.make_contexttransformation()
       return []
     end
 
-    # Add a translation transform to the context transformation    
+    # Add a translation transform to the context transformation.    
     # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add translate to
     # @param point [Hash] A point to translate the context by.
@@ -218,7 +218,7 @@ module MovingImages
       return transformations
     end
 
-    # Add a scale transform to the context transformations    
+    # Add a scale transform to the context transformations.    
     # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add transform to
     # @param scaleXY [Hash] A point hash to scale the context by.
@@ -230,7 +230,7 @@ module MovingImages
       return transformations
     end
 
-    # Add a rotate transform to the context transformations    
+    # Add a rotate transform to the context transformations.    
     # Throws an exception if transformations is not an array.
     # @param transformations [Array] The transformations to add rotate transform
     # @param rotation [Float] The rotation in radians to rotate the context by.
@@ -243,7 +243,7 @@ module MovingImages
       return transformations
     end
 
-    # Make an affine transform    
+    # Make an affine transform.    
     # @param m11 [Float] The m11 component of affine transform.
     # @param m12 [Float] The m12 component of affine transform.
     # @param m21 [Float] The m21 component of affine transform.
@@ -258,9 +258,10 @@ module MovingImages
     end
   end
 
-  # == A collection of methods for creating colors and getting profile names
+  # A collection of methods for creating colors and getting profile names.    
   module MIColor
-    # Creates an rgba color with profile. The profile is optional & if not set 
+    # Creates an rgba color with profile.    
+    # The profile is optional & if not set 
     # then the srgb color profile will be used. Any of the color components can
     # be set to an equation which is why String is an option.
     # @param r [Float, Fixnum, String] The red component of the color
@@ -275,7 +276,7 @@ module MovingImages
                 :alpha => a, :colorcolorprofilename => profile }
     end
 
-    # Set the red component of a rgba color to a formula.
+    # Set the red component of a rgba color to a formula.    
     # The equations are maths like and functions like sin and cos work
     # as you would expect. Variables are identified by starting with a $ sign.
     # So a simple equation looks like: "10.0 + $xadjust"
@@ -287,7 +288,7 @@ module MovingImages
       theColor
     end
 
-    # Set the green component of a rgba color to a formula.
+    # Set the green component of a rgba color to a formula.    
     # @param theColor [Hash] A previously created rgba color hash.
     # @param theEquation [String] The equation to assign to the green component
     # @return [Hash] The modified rgba color hash.
@@ -296,7 +297,7 @@ module MovingImages
       theColor
     end
 
-    # Set the blue component of a rgba color to a formula.
+    # Set the blue component of a rgba color to a formula.    
     # @param theColor [Hash] A previously created rgba color hash.
     # @param theEquation [String] The equation to assign to the blue component
     # @return [Hash] The modified rgba color hash.
@@ -305,7 +306,7 @@ module MovingImages
       theColor
     end
 
-    # Set the alpha component of a rgba or gray color to a formula.
+    # Set the alpha component of a rgba or gray color to a formula.    
     # @param theColor [Hash] A previously created rgba or gray color hash.
     # @param theEquation [String] The equation to assign to the alpha component
     # @return [Hash] The modified color hash.
@@ -314,7 +315,8 @@ module MovingImages
       theColor
     end
 
-    # Creates a gray color with profile. If profile is not included or set to
+    # Creates a gray color with profile.    
+    # If profile is not included or set to
     # nil, then the generic gray profile will be used. Possible profile.
     # @param g [Float, #to_f] The grayscale value of the color
     # @param a [Float, #to_f] The alpha component of the color (transparency)
@@ -325,7 +327,7 @@ module MovingImages
       return { :gray => g, :alpha => a, :profile => profile }
     end
 
-    # Set the gray value of a gray color to a formula.
+    # Set the gray value of a gray color to a formula.    
     # @param theColor [Hash] A previously created rgba color hash.
     # @param theEquation [String] The equation to assign to the gray component
     # @return [Hash] The modified gray color hash.
@@ -334,7 +336,8 @@ module MovingImages
       theColor
     end
 
-    # Creates an cmyk color. Core Graphics only supplies one named CMYK
+    # Creates an cmyk color.    
+    # Core Graphics only supplies one named CMYK
     # color profile, so that profile is assigned.
     # @param c [Float, #to_f] The cyan component of the cmyk color
     # @param m [Float, #to_f] The magenta component of the cmyk color
@@ -346,21 +349,21 @@ module MovingImages
                 :colorcolorprofilename => "kCGColorSpaceGenericCMYK" }
     end
 
-    # Get the list of named rgb color profiles built in to CoreGraphics
+    # Get the list of named rgb color profiles built in to CoreGraphics.    
     # @return [Array<String>] An array of rgb color profile names.
     def self.rgbprofiles
       return ['kCGColorSpaceGenericRGB', 'kCGColorSpaceGenericRGBLinear',
                 'kCGColorSpaceSRGB', 'kCGColorSpaceAdobeRGB1998']
     end
 
-    # Get the list of named grayscale profiles built into CoreGraphics
+    # Get the list of named grayscale profiles built into CoreGraphics.   
     # @return [Array<String>] An array of grayscale profile names.
     def self.grayprofiles
       return ['kCGColorSpaceGenericGray', 'kCGColorSpaceGenericGrayGamma2_2']
     end
   end
 
-  # == Wrap an array of path elements
+  # Wrap an array of path elements.    
   # As core graphics works with the concept of the current point, when a path
   # is first started a point is supplied which is the starting point for the
   # path. From then on with the addition of each path component the current
@@ -370,20 +373,20 @@ module MovingImages
   # method rather than trying to guess where the current point might have
   # finished.
   class MIPath
-    # Initialize a MIPath object which sets @pathArray to an empty list
+    # Initialize a MIPath object which sets @pathArray to an empty list.    
     # @return [MIPath]
     def initialize()
       # The path array containing all the path elements.
       @pathArray = []
     end
 
-    # Get the list of path elements
+    # Get the list of path elements.    
     # @return [Array<Hash>] list of path elements
     def patharray
       return @pathArray
     end
 
-    # Add a rectangle to the list of path elements.
+    # Add a rectangle to the list of path elements.    
     # @param theRect [Hash] A hash representation of a rectangle.
     # @return [Array<Hash>] list of path elements
     def add_rectangle(theRect)
@@ -392,7 +395,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a rounded rectangle to the list of path elements.
+    # Add a rounded rectangle to the list of path elements.    
     # @param theRect [Hash] A hash representation of a rectangle.
     # @param radius [Float, #to_f] The radius of the rounded corners of the rect
     # @return [Array<Hash>] list of path elements
@@ -403,7 +406,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a rounded rectangle to the list of path elements.
+    # Add a rounded rectangle to the list of path elements.    
     # @param theRect [Hash] A hash representation of a rectangle.
     # @param radiuses [Array<Float>] A radius for each corner of the rectangle.
     # @return [Array<Hash>] list of path elements
@@ -415,7 +418,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add an oval to the list of path elements.
+    # Add an oval to the list of path elements.    
     # @param ovalBounds [Hash] A representation of a rect that bounds the oval.
     # @return [Array<Hash>] list of path elements
     def add_oval(ovalBounds)
@@ -424,7 +427,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a bezier curve to the list of path elements.
+    # Add a bezier curve to the list of path elements.    
     # @param controlPoint1 [Hash] First control point of a bezier curve
     # @param controlPoint2 [Hash] Second control point of a bezier curve
     # @param endPoint [Hash] The end point of the bezier curve
@@ -443,7 +446,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a bezier curve to the list of path elements.
+    # Add a bezier curve to the list of path elements.    
     # @param controlPoint1 [Hash] The quadratic curve control point
     # @param endPoint [Hash] The quadratic curve end point
     # @return [Array<Hash>] list of path elements
@@ -456,7 +459,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a line to the list of path elements.
+    # Add a line to the list of path elements.    
     # @param endPoint [Hash] Point defining the end of the line
     # @return [Array<Hash>] list of path elements
     def add_lineto(endPoint)
@@ -465,7 +468,7 @@ module MovingImages
       @pathArray
     end
 
-    # Move to a new location without adding a path element.
+    # Move to a new location without adding a path element.    
     # @param endPoint [Hash] Point defining the new location for the path.
     # @return [Array<Hash>] list of path elements
     def add_moveto(endPoint)
@@ -474,7 +477,7 @@ module MovingImages
       @pathArray
     end
 
-    # Close the sub path.
+    # Close the sub path.    
     # The close sub path is just treated as another path element in the list
     # of path elements.
     # @return [Array<Hash>] list of path elements
@@ -483,7 +486,7 @@ module MovingImages
       @pathArray
     end
 
-    # Add a triangle shape to the path.
+    # Add a triangle shape to the path.    
     # @param points [Array<Hash>] A list of 3 points
     def add_triangle(points: nil)
       fail "Needs an array of 3 points" if points.nil?
@@ -497,45 +500,45 @@ module MovingImages
     end
   end
 
-  # == MIShadow objects describe the form a shadow takes. Applied to drawing.
+  # MIShadow objects describe the form a shadow takes. Applied to drawing.
   class MIShadow
   
-    # Initialize a MIShadow object, basically setting @shadownHash
+    # Initialize a MIShadow object, basically setting @shadownHash.    
     def initialize()
       # The shadow hash, holding all the properties of the shadow
       @shadowHash = {}
     end
   
-    # Get the shadow hash
+    # Get the shadow hash.    
     # @return [Hash] The hash representation of the shadow
     def shadowhash
       return @shadowHash
     end
 
-    # Set the color used to draw the shadow with.
+    # Set the color used to draw the shadow with.    
     # @param theColor [Hash] The shadow color.
     def color=(theColor)
       @shadowHash[:fillcolor] = theColor
     end
   
-    # Set the shadow offset
+    # Set the shadow offset.    
     # @param theOffset [Hash] A size { :width, :height } hash.
     def offset=(theOffset)
       @shadowHash[:offset] = theOffset
     end
   
-    # Set the blur to apply to the shadow
+    # Set the blur to apply to the shadow.    
     # @param theBlur [Float, String] The blur width. String allows a formula
     def blur=(theBlur)
       @shadowHash[:blur] = theBlur
     end
   end
 
-  # == Abstract draw element class
-  # Root of the draw element class hierarchy
+  # Abstract draw element class.    
+  # Root of the draw element class hierarchy.
   # Implements a small collection of methods common to all draw element classes
   class MIAbstractDrawElement
-    # Initialize a new MIDrawElement object with the element type.
+    # Initialize a new MIDrawElement object with the element type.    
     # @param element_type [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
     def initialize(element_type)
@@ -543,7 +546,8 @@ module MovingImages
       @elementHash = { :elementtype => element_type.to_sym }
     end
 
-    # reset the element type, most useful when you want to use the same element
+    # Reset element type.    
+    # Useful when you want to use the same element
     # for drawing fill and stroking. Be careful though, due to the way ruby
     # passes objects by reference you might end up modifying an already setup
     # draw element command that you thought was finalized.
@@ -553,7 +557,7 @@ module MovingImages
       @elementHash[:elementtype] = elementType.to_sym
     end
 
-    # Get the draw element hash
+    # Get the draw element hash.    
     # @return [Hash] The hash of the draw element object.
     def elementhash
       return @elementHash
@@ -565,7 +569,7 @@ module MovingImages
       return @elementHash.to_json
     end
 
-    # Set the variables property of the drawing instruction to variablesHash
+    # Set the variables property of the drawing instruction to theVariables.    
     # The property keys for the input variables hash are variable names, and 
     # the property values are the values to be assigned to the variables.
     # @param theVariables [Hash] keys are variable names.
@@ -574,7 +578,7 @@ module MovingImages
       @elementHash[:variables] = theVariables
     end
 
-    # Set the shadow to be applied to the drawing.
+    # Set the shadow to be applied to the drawing.    
     # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
     def shadow=(theShadow)
       if theShadow.respond_to? "shadowhash"
@@ -583,7 +587,7 @@ module MovingImages
       @elementHash[:shadow] = theShadow
     end
 
-    # Set the debug name for this draw element command
+    # Set the debug name for this draw element command.    
     # Keeping track of draw commands to track down bugs can be difficult, by
     # giving a draw element command a debug name the debug name will be returned
     # if a draw command error occurred whilst processing a draw element which 
@@ -594,7 +598,7 @@ module MovingImages
       @elementHash[:elementdebugname] = debugName
     end
 
-    # Set the context transformation for the draw element.
+    # Set the context transformation for the draw element.    
     # If an affine transform was previously set, it is deleted from the
     # the draw element hash. If there was a previous context transformation set
     # it is replaced.
@@ -605,7 +609,7 @@ module MovingImages
       @elementHash[:contexttransformation] = transformation
     end
 
-    # Set the affine transform for the draw element.
+    # Set the affine transform for the draw element.    
     # If a context transformation was previously set, it is deleted from the
     # draw element hash. If there was a previous affine transform set then it is
     # replaced.
@@ -616,7 +620,7 @@ module MovingImages
       @elementHash[:affinetransform] = affineTransform
     end
 
-    # Set the drawing blend mode
+    # Set the drawing blend mode.    
     # @param blendMode [String] see {MIMeta.listcgblendmodes} for list of values
     # @return [Hash] The hash of the draw element object
     def blendmode=(blendMode)
@@ -624,71 +628,71 @@ module MovingImages
     end
   end
 
-  # == Objects of the draw element class manage basic drawing
+  # Objects of the draw element class manage basic drawing.    
   # All shape drawing including drawing of path objects is done through objects
   # of the MIDrawElement class. Objects of this class also manage the drawing
   # of an array of draw elements. Drawing that is not managed by objects of this
   # class are, drawing of images, drawing of text, drawing of linear color
   # gradients.
   class MIDrawElement < MIAbstractDrawElement
-    # Initialize a new MIDrawElement object with the element type.
+    # Initialize a new MIDrawElement object with the element type.    
     # @param element_type [String] The type of draw element command
     # @return [MIDrawElement] the newly created object
     def initialize(element_type)
       super
     end
 
-    # Set the rectangle
+    # Set the rectangle.    
     # @param theRect [Hash] Assign a rectangle for draw rect and oval elements
     # @return [Hash] The hash of the draw element object
     def rectangle=(theRect)
       @elementHash[:rect] = theRect
     end
   
-    # Set the fill color used in draw fill element commands
+    # Set the fill color used in draw fill element commands.    
     # @param fillColor [Hash] A hash representation of a color see {MIColor}
     # @return [Hash] The hash of the draw element object
     def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
     end
 
-    # Set the stroke color used in draw stroke element commands
+    # Set the stroke color used in draw stroke element commands.    
     # @param strokeColor [Hash] A hash representation of a color see {MIColor}
     # @return [Hash] The hash of the draw element object
     def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
     end
 
-    # Set the line used used in draw stroke element commands
+    # Set the line used used in draw stroke element commands.    
     # @param lineWidth [Float, String] The stroke draw width
     # @return [Hash] The hash of the draw element object
     def linewidth=(lineWidth)
       @elementHash[:linewidth] = lineWidth
     end
 
-    # Assign a line hash to the draw element hash
+    # Assign a line hash to the draw element hash.    
     # @param theLine [Hash] A start and end point, See {MIShapes.make_line}
     # return [Hash] the line hash assigned to the draw element hash.
     def line=(theLine)
       @elementHash[:line] = theLine
     end
 
-    # Set an array of points, used in the draw lines draw element command.
+    # Set an array of points, used in the draw lines draw element command.    
     # @param arrayOfPoints [Array<Hash>] A list of points for drawing lines.
     # @return [Hash] The hash of the draw element object
     def points=(arrayOfPoints)
       @elementHash[:points] = arrayOfPoints
     end
 
-    # Set the linecap which defines how the ends of a line are drawn
-    # For values see {linecap_list}
+    # Set the linecap which defines how the ends of a line are drawn.    
+    # For values see {linecap_list}.
     # @param lineCap [String] One of: {linecap_list}
     # @return [Hash] The hash of the draw element object
     def linecap=(lineCap)
       @elementHash[:linecap] = lineCap
     end
 
-    # Set the line join which defines how lines are joined in a path
+    # Set the line join which defines how lines are joined in a path.    
     # For values see {linejoin_list}
     # @param lineJoin [String] One of: {linejoin_list}
     # @return [Hash] The hash of the draw element object
@@ -696,7 +700,8 @@ module MovingImages
       @elementHash[:linejoin] = lineJoin
     end
 
-    # Set the miter limit. The miter limit is described in the painting a path
+    # Set the miter limit.    
+    # The miter limit is described in the painting a path
     # section of Apple's Quarzt 2D Programming Guide. I'm providing a link but
     # Apple does move its documentation around so the link can become stale:
     # {https://t.co/0zBEVpD7YZ Painting paths section of Quartz 2D Programming}
@@ -706,23 +711,23 @@ module MovingImages
       @elementHash[:miter] = miterVal.to_f
     end
 
-    # The radius to use for a rounded rectangle
+    # The radius to use for a rounded rectangle.    
     # @param radius [Float, String] The radius to draw the rectangle's corners
     # @return [Hash] The hash of the draw element object
     def radius=(radius)
       @elementHash[:radius] = radius
     end
 
-    # The radius to use for each corner of a rounded rectangle. First radius
-    # is for the bottom right corner of the rectangle, and then each next value
-    # is for the next corner in an anti-clockwise direction.
+    # The radius to use for each corner of a rounded rectangle.    
+    # First radius is for the bottom right corner of the rectangle, and then 
+    # each next value is for the next corner in an anti-clockwise direction.
     # @param radiuses [Array<Float, String>] One value for each corner
     # @return [Hash] The hash of the draw element object
     def radiuses=(radiuses)
       @elementHash[:radiuses] = radiuses # radiuses is an array of floats.
     end
 
-    # Add the draw element to the array of elements to be drawn
+    # Add the draw element to the array of elements to be drawn.    
     # When the draw element is array of elements, then what is drawn is
     # in a list of draw elements. This methods adds a draw element to the
     # list of draw elements.
@@ -745,7 +750,7 @@ module MovingImages
     end
 
     # Set the array of path elements used when the draw element is stroke path
-    # or fill path, or fill and stroke path.
+    # or fill path, or fill and stroke path.    
     # @param thePath [Array<Hash>] The array of path elements defining the path.
     # @return [Array] The array of path elements assign draw element.
     def arrayofpathelements=(thePath)
@@ -758,7 +763,7 @@ module MovingImages
       @elementHash[:arrayofpathelements] = thePath
     end
 
-    # Set the point for the start of the array of path elements.
+    # Set the point for the start of the array of path elements.    
     # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
     # @return [Hash] The start point added to the draw element.
     def startpoint=(startPoint)
@@ -767,13 +772,13 @@ module MovingImages
 
   # Class methods follow
 
-    # Get the list of draw element types
+    # Get the list of draw element types.    
     # @return [Array<String>] The list of possible draw element types
     def self.elementtype_list
       MIMeta.listdrawelements
     end
 
-    # Get the list of path element types
+    # Get the list of path element types.    
     # @return [Array<String>] The list of possible path element types
     def self.pathelementtype_list
       return ['pathmoveto', 'pathlineto', 'pathbeziercurve',
@@ -781,7 +786,7 @@ module MovingImages
                'pathroundedrectangle', 'pathoval', 'pathclosesubpath']
     end
   
-    # Get the list of line cap definitions
+    # Get the list of line cap definitions.    
     # The linecap is described in the drawing paths section of Apple's 
     # Quartz 2D Programming guide. I'm providing the link here but apple
     # moves it's documentation around so this link might become stale.
@@ -791,7 +796,7 @@ module MovingImages
       return %w(kCGLineCapButt kCGLineCapRound kCGLineCapSquare)
     end
 
-    # Get the list of line join definitions
+    # Get the list of line join definitions.    
     # The linejoin is described in the drawing paths section of Apple's 
     # Quartz 2D Programming guide. I'm providing the link here but apple
     # moves it's documentation around so this link might become stale.
@@ -803,9 +808,10 @@ module MovingImages
   end
 
   # Objects of the linear gradient fill element class contain the information
-  # needed to draw a linear gradient fill in a context. Required properties are
-  # the line, array of path elements, the start point for the array of path
-  # elements, an array of locations on the line, and the colors to go with them.
+  # needed to draw a linear gradient fill in a context.    
+  # Required properties are the line, array of path elements, the start point
+  # for the array of path elements, an array of locations on the line, and the 
+  # colors to go with them.
   class MILinearGradientFillElement < MIAbstractDrawElement
     def initialize()
       super(:lineargradientfill)
@@ -816,14 +822,14 @@ module MovingImages
       @elementHash[:startpoint] = MIShapes.make_point(0, 0)
     end
 
-    # Assign a line hash to the draw element hash
+    # Assign a line hash to the draw element hash.    
     # @param theLine [Hash] A start and end point, See {MIShapes.make_line}
     # return [Hash] the line hash assigned to the draw element hash.
     def line=(theLine)
       @elementHash[:line] = theLine
     end
 
-    # Set the array of path elements to clip the drawing of the gradient fill
+    # Set the array of path elements to clip the drawing of the gradient fill.    
     # @param pathElements [Array<Hash>] The list of path elements
     # @return [Hash] The representation of the draw element object.
     def arrayofpathelements=(pathElements)
@@ -834,12 +840,13 @@ module MovingImages
       @elementHash[:arrayofpathelements] = arrayOfPathElements
     end
 
-    # Set the start point for the start of the array of path elements.
+    # Set the start point for the start of the array of path elements.    
     # @param startPoint [Hash] The initial point for creating the path.
     def startpoint=(startPoint)
       @elementHash[:startpoint] = startPoint
     end
 
+    # Set locations along a line and the colors at those locations.    
     # The two arrays need to be the same length. The locations is an array
     # of positions along the gradient line at which the colors are defined. The
     # gradient fill interpolates the color between each defined point along the
@@ -861,7 +868,8 @@ module MovingImages
 
 
   # Objects of the draw basic string element class contain the information
-  # needed to draw text in a context. Required properties are the text, and the 
+  # needed to draw text in a context.    
+  # Required properties are the text, and the 
   # point where to draw the text. The font to use to draw the text and the text
   # size can either be defined by setting the postscript font name and font
   # size, or by setting the user interface font. There are a number of optional
@@ -880,8 +888,9 @@ module MovingImages
       @elementHash[:stringtext] = textToDraw
     end
 
-    # Set the bottom left position of where the text is to be drawn. Required.
-    # If for example the array of path elements contains a single rectangle
+    # Set the bottom left position of where the text is to be drawn.     
+    # Required even if for example the array of path elements contains a single
+    # rectangle 
     # element within which to contain the text, then this point will be ignored.
     # If the array of path elements starts with a line or curve then this point
     # will be used as the starting point for the path.
@@ -891,7 +900,7 @@ module MovingImages
       @elementHash[:point] = drawPoint
     end
 
-    # Set the postscript name of the font you want to use to draw the text.
+    # Set the postscript name of the font you want to use to draw the text.    
     # Also clear any reference to a user interface font.
     # @param postscriptFontName [String] The postscript name of the font to use
     # @return [Hash] The representation of the draw string command
@@ -900,7 +909,8 @@ module MovingImages
       @elementHash.delete(:userinterfacefont)
     end
 
-    # Set the user interface to draw the text with. A user interface font also
+    # Set the user interface to draw the text with.    
+    # A user interface font also
     # defines a font size, but this can be over riden by setting the font size.
     # Use {MIMeta.listuserinterfacefonts} to get user interface font list
     # @param userInterfaceFont [String] The user interface font to draw the text
@@ -910,7 +920,8 @@ module MovingImages
       @elementHash.delete(:postscriptfontname)
     end
 
-    # Set the font size to use to draw the text. A required option if drawing
+    # Set the font size to use to draw the text.    
+    # A required option if drawing
     # text using a post script font name, or an optional property if drawing
     # the text using a user interface font.
     # @param fontSize [Float, #to_f] The user interface font to draw the text
@@ -919,14 +930,14 @@ module MovingImages
       @elementHash[:fontsize] = fontSize.to_f
     end
 
-    # Set the color for drawing the text
+    # Set the color for drawing the text.    
     # @param fillColor [Hash] The color to draw text with created with {MIColor}
     # @return [Hash] The representation of the draw string command
     def fillcolor=(fillColor)
       @elementHash[:fillcolor] = fillColor
     end
 
-    # Set the path within which the text will be drawn.
+    # Set the path within which the text will be drawn.    
     # @param pathElements [Array<Hash>, #patharray] Array of path elements.
     #   See {MIPath}
     # @return [Hash] The representation of the draw string command
@@ -938,7 +949,7 @@ module MovingImages
       @elementHash[:arrayofpathelements] = arrayOfPathElements
     end
 
-    # Set the text alignment when drawing the text
+    # Set the text alignment when drawing the text.    
     # possible values are: kCTTextAlignmentLeft, kCTTextAlignmentRight,
     # kCTTextAlignmentCenter, kCTTextAlignmentJustified, kCTTextAlignmentNatural
     # @param textAlignment [String] Alignment. Default "kCTTextAlignmentNatural"
@@ -947,14 +958,14 @@ module MovingImages
       @elementHash[:textalignment] = textAlignment
     end
 
-    # Set the stroke color for stroking text.
+    # Set the stroke color for stroking text.    
     # @param strokeColor [Hash] The color to stroke text with, see {MIColor}
     # @return [Hash] The representation of the draw string command
     def strokecolor=(strokeColor)
       @elementHash[:strokecolor] = strokeColor
     end
 
-    # Set stroke width.
+    # Set stroke width.    
     # If this property is not set then text will be drawn with the fill color
     # If this property is set with a positive value then text will be stroked
     # using the stroke color and not filled. If this property is set with a
@@ -969,7 +980,8 @@ module MovingImages
   end
 
   # Objects of the draw image element class contain the information needed to
-  # draw an image into a context. Required info is the image source and
+  # draw an image into a context.    
+  # Required info is the image source and
   # the destination rectangle. Options info is the source image, blend mode,
   # and interpolation quality.
   class MIDrawImageElement < MIAbstractDrawElement
@@ -980,7 +992,7 @@ module MovingImages
     end
 
     # Set the object from which to source the image and optionally provide 
-    # an image index.
+    # an image index.    
     # @param source_object [Hash] The source object, see {SmigIDHash} methods
     # @param imageindex [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
@@ -991,7 +1003,7 @@ module MovingImages
     end
 
     # Set the destination rectangle within  coordinate system of the context's
-    # current transformation where the image will be drawn
+    # current transformation where the image will be drawn.    
     # @param destRect [Hash] A rectangle created using {MIShapes.make_rectangle}
     # @return [Hash] The representation of the draw image command
     def destinationrectangle=(destRect)
@@ -999,14 +1011,15 @@ module MovingImages
     end
 
     # Set the source rectangle within the frame of the source image within which
-    # to crop the source image.
+    # to crop the source image.    
     # @param sourceRect [Hash] A rectangle see {MIShapes.make_rectangle}
     # @return [Hash] The representation of the draw image command
     def sourcerectangle=(sourceRect)
       @elementHash[:sourcerectangle] = sourceRect
     end
 
-    # Set the interpolation quality option, will be used when drawing the image
+    # Set the interpolation quality option.    
+    # Will be used when drawing the image 
     # is not a straight one to one mapping, when the transform is not an
     # identity transform.
     # See {MIDrawImageElement.listofinterpolationqualityoptions} for 
@@ -1019,7 +1032,7 @@ module MovingImages
 
     # Class method
 
-    # Return the list of interpolation quality strings.
+    # Return the list of interpolation quality strings.    
     # @return [Array<String>] A list of interpolation quality strings.
     def self.listofinterpolationqualityoptions
       return ['kCGInterpolationDefault', 'kCGInterpolationNone',

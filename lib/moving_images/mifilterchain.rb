@@ -1,12 +1,13 @@
 
 module MovingImages
 
-  # == The MIFilterProperty module is used for making filter properties    
+  # The MIFilterProperty module is used for making filter properties    
   # Once a filter property is created, it will be added to a list of properties
   # which is part of the definition of a {MIFilter} in a {MIFilterChain}.
   module MIFilterProperty
     # Make an image property, with an optional value which is the source of 
-    # the input image. The key will most often be "inputImage", but
+    # the input image.    
+    # The key will most often be "inputImage", but
     # can also have values like "backgroundImage".
     # @param key [String] The filter property key used to assign the image.
     # @param value [Hash] The object to get the image from. See {SmigIDHash}
@@ -17,7 +18,7 @@ module MovingImages
       imageHash
     end
 
-    # Add the object to the property hash which provides the image
+    # Add the object to the property hash which provides the image.    
     # @param ciProperty [Hash] The filter property to be assigned the image.
     # @param imageSource [Hash] The object to get image from. See {SmigIDHash}
     # @return [Hash] The filter property image hash.
@@ -26,7 +27,7 @@ module MovingImages
       return ciProperty
     end
 
-    # Make a core image vector property, taking a string representing the vector
+    # Make a core image vector property, taking a string representation.    
     # @param key [String] The filter property to be assigned the vector.
     # @param value [String] A string representing the vector.
     # @return [Hash] The vector filter property hash.
@@ -36,7 +37,7 @@ module MovingImages
                 :cifiltervalueclass => "CIVector" }
     end
 
-    # Make a core image vector property, taking an array of Floats.
+    # Make a core image vector property, taking an array of Floats.    
     # @param key [String] The filter property key used to assign the vector.
     # @param value [Array<Float>] 
     # @return [Hash] The vector filter property hash.
@@ -49,7 +50,7 @@ module MovingImages
     end
 
     # Make a core image color property, taking a string representation of the 
-    # color    
+    # color.    
     # The color needs to be a rgb color with alpha in kCGColorSpaceGenericRGB
     # color space.
     # @param key [String] The filter property to be assigned the color
@@ -61,7 +62,7 @@ module MovingImages
                 :cifiltervalueclass => "CIColor" }
     end
 
-    # Make a core image color property, taking an array of color components.
+    # Make a core image color property, taking an array of color components.    
     # The array order is: [ red, green, blue, alpha ] and the color needs to be
     # defined with the profile kCGColorSpaceGenericRGB
     # @param key [String] The filter property to be assigned the color value.
@@ -81,7 +82,7 @@ module MovingImages
       return self.make_cicolorproperty_fromstring(key: key, value: stringVal)
     end
 
-    # Make a core image color property, taking a color hash, see {MIColor}
+    # Make a core image color property, taking a color hash see {MIColor}.    
     # Because the profile is specified, when the color is converted to a core 
     # image color it will be converted to a color with a profile: 
     # "kCGColorSpaceGenericRGB" before the filter property is assigned to
@@ -96,7 +97,7 @@ module MovingImages
                   :cifiltervalueclass => "CIColor" }
     end
 
-    # Make a number property
+    # Make a number property.    
     # @param key [String] The filter property to be assigned the numeric value.
     # @param value [Float] The numeric value to be assigned.
     # @return [Hash] The core image numeric property hash.
@@ -104,7 +105,7 @@ module MovingImages
       return { :cifilterkey => key, :cifiltervalue => value }
     end
 
-    # Make a number property with a min-max range and a default value
+    # Make a number property with a min-max range and a default value.    
     # @param key [String] The filter property to be assigned the numeric value.
     # @param min [Float, Fixnum] The min value to be assigned to the property.
     # @param max [Float, Fixnum] The max value to be assigned to the property.
@@ -118,8 +119,8 @@ module MovingImages
                 :min => min, :default => default }
     end
 
-    # Assign a integer value to an already created filter property
-    # Constrain the the value to be assigned to within the min/max range if
+    # Assign a integer value to an already created filter property.    
+    # Constrain the value to be assigned to within the min/max range if
     # those values exist in the filter property hash.
     # @param numberProperty [Hash] The property to assign the property value to.
     # @param theVal [Integer, #to_i] The integer value to be assigned.
@@ -137,8 +138,8 @@ module MovingImages
       numberProperty
     end
 
-    # Assign a float value to an already created filter property
-    # Constrain the the value to be assigned to within the min/max range if
+    # Assign a float value to an already created filter property.    
+    # Constrain the value to be assigned to within the min/max range if
     # those values exist in the filter property hash.
     # @param numberProperty [Hash] The property to assign the property value to.
     # @param theVal [Float, #to_f] The float value to be assigned.
@@ -156,7 +157,7 @@ module MovingImages
       numberProperty
     end
 
-    # Make an affine transform filter property.
+    # Make an affine transform filter property.    
     # @param key [String] Filter property to be assigned the affine transfor
     # @param m11 [Float] The value for the m11 component of the affine transform
     # @param m12 [Float] The value for the m12 component of the affine transform
@@ -179,16 +180,16 @@ module MovingImages
     end
   end
 
-  # ==The MIFilter class
+  # The MIFilter class.    
   # A filter is made up of a filter name which is the core image name for the
   # filter to be created, an optional name id, which is used to identify the 
   # filter so that it can be linked to from later filters in the filter chain.
   # Filters also take a list of input properties. Different filters take 
   # different inputs.
   class MIFilter
-    # Initialize a filter object with the filter name and a name identifier
-    # @param filter [String, Symbol] The core image filter name.
-    # @param identifier [String] The name of this filter for identification.
+    # Initialize a filter object with the filter name and a name identifier.    
+    # @param filter [String, Symbol] The core image filter name
+    # @param identifier [String] The name of this filter for identification
     def initialize(filter, identifier: nil)
       @filter_hash = { cifiltername: filter }
       @filter_hash[:mifiltername] = identifier unless identifier.nil?
@@ -200,8 +201,8 @@ module MovingImages
       @filter_hash
     end
 
-    # Add a property to the filters list of input properties
-    # @param filter_property [Hash] Representation of the filter property.
+    # Add a property to the filters list of input properties.    
+    # @param filter_property [Hash] Representation of the filter property
     # @return void
     def add_property(filter_property)
       if @filter_hash[:cifilterproperties].nil?
@@ -211,8 +212,8 @@ module MovingImages
       end
     end
 
-    # Add a list of properties to the filters list of input properties
-    # @param filter_properties [Array<Hash>] Array of filter property hashes.
+    # Add a list of properties to the filters list of input properties.    
+    # @param filter_properties [Array<Hash>] Array of filter property hashes
     # @return void
     def add_properties(filter_properties)
       if @filter_hash[:cifilterproperties].nil?
@@ -227,15 +228,15 @@ module MovingImages
       @filter_hash.delete(:cifilterproperties)
     end
 
-    # Replace any previously assigned filter properties
+    # Replace any previously assigned filter properties.    
     # @param filter_properties [Array<Hash>] List of filter property hashes
     # @return void
-    def set_properties(filter_properties)
+    def properties=(filter_properties)
       @filter_hash[:cifilterproperties] = filter_properties
     end
   end
 
-  # ==The filter chain, representing a list of connected filters
+  # The filter chain, representing a list of connected filters.    
   # A filter chain can be as short as a single filter, or lengthy including
   # containing multiple branches which ultimately end at the last filter in the
   # filter chain which generates the output image. The filter chain object
@@ -246,7 +247,7 @@ module MovingImages
   # generic linear color space which is its default.
   class MIFilterChain
 
-    # Initialize the filter chain object
+    # Initialize the filter chain object.    
     # @param renderDestination [Hash] Destination object {SmigIDHash}
     # @param filterList [Array<Hash>] optional list of filters in filter chain
     # @return [MIFilterChain]
@@ -256,7 +257,7 @@ module MovingImages
       @filterChainHash[:cifilterlist] = filterList unless filterList.nil?
     end
 
-    # Add a filter definition to the filter chain
+    # Add a filter definition to the filter chain.    
     # @param filter [Hash, #filterhash] Filter to add to the filter chain
     # @return [Hash] The filter chain hash
     def add_filter(filter)
@@ -269,7 +270,7 @@ module MovingImages
       return @filterChainHash
     end
 
-    # Specify whether the filter chain should be rendered in software
+    # Specify whether the filter chain should be rendered in software.    
     # @param softwareRender [bool] Should filter chain be rendered in software
     # @return [Hash] The filter chain hash
     def softwarerender=(softwareRender)
@@ -277,7 +278,7 @@ module MovingImages
       @filterChainHash
     end
 
-    # Should the filter chain be rendered in the sRGB color space
+    # Should the filter chain be rendered in the sRGB color space.    
     # By default the filter chain is rendered in the generic linear rgb color
     # space. By setting this option, your specifying that the filter chain 
     # should be rendered in the sRGB color space instead.
@@ -288,26 +289,26 @@ module MovingImages
       @filterChainHash
     end
 
-    # Get the filter chain hash.
+    # Get the filter chain hash.    
     # @return [Hash] The filter chain hash
     def filterchainhash
       return @filterChainHash
     end
 
-    # Convert the filter chain hash to json and return the json string
-    # @return [String] The filter chain hash converted to a json string.
+    # Convert the filter chain hash to json and return the json string.    
+    # @return [String] The filter chain hash converted to a json string
     #def to_json
     #  return @filterChainHash.to_json
     #end
   end
 
-  # == Create a filter chain render property
+  # Create a filter chain render property.    
   # When rendering a filter chain, an optional list of render properties can
   # be provided that make it possible to modify the filter properties at
   # render time. The MIFilterRenderProperty module provides methods to create
   # render properties that are associated with filters.
   module MIFilterRenderProperty
-    # Create a filter property with a name identifier.
+    # Create a filter property with a name identifier.    
     # @param key [String] the filter property to be set.
     # @param value [String, Float, Fixnum, Hash] The value the filter property
     #   will be assigned to. CIVector and CIColor filter class can both have
@@ -325,7 +326,7 @@ module MovingImages
       return renderProp
     end
 
-    # Create a filter property with a filter index.
+    # Create a filter property with a filter index.    
     # @param key [String] the filter property to be set.
     # @param value [String, Float, Fixnum, Hash] The value the filter property
     #   will be assigned to. CIVector and CIColor filter class can both have
@@ -338,13 +339,13 @@ module MovingImages
                                                  filter_index: 1,
                                                  value_class: nil)
       renderProp =  { :cifilterkey => key, :cifiltervalue => value,
-                      :cifilterindex => filterIndex }
+                      :cifilterindex => filter_index }
       renderProp[:cifiltervalueclass] = value_class unless value_class.nil?
       return renderProp
     end
   end
 
-  # == Render the filter chain object
+  # Render the filter chain object.    
   # When rendering the filter chain, the render command can take an optional
   # render filter chain hash. The render filter chain hash takes a source 
   # rectangle which allows you to crop the output of the render filter chain, 
@@ -356,34 +357,34 @@ module MovingImages
   # the filters to be modified immediately before the filter chain is rendered.
   class MIFilterChainRender
 
-    # Assign the render hash to an empty hash object.
+    # Assign the render hash to an empty hash object.    
     def initialize()
       # The render hash that holds the configuration options for the render
       @renderHash = {}
     end
 
-    # Add a source rectangle to the render hash
+    # Add a source rectangle to the render hash.    
     # @param sourceRect [Hash] A hash representing a rectangle
     # @return [Hash] the render hash
     def sourcerectangle=(sourceRect)
       @renderHash[:sourcerectangle] = sourceRect
     end
 
-    # Add a destination rectangle to the render hash
+    # Add a destination rectangle to the render hash.    
     # @param destinationRect [Hash] A hash representing a rectangle
     # @return [Hash] the render hash
     def destinationrectangle=(destinationRect)
       @renderHash[:destinationrectangle] = destinationRect
     end
 
-    # Set a list of filter properties to the render hash
+    # Set a list of filter properties to the render hash.    
     # @param renderFilterProperties [Array<Hash>] The filter properties.
     # @return [Hash] the render hash.
     def filterproperties=(renderFilterProperties)
       @renderHash[:cifilterproperties] = renderFilterProperties
     end
 
-    # Add a filter property to the list of properties in the render hash
+    # Add a filter property to the list of properties in the render hash.    
     # @param renderFilterProperty [Hash] The property to be added to the list.
     # @return [Array] the list of properties that the property has been added to
     def add_filterproperty(renderFilterProperty)
@@ -394,7 +395,7 @@ module MovingImages
       end
     end
 
-    # Set the render filter chain variables
+    # Set the render filter chain variables.    
     # @param theVariables [Hash] The variables
     def variables=(theVariables)
       @renderHash[:variables] = theVariables
@@ -406,8 +407,8 @@ module MovingImages
       return @renderHash
     end
 
-    # Convert the render filter chain object to json.
-    # @return [String] A string representing a json object.
+    # Convert the render filter chain object to json.    
+    # @return [String] A string representing a json object
     def to_json()
       return @renderHash.to_json
     end

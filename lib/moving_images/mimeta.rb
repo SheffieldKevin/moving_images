@@ -3,8 +3,8 @@
 
 module MovingImages
 
-  # == MILAMeta - information about MovingImages LaunchAgent.
-  # Get and set the LaunchAgent's idle time.
+  # MILAMeta - information about MovingImages LaunchAgent.    
+  # Get version numbers and get and set the LaunchAgent's idle time.
   module MILAMeta
     # The command line tool to be called.
     Smig = "smig"
@@ -44,11 +44,11 @@ module MovingImages
     # contains no base objects.
     # @return [Fixnum] The time in seconds.
     def self.idletime
-      resultStr, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
+      result, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
                                         "idletime")
       self.raiseexception_unlesstatuszero(method: "MIMeta.idletime",
-                                      status: exitVal, result: resultStr)
-      return resultStr.to_i
+                                      status: exitVal, result: result)
+      return result.to_i
     end
 
     # Sets the length of time the MovingImages Launch Agent will remain alive
@@ -62,9 +62,27 @@ module MovingImages
                                       status: exitVal, result: result)
       return result
     end
+
+    # Get the version number of the installed smig command line tool.    
+    def self.smig_version
+      result, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
+                                        "smigversion")
+      self.raiseexception_unlesstatuszero(method: "MIMeta.smig_version",
+                                      status: exitVal, result: result)
+      return result
+    end
+
+    # Get the moving images version number.
+    def self.version
+      result, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
+                                        "smigversion")
+      self.raiseexception_unlesstatuszero(method: "MIMeta.smig_version",
+                                      status: exitVal, result: result)
+      return result
+    end
   end
 
-  # == Metadata to do with MovingImages
+  # Metadata to do with MovingImages
   # Get a list of the different objects types you can create.    
   # Get lists of the commands MovingImages handles, including by class type, 
   # or object type.    
@@ -157,14 +175,14 @@ module MovingImages
                                        CloseObjectCommand, DrawElementCommand ]
     }
 
-    # Get a list of the different types of objects MovingImages can create.
+    # Get a list of the different types of objects MovingImages can create.    
     # @return [Array<Symbol>] The list of object types as ruby symbols
     def self.listobjecttypes
       return [ BitmapContextType, ImageImporterType, ImageExporterType, 
                 ImageFilterChainType, PDFContextType, WindowContextType ]
     end
 
-    # Get a list of all the commands handled by MovingImages.
+    # Get a list of all the commands handled by MovingImages.    
     # @return [Array<Symbol>] The array of commands as ruby symbols
     def self.listallcommands
       return [ GetPropertyCommand, SetPropertyCommand, GetPropertiesCommand,
@@ -175,7 +193,8 @@ module MovingImages
                RenderFilterChainCommand ]
     end
 
-    # The list of draw elements. These are values for the elementtype
+    # The list of draw elements.    
+    # These are values for the elementtype
     # key which define the type of drawing to be done.
     DrawElementList = [:arrayofelements, :fillrectangle, :strokerectangle,
                    :filloval, :strokeoval, :drawline, :drawlines,
@@ -183,13 +202,13 @@ module MovingImages
                    :fillpath, :strokepath, :fillandstrokepath,
                    :drawbasicstring, :lineargradientfill, :drawimage]
 
-    # Get the list of draw elements.
+    # Get the list of draw elements.    
     # @return [Array<Symbols>] List of draw element types.
     def self.listdrawelements
       DrawElementList
     end
 
-    # Get a list of the commands handled by classes of type.
+    # Get a list of the commands handled by classes of type.    
     # @param bytype [Symbol] The type to get list of commands from.
     # @return [Array<Symbol>] The array of commands as as ruby symbols
     def self.listclasscommands(bytype: BitmapContextType)
@@ -210,14 +229,14 @@ module MovingImages
       return CommandsForObjectsOfClasses[bytype]
     end
 
-    # Get a list of named rgb color profiles. Default kCGColorSpaceSRGB
+    # Get a list of named rgb color profiles. Default kCGColorSpaceSRGB.    
     # @return [Array<Symbol>] A list of the named rgb color profiles.
     def self.listrgbprofiles
       [:kCGColorSpaceGenericRGB, :kCGColorSpaceGenericRGBLinear,
         :kCGColorSpaceAdobeRGB1998, :kCGColorSpaceSRGB]
     end
 
-    # Get a list of named grayscale profiles. Default: kCGColorSpaceGenericGray
+    # Get a list of named grayscale profiles. Default: kCGColorSpaceGenericGray.    
     # @return [Array<Symbol>] A list of the named grayscale color profiles.
     def self.listgrayscaleprofiles
       [:kCGColorSpaceGenericGray, :kCGColorSpaceGenericGrayGamma2_2]
@@ -232,7 +251,7 @@ module MovingImages
       profiles
     end
 
-    # Get the list of filters that can be part of an image filter chain object.
+    # Get the list of filters that can be part of an image filter chain object.    
     # If no category is specified (default) then return a list of all filters.
     # Apple provides a list of categories in its developer documentation, but
     # since Apple changes its developer documentation layout this link to
@@ -248,7 +267,7 @@ module MovingImages
       return Smig.perform_commands( { :commands => [ commandHash ] } )
     end
 
-    # Get a list of the commands handled by objects of class type.
+    # Get a list of the commands handled by objects of class type.    
     # @param filtername [String] The type to get list of commands from.
     # @return [String] A JSON object describing the filter attributes
     def self.filterattributes(filtername: "CIBoxBlur")
@@ -259,35 +278,35 @@ module MovingImages
       return Smig.perform_commands( { :commands => [ commandHash ] } )
     end
 
-    # Get the list of presets that can be used to create a bitmap context.
+    # Get the list of presets that can be used to create a bitmap context.    
     # @return [String] A space delimited string with the list of presets.
     def self.listpresets
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                         property: :presets)
     end
 
-    # Get the list of blend modes for drawing into a context.
+    # Get the list of blend modes for drawing into a context.    
     # @return [String] A space delimited string with the list of blend modes.
     def self.listcgblendmodes
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                           property: "blendmodes")
     end
 
-    # Get the list of the available user interface fonts.
+    # Get the list of the available user interface fonts.    
     # @return [String] A space delimited string of user interface fonts
     def self.listuserinterfacefonts
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
                                          property: "userinterfacefonts")
     end
     
-    # Get the list of available image file exporter types
+    # Get the list of available image file exporter types.    
     # @return [String] A space delimited string of export uti file types
     def self.listimageexporttypes
       return Smig.get_classtypeproperty(objecttype: ImageExporterType,
                                         property: :imageexporttypes)
     end
 
-    # Get the list of available image file importer types
+    # Get the list of available image file importer types.    
     # @return [String] A space delimited string of import uti file types
     def self.listimageimporttypes
       return Smig.get_classtypeproperty(objecttype: ImageImporterType,

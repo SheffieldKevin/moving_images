@@ -1,6 +1,6 @@
 
 module MovingImages
-  # == Making Ruby hashes that identify MovingImage's objects and filters    
+  # Making Ruby hashes that identify MovingImage's objects and filters.    
   # The three methods, makeid_withobjectreference, makeid_withobjectypeandname,
   # & makeid_withfilternameid create a ruby hash that identifies a base object.
   # The hash objects are used for identifying an object for when we want to
@@ -13,7 +13,7 @@ module MovingImages
   # image can be used as an input image for another filter in the same filter
   # filter chain.
   module SmigIDHash
-    # Makes an object identifier using named paramters.
+    # Makes an object identifier using named paramters.    
     # Since there is a preferred order to identify objects, this method tries to
     # create an object identifier in the preferred order based on which named
     # parameters have been assigned values that are not nil. If a required
@@ -54,14 +54,14 @@ module MovingImages
       objectid
     end
 
-    # Make a filter identifier for a filter in a filter chain.
+    # Make a filter identifier for a filter in a filter chain.    
     # @param filtername_id [String] The name of the filter in the filter chain.
     # @return [Hash] A ruby hash identifying a filter in a filter chain.
     def self.makeid_withfilternameid(filtername_id)
       return { :mifiltername => filtername_id }
     end
 
-    # Make a filter identifier for a filter in a filter chain.
+    # Make a filter identifier for a filter in a filter chain.    
     # @param filterIndex [Fixnum] The index of the filter in the filter chain.
     # @return [Hash] A ruby hash identifying a filter in a filter chain.
     def self.makeid_withfilterindex(filterIndex)

@@ -7,7 +7,7 @@ require 'securerandom'
 
 module MovingImages
 
-  # ==The Smig module is used for sending commands using "smig" to MovingImages
+  # The Smig module is used for sending commands using "smig" to MovingImages.    
   # The perform_commands method will raise an exception and set the module
   # properties @@exitvalue, and @@exitstring if smig returns an error.
   # The no throw version of the perform_command method ignores the return value
@@ -37,7 +37,7 @@ module MovingImages
 
     public
 
-    # Get exit value from the last perform_commands method run
+    # Get exit value from the last perform_commands method run.
     # @return [Fixnum] The error code. A value of 0 indicates no error.
     def self.exitvalue
       return @@exitvalue
@@ -49,7 +49,7 @@ module MovingImages
       return @@exitstring
     end
 
-    # Perform MovingImages commands one at a time
+    # Perform MovingImages commands one at a time.    
     # This method unwraps the commands and performs each command individually.
     # Also performs the cleanup commands after the command list.
     # @param commands [Hash] A ruby hash contain the list of commands to run.
@@ -120,7 +120,7 @@ module MovingImages
             FileUtils.rm_f(full_path)
           end
         else
-          result, exit_value = Open3.capture2(Smig, 'performcommand',
+          result, exit_val = Open3.capture2(Smig, 'performcommand',
                                         '-jsonstring', jsonstring)
         end
       end
@@ -134,14 +134,14 @@ module MovingImages
       return result
     end
 
-    # Perform MovingImages commands
+    # Perform MovingImages commands.    
     # If an error occurs then then an exception is raised
     # @param commands [Hash] A ruby hash containing the list of commands to run
     # @param debug [bool] Run the commands through self.perform_debugcommands.
     # @return [String] The result from running the commands
     def self.perform_commands(commands, debug: false)
       commands = commands.commandshash if commands.respond_to? "commandshash"
-      fail "commands not a commandshash" unless commands.kind_of?(Hash)
+      fail "commands not a commandshash" unless commands.is_a?(Hash)
 
       return self.perform_debugcommands(commands) if debug
       jsonstring = commands.to_json
@@ -166,7 +166,7 @@ module MovingImages
       return result
     end
 
-    # Perform MovingImages commands and return how long the commands took to run
+    # Perform MovingImages commands and return how long they took to run.    
     # @param commands [Hash, #commandshash] The commands to be run
     # @param debug [bool] Should the commands be run one after the other.
     # @return [Float] The time in seconds the commands took to run.
@@ -176,7 +176,7 @@ module MovingImages
       Time.now - oldTime
     end
 
-    # Perform a single MovingImages command
+    # Perform a single MovingImages command.    
     # @param theCommand [Hash, #commandhash] The command to be performed
     # @return [String] The output from running the command
     def self.perform_command(theCommand)
@@ -188,7 +188,7 @@ module MovingImages
       self.perform_commands(commandWrapper)
     end
 
-    # Perform a single MovingImages command and don't throw if an error occurs
+    # Perform a single MovingImages command and don't throw if an error occurs.    
     # @param theCommand [Hash, #commandhash] The command to be performed
     # @return [String] The output from running the command
     def self.perform_command_nothrow(theCommand)
@@ -201,9 +201,9 @@ module MovingImages
       return result
     end
 
-    # Perform MovingImages commands without raising an exception
-    # @param commands [Hash, #commandshash] The commands to run.
-    # @return [String] The result from running the commands.
+    # Perform MovingImages commands without raising an exception.
+    # @param commands [Hash, #commandshash] The commands to run
+    # @return [String] The result from running the commands
     def self.perform_commands_nothrow(commands)
       if commands.respond_to? "commandshash"
         commands = commands.commandshash
@@ -213,12 +213,12 @@ module MovingImages
       return result
     end
 
-    # Get the number of MovingImages base objects    
+    # Get the number of MovingImages base objects.    
     # If objecttype is nil, then get the count of all the base objects, 
     # otherwise objecttype is the base object class type which we want to
     # the how many objects of that type there are.
     # @param objecttype [String, Symbol, nil] 
-    # @return [Fixnum] The number of base objects.
+    # @return [Fixnum] The number of base objects
     def self.get_numberofobjects(objecttype: nil)
       commandHash = { :command => "getproperty",
                       :propertykey => "numberofobjects" }
@@ -238,7 +238,7 @@ module MovingImages
       return self.perform_commands( { :commands => [ commandHash ] } )
     end
 
-    # Get a property of an object    
+    # Get a property of an object.    
     # The optional imageindex parameter provides an option to get the property 
     # of an image at a particular image index, in for example an image importer
     # object.
@@ -271,7 +271,7 @@ module MovingImages
       self.perform_command_nothrow(close_command)
     end
 
-    # Close all MovingImages objects    
+    # Close all MovingImages objects.    
     # This is a bit dangerous, if moving images is responding to more than
     # one scripts concurrently then this command will close all the objects,
     # not just the ones related to the script running this command. If

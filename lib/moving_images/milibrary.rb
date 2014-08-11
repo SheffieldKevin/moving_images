@@ -21,7 +21,7 @@ module MovingImages
         return interp_dict[interp.to_sym]
       end
 
-      # Convert a uti image file type to a file extension.
+      # Convert a uti image file type to a file extension.    
       # @param filetype [String, Symbol] The image file type.
       # @return [String] A file extension with the dot.
       def self.get_extension_fromimagefiletype(filetype: 'public.jpeg')
@@ -71,7 +71,7 @@ module MovingImages
       end
 
       # Save the metadata about an image from an image file as a json
-      # or plist file. Will throw on failure.
+      # or plist file. Will throw on failure.    
       # @param imagefile_path [String] Path to the file containing images
       # @param imageindex [Fixnum] The index of the image in the image file
       # @param savemetadataformat [:jsonfile, :plistfile]
@@ -93,7 +93,7 @@ module MovingImages
         smig_commands = CommandModule::SmigCommands.new
         importer_object = smig_commands.make_createimporter(imagefile_path)
         get_properties_command = CommandModule.make_get_objectproperties(
-                                    importer_object, imageindex: 0,
+                                    importer_object, imageindex: imageindex,
                                     saveresultstype: savemetadataformat,
                                     saveresultsto: savemetadatato)
         smig_commands.add_command(get_properties_command)
@@ -101,7 +101,7 @@ module MovingImages
       end
     end
 
-    # Scale images using the lanczos CoreImage filter    
+    # Scale images using the lanczos CoreImage filter.    
     # Assumes all input images have the same dimensions
     # @param theOpts [Hash] Configuring options for scaling images
     # @param fileList [Array] List of paths to scale
@@ -242,7 +242,7 @@ module MovingImages
       Smig.perform_commands(theCommands)
     end
 
-    # Scale images using CoreGraphics transformations    
+    # Scale images using CoreGraphics transformations.    
     # Assumes all input images have the same dimensions
     # @param theOpts [Hash] Configuring options for scaling images
     # @param fileList [Array] List of paths to scale
@@ -350,7 +350,7 @@ module MovingImages
       Smig.perform_commands(theCommands)
     end # #scale_files_usequartz
     
-    # Scale images transformations    
+    # Scale images transformations.    
     # Assumes all input images have the same dimensions. Will pass the work
     # to one of two scripts depending on two of the attributes of the
     # theOpts hash. If :async is false and :interpqual is missing or set to

@@ -55,8 +55,8 @@ module MovingImages
     # before the agent will exit.
     # @param idletime [Fixnum] Time in seconds (1..900) (1 sec to 15 mins)
     # @return [Fixnum] The time actually set
-    def self.idletime=(idletime: 10)
-      result, exitVal = Open3.captures(smig, "setproperty", "-property", 
+    def self.idletime=(idletime = 10)
+      result, exitVal = Open3.capture2(Smig, "setproperty", "-property", 
                                         "idletime", idletime.to_s)
       self.raiseexception_unlesstatuszero(method: "MIMeta.idletime",
                                       status: exitVal, result: result)
@@ -67,7 +67,7 @@ module MovingImages
     def self.smig_version
       result, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
                                         "smigversion")
-      self.raiseexception_unlesstatuszero(method: "MIMeta.smig_version",
+      self.raiseexception_unlesstatuszero(method: "MILAMeta.smig_version",
                                       status: exitVal, result: result)
       return result
     end
@@ -75,8 +75,8 @@ module MovingImages
     # Get the moving images version number.
     def self.version
       result, exitVal = Open3.capture2(Smig, "getproperty", "-property", 
-                                        "smigversion")
-      self.raiseexception_unlesstatuszero(method: "MIMeta.smig_version",
+                                        "version")
+      self.raiseexception_unlesstatuszero(method: "MILAMeta.smig_version",
                                       status: exitVal, result: result)
       return result
     end

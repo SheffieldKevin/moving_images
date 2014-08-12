@@ -7,13 +7,18 @@
 LICENSE.txt
 
 ./markdown/AsynchronousCommands
+./markdown/BaseObjectTypesAndPresets
 ./markdown/Contents
 ./markdown/CreatingObjects
 ./markdown/Drawing
+./markdown/DrawingCommandsProperties
 ./markdown/home
 ./markdown/ImageFilterChains
 ./markdown/ImageMetadata
 ./markdown/Introduction
 ./markdown/JSONandPropertyLists
+./markdown/JSONCommandsPropertyKeysAndValues
+./markdown/MIFilterChainJSONKeys
+./markdown/MovingImagesLaunchAgentMeta
 ./markdown/PlayingWithObjects
 ./markdown/Scripts

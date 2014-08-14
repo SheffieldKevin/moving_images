@@ -11,10 +11,14 @@ module MovingImages
     # can also have values like "backgroundImage".
     # @param key [String] The filter property key used to assign the image.
     # @param value [Hash] The object to get the image from. See {SmigIDHash}
+    # @param keep_static [Bool, nil] Keep the image even if it changes.
     # @return [Hash] The filter property image hash.
-    def self.make_ciimageproperty(key: :inputImage, value: nil)
+    def self.make_ciimageproperty(key: :inputImage,
+                                  value: nil,
+                                  keep_static: nil)
       imageHash = { :cifilterkey => key, :cifiltervalueclass => :CIImage }
       imageHash[:cifiltervalue] = value unless value.nil?
+      imageHash[:cisourceimagekeepstatic] = keep_static unless keep_static.nil?
       imageHash
     end
 
@@ -316,7 +320,7 @@ module MovingImages
     # @param filtername_id [String] Identifier for filter in filter chain.
     # @param value_class [String, nil] The CoreImage class name to assign
     # @return [Hash] The created render property.
-    def self.make_renderproperty_withfilternameid(key: "inputLevel",
+    def self.make_renderproperty_withfilternameid(key: :inputLevel,
                                                   value: 10.0,
                                                   filtername_id: "blurfilter",
                                                   value_class: nil)
@@ -334,7 +338,7 @@ module MovingImages
     # @param filter_index [Fixnum] The filter index in the filter chain.
     # @param value_class [String, nil] The CoreImage class name to assign
     # @return [Hash] The created render property.
-    def self.make_renderproperty_withfilterindex(key: "inputRadius",
+    def self.make_renderproperty_withfilterindex(key: :inputRadius,
                                                  value: 100.0,
                                                  filter_index: 1,
                                                  value_class: nil)
@@ -342,6 +346,50 @@ module MovingImages
                       :cifilterindex => filter_index }
       renderProp[:cifiltervalueclass] = value_class unless value_class.nil?
       return renderProp
+    end
+
+    # Make a keep image, image filter chain render property.    
+    # If keep_static is true then once the input image for the filter is
+    # obtained for the first time, then that image will not be replaced even
+    # if the source providing the image has changed. False which is the
+    # default means that if the source image has changed then a new image
+    # will be requested when the filter chain renders. This changes the
+    # behaviour for any future filter chain renders until next time the
+    # keep image property is changed.    
+    # One of filtername_id or filter_index needs to be set for the filter
+    # to have a property modified to be identified.
+    # @param key [String, Symbol] The image filter property to be modified
+    # @param filtername_id [String, nil] The name identifier of the filter
+    # @param filter_index [Fixnum] The index into the filter chain.
+    # @param keep_static [bool] The 
+    def self.make_renderproperty_keepimage_static(key: :inputImage,
+                                                  filtername_id: nil,
+                                                  filter_index: nil,
+                                                  keep_static: false)
+      render_prop = { cifilterkey: key,
+                      cisourceimagekeepstatic: keep_static }
+      render_prop[:cifilterindex] = filter_index unless filter_index.nil?
+      render_prop[:mifiltername] = filtername_id unless filtername_id.nil?
+      render_prop
+    end
+
+    # Make a force the image to be updated no matter what property.    
+    # When this property is added to the list of render properties, then
+    # the image it refers to will be updated before the filter chain renders.
+    # 
+    # One of filtername_id or filter_index needs to be set for the filter
+    # to have a property modified to be identified.
+    # @param key [String, Symbol] The image filter property to be modified
+    # @param filtername_id [String, nil] The name identifier of the filter
+    # @param filter_index [Fixnum] The index into the filter chain.
+    def self.make_renderproperty_updateimage_now(key: :inputImage,
+                                                 filtername_id: nil,
+                                                 file_index: nil)
+      render_prop = { cifilterkey: key,
+                      cisourceimageforceupdate: true }
+      render_prop[:cifilterindex] = filter_index unless filter_index.nil?
+      render_prop[:mifiltername] = filtername_id unless filtername_id.nil?
+      render_prop
     end
   end
 

@@ -535,7 +535,7 @@ module MovingImages
       theCommand
     end
 
-    # == Manages a list of commands, and lets you configure how commands are run    
+    # Manages a list of commands, and lets you configure how commands are run.    
     # The @commandsHash contains a list of commands to be run, options as
     # to how the commands will be run, plus a list of cleanup commands. The
     # cleanup commands are run whether the main command successfully completed 

@@ -887,24 +887,6 @@ module MovingImages
       { :objectreference => result.to_i }
     end
 
-    # Close an object. Will throw if an error occurs closing the object.
-    # @param theObject [Hash] A reference to the object to close.
-    # @return [void]
-    def self.close_object(theObject)
-      closeCommand = CommandModule.make_close(theObject)
-      Smig.perform_command(closeCommand)
-    end
-
-    # Close an object and don't throw or report any error.    
-    # @param theObject [Hash] A reference to the object to close
-    # @return [void]
-    def self.close_object_nothrow(theObject)
-      closeCommand = CommandModule.make_close(theObject)
-      commands = { :commands => [ closeCommand.commandhash ] }
-      Smig.perform_commands_nothrow(commands)
-      nil
-    end
-
     # Draw an image in a image file to the destination.    
     # @param destination [Hash] Destination object, bitmap or window context.
     # @param destinationrect [Hash] Where to draw. {MIShapes.make_rectangle}

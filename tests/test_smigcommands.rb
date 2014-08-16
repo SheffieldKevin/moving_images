@@ -89,6 +89,7 @@ class TestObjectCommands < MiniTest::Unit::TestCase
   end
   # This is no way complete
   
+  # Test the making of the addimage command.
   def test_make_addimagecommand
     exporter_object = { objecttype: :imageexporter,
                         objectname: 'exporter.object' }
@@ -117,6 +118,7 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
   end
   
+  # Test the get properties commands.
   def test_make_getpropertiescommand
     object = SmigIDHash.make_objectid(objecttype: :imageimporter,
                                       objectname: 'test.importer.object')

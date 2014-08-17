@@ -83,7 +83,7 @@ module MovingImages
     # be returned.
     # @param filetype [String, Symbol, nil] The image file type
     # @param onlyin [String, nil] Path to directory to find files in
-    # @return [Array<Hash[Array]>] An array of hashes.
+    # @return [Array<Hash>] Array of hashes with keys: :width, :height, :files
     def self.collect_imagefiles_bydimension(filetype: nil, onlyin: nil)
       start_time = Time.now
       the_files = self.find_imagefiles(filetype: filetype, onlyin: onlyin)
@@ -141,7 +141,7 @@ module MovingImages
     # Find image files using spotlight which have specific pixel dimensions, and 
     # a particular file type, with an option to limit the search to be within a
     # directory. To allow any image file type specify "public.image" for 
-    # fileType instead of a value like "public.jpeg". The returned hash contains
+    # filetype instead of a value like "public.jpeg". The returned hash contains
     # three attributes, a :width and :height attribute plus a :files attribute. 
     # The files attribute value is an array of file paths.
     # @param width [Fixnum] The width of the image

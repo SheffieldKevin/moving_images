@@ -53,7 +53,6 @@ module MovingImages
       return contentTypeQueryPart
     end
 
-
     # essentially a private module method, though I've not found a nice solution
     # to hide private methods
     def self.runquerycommand(theCommand)
@@ -63,6 +62,82 @@ module MovingImages
       return theOutput
     end
 
+    # Find image files with optional file type in an optional directory.    
+    # If no file type is specified then images belonging to all file types will
+    # be returned.
+    # @param filetype [String, Symbol, nil] The image file type
+    # @param onlyin [String, nil] Path to directory to find files in
+    # @return [Array<String>] An array of paths to image files
+    def self.find_imagefiles(filetype: nil, onlyin: nil)
+      the_command = [ "mdfind" ]
+      unless onlyin.nil?
+        onlyin = File.expand_path(onlyin)
+        the_command.push('-onlyin', onlyin)
+      end
+      the_command.push(self.make_contenttypepartofquery(filetype))
+      self.runquerycommand(the_command)
+    end
+
+    # Collect images files and organize into list of image with same dimensions.    
+    # If no file type is specified then images belonging to all file types will
+    # be returned.
+    # @param filetype [String, Symbol, nil] The image file type
+    # @param onlyin [String, nil] Path to directory to find files in
+    # @return [Array<Hash[Array]>] An array of hashes.
+    def self.collect_imagefiles_bydimension(filetype: nil, onlyin: nil)
+      start_time = Time.now
+      the_files = self.find_imagefiles(filetype: filetype, onlyin: onlyin)
+      collected_lists = []
+      the_files.each do |image_file|
+        dimensions = self.get_imagedimensions(image_file)
+        found_list = nil
+        collected_lists.each do |file_list|
+          if file_list[:width].eql?(dimensions[:width]) &&
+                                  file_list[:height].eql?(dimensions[:height])
+              found_list = file_list
+              break
+          end
+        end
+        if found_list.nil?
+          new_list = { files: [ image_file ],
+                       width: dimensions[:width],
+                      height: dimensions[:height] }
+          collected_lists.push(new_list)
+        else
+          found_list[:files].push(image_file)
+        end
+      end
+      puts "Time to process: #{Time.now - start_time}"
+      collected_lists
+    end
+
+    # Print information about the image file collections.    
+    # @param collected_images [Array<Hash>] list of list of images by dimensions
+    # @return nil
+    def self.print_infoabout_collectedimages(collected_images)
+      puts "Number of collections: #{collected_images.length}"
+      collected_images.each do |collection|
+        puts "Width: #{collection[:width]} height: #{collection[:height]} "\
+             "number of images: #{collection[:files].length}"
+      end
+      nil
+    end
+
+    # Get the list of images from the collection which have dimensions.    
+    # @param collected_images [Hash] Returned collect_imagefiles_bydimension
+    # @param dimension [Hash] The dimension to find the list of from collection
+    # @return [Hash] A hash with keys: :width :height and :files
+    def self.get_imagefilelist_fromcollection(collected_images,
+                                              dimension: {} )
+      collected_images.each do |image_list|
+        if image_list[:width].eql?(dimensions[:width]) &&
+                                  image_list[:height].eql?(dimensions[:height])
+          return image_list
+        end
+      end
+      return nil
+    end
+
     # Find image files using spotlight which have specific pixel dimensions, and 
     # a particular file type, with an option to limit the search to be within a
     # directory. To allow any image file type specify "public.image" for 
@@ -70,10 +145,10 @@ module MovingImages
     # @param width [Fixnum] The width of the image
     # @param height [Fixnum] The height of the image
     # @param filetype [String, Symbol] The image uti file type
-    # @param onlyin_dirpath [nil, String] Option directory to find files within.
+    # @param onlyin [nil, String] Option directory to find files within.
     # @return [Array<String>] An array of paths, one path per result.
-    def self.find_imagefiles(width: 800, height: 600,
-                             filetype: "public.image", onlyin_dirpath: nil)
+    def self.find_imagefiles_withdimensions(width: 800, height: 600,
+                             filetype: "public.image", onlyin: nil)
       theCommand = [ "mdfind" ]
       theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
       query = self.make_contenttypepartofquery(filetype) + " && "

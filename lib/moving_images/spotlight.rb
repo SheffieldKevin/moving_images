@@ -125,10 +125,10 @@ module MovingImages
 
     # Get the list of images from the collection which have dimensions.    
     # @param collected_images [Hash] Returned collect_imagefiles_bydimension
-    # @param dimension [Hash] The dimension to find the list of from collection
+    # @param dimensions [Hash] The dimension to find the list of from collection
     # @return [Hash] A hash with keys: :width :height and :files
     def self.get_imagefilelist_fromcollection(collected_images,
-                                              dimension: {} )
+                                              dimensions: {} )
       collected_images.each do |image_list|
         if image_list[:width].eql?(dimensions[:width]) &&
                                   image_list[:height].eql?(dimensions[:height])
@@ -141,20 +141,23 @@ module MovingImages
     # Find image files using spotlight which have specific pixel dimensions, and 
     # a particular file type, with an option to limit the search to be within a
     # directory. To allow any image file type specify "public.image" for 
-    # fileType instead of a value like "public.jpeg".
+    # fileType instead of a value like "public.jpeg". The returned hash contains
+    # three attributes, a :width and :height attribute plus a :files attribute. 
+    # The files attribute value is an array of file paths.
     # @param width [Fixnum] The width of the image
     # @param height [Fixnum] The height of the image
     # @param filetype [String, Symbol] The image uti file type
     # @param onlyin [nil, String] Option directory to find files within.
-    # @return [Array<String>] An array of paths, one path per result.
+    # @return [Hash] With keys :width, :height, :files.
     def self.find_imagefiles_withdimensions(width: 800, height: 600,
                              filetype: "public.image", onlyin: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
+      theCommand.push('-onlyin', onlyin) unless onlyin.nil?
       query = self.make_contenttypepartofquery(filetype) + " && "
       query += "kMDItemPixelWidth == #{width} && "
       query += "kMDItemPixelHeight == #{height}"
-      self.runquerycommand(theCommand.push(query))
+      file_list = self.runquerycommand(theCommand.push(query))
+      return { width: width, height: height, files: file_list }
     end
 
     # Find image files with dimensions greater than the height & width specified
@@ -164,49 +167,49 @@ module MovingImages
     # @param onlyin_dirpath [String] Option directory to find files within.
     # @return [Array<String>] A list of paths, one path per result.
     def self.find_imagefiles_largerthan(width: 800, height: 600,
-                                  fileType: "public.image", onlyin_dirpath: nil)
+                                  filetype: "public.image", onlyin: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyInDirPath) unless onlyin_dirpath.nil?
-      query = self.make_contenttypepartofquery(fileType) + " && "
+      theCommand.push('-onlyin', onlyin) unless onlyin.nil?
+      query = self.make_contenttypepartofquery(filetype) + " && "
       query += "kMDItemPixelWidth >= #{width} && "
       query += "kMDItemPixelHeight >= #{height}"
       self.runquerycommand(theCommand.push(query))
     end
 
     # Find image files created monthsAgo number of months ago.    
-    # @param monthsAgo [Fixnum] How long ago in months an image file was created
+    # @param months_ago [Fixnum] How long ago (months) an image file was created
     # @param fileType [String] Find image files with type. Default is any
-    # @param onlyin_dirpath  [String] Option directory to find files within.
+    # @param onlyin [String] Option directory to find files within.
     # @return [Array<String>] A list of path, one path per result.
-    def self.find_imagefilescreated(monthsAgo: 3, fileType: "public.image",
-                                      onlyin_dirpath: nil)
-      monthsAgo = - monthsAgo
+    def self.find_imagefilescreated(months_ago: 3, filetype: "public.image",
+                                      onlyin: nil)
+      months_ago = - months_ago
       monthsAgoP1 = monthsAgo + 1
 
-      theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
+      the_command = [ "mdfind" ]
+      the_command.push('-onlyin', onlyin) unless onlyin.nil?
 
-      query = self.make_contenttypepartofquery(fileType) + " && "
-      query += "kMDItemContentCreationDate > $time.this_month(#{(monthsAgo)})" +
+      query = self.make_contenttypepartofquery(filetype) + " && "
+      query += "kMDItemContentCreationDate > $time.this_month(#{(months_ago)})"+
         " && kMDItemContentCreationDate < $time.this_month(#{(monthsAgoP1)}))"
-      theCommand.push(query)
-      return self.runquerycommand(theCommand)
+      the_command.push(query)
+      return self.runquerycommand(the_command)
     end
 
-    # Find image files created since number of days daysAgo.    
+    # Find image files created since number of days days_ago.    
     # Unlike the months ago find files which finds files created within a month, 
     # this finds all files created since some day in the past until today using
     # spotlight.
-    # @param daysAgo [Fixnum] How long ago in months an image file was created
-    # @param fileType [String] Find image files with type. Default is any
-    # @param onlyin_dirpath  [String] Option directory to find files within
+    # @param days_ago [Fixnum] How long ago in months an image file was created
+    # @param filetype [String] Find image files with type. Default is any
+    # @param onlyin  [String] Option directory to find files within
     # @return [Array<String>] A list of path, one path per result
-    def self.find_imagefilescreatedsince(daysAgo: 20, fileType: nil, 
-                                                        onlyin_dirpath: nil)
+    def self.find_imagefilescreatedsince(days_ago: 20, filetype: nil,
+                                                                  onlyin: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyin_dirpath) unless onlyin_dirpath.nil?
-      query = self.make_contenttypepartofquery(fileType) + " && "
-      query += "kMDItemContentCreationDate >= $time.today(#{(-daysAgo)})"
+      theCommand.push('-onlyin', onlyin) unless onlyin.nil?
+      query = self.make_contenttypepartofquery(filetype) + " && "
+      query += "kMDItemContentCreationDate >= $time.today(#{(-days_ago)})"
       theCommand.push(query)
       return self.runquerycommand(theCommand)
     end

@@ -78,15 +78,12 @@ module MovingImages
       self.runquerycommand(the_command)
     end
 
-    # Collect images files and organize into list of image with same dimensions.    
-    # If no file type is specified then images belonging to all file types will
-    # be returned.
-    # @param filetype [String, Symbol, nil] The image file type
-    # @param onlyin [String, nil] Path to directory to find files in
-    # @return [Array<Hash>] Array of hashes with keys: :width, :height, :files
-    def self.collect_imagefiles_bydimension(filetype: nil, onlyin: nil)
+    # Sort a list of image files into lists of images with same dimensions.    
+    # @param the_files [Array<String>] A list of file paths to images.
+    # @return [Array<Hash>] A list of hashes containing dimensions and a list of
+    #    files containing images with those dimensions.
+    def self.sort_imagefilelist_bydimension(the_files)
       start_time = Time.now
-      the_files = self.find_imagefiles(filetype: filetype, onlyin: onlyin)
       collected_lists = []
       the_files.each do |image_file|
         dimensions = self.get_imagedimensions(image_file)
@@ -107,8 +104,19 @@ module MovingImages
           found_list[:files].push(image_file)
         end
       end
-      puts "Time to process: #{Time.now - start_time}"
-      collected_lists
+      puts "Time to sort image files into list: #{Time.now - start_time}"
+      collect_lists
+    end
+
+    # Find images files and sort them into lists of images with same dimensions.    
+    # If no file type is specified then images belonging to all file types will
+    # be returned.
+    # @param filetype [String, Symbol, nil] The image file type
+    # @param onlyin [String, nil] Path to directory to find files in
+    # @return [Array<Hash>] Array of hashes with keys: :width, :height, :files
+    def self.collect_imagefiles_bydimension(filetype: nil, onlyin: nil)
+      the_files = self.find_imagefiles(filetype: filetype, onlyin: onlyin)
+      return self.sort_imagefilelist_bydimension(the_files)
     end
 
     # Print information about the image file collections.    

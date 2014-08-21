@@ -83,9 +83,10 @@ module MovingImages
     # @return [Array<Hash>] A list of hashes containing dimensions and a list of
     #    files containing images with those dimensions.
     def self.sort_imagefilelist_bydimension(the_files)
-      start_time = Time.now
+      # start_time = Time.now
       collected_lists = []
       the_files.each do |image_file|
+        image_file = File.expand_path(image_file)
         dimensions = self.get_imagedimensions(image_file)
         found_list = nil
         collected_lists.each do |file_list|
@@ -104,8 +105,8 @@ module MovingImages
           found_list[:files].push(image_file)
         end
       end
-      puts "Time to sort image files into list: #{Time.now - start_time}"
-      collect_lists
+      # puts "Time to sort image files into list: #{Time.now - start_time}"
+      collected_lists
     end
 
     # Find images files and sort them into lists of images with same dimensions.    

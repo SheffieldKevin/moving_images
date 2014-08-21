@@ -99,6 +99,42 @@ module MovingImages
         smig_commands.add_command(get_properties_command)
         Smig.perform_commands(smig_commands)
       end
+
+      # Calculate the number of command lists to create.    
+      # The idea is to be able to distribute work asynchronously, but that there
+      # is little point until we have enough items to process to make switching
+      # to asynchronous processing effective. If numitems_forasync is left at
+      # default of 50 items, then async processing will be triggered when we
+      # have 51 items or more to process. With 51 items we will have 2 queues
+      # of 26 & 25 items. At 101 items we will have 3 queues of 34,34,33 items,
+      # at 151 items we have 4 queues etc of 38, 38, 38, 37
+      # @param item_list [Array] A list of items to be processed.
+      # @param numitems_forasync [Fixnum] The number of items for async process
+      # @return The number of lists to create
+      def self.calculate_num_commandlist(item_list, numitems_forasync = 50)
+        if item_list[:files].length < numitems_forasync
+          return 1
+        end
+        return (item_list[:files].size+numitems_forasync - 1)/numitems_forasync
+      end
+
+      # Split the input list into a list of lists
+      # @param input_list [Array] A list of objects
+      # @param num_list [Fixnum] The number of lists to split input list into.
+      # @return [Array<Array>] An array of an array of items
+      def self.splitlist(input_list, num_lists: 4)
+        listof_list_offiles = []
+        num_lists.times do |index|
+          sub_list = { files: [], width: input_list[:width],
+                       height: input_list[:height] }
+          file_list = input_list[:files]
+          file_list.each_index do |i|
+            sub_list[:files].push(file_list[i]) if (i % num_lists).eql? index
+          end
+          listof_list_offiles.push(sub_list)  
+        end
+        listof_list_offiles
+      end
     end
 
     # Scale images using the lanczos CoreImage filter.    
@@ -116,6 +152,12 @@ module MovingImages
 
       # Create the command list object that we can then add commands to.
       theCommands = CommandModule::SmigCommands.new
+
+      async = false
+      unless options[:async].nil?
+        theCommands.run_asynchronously = options[:async]
+        async = options[:async]
+      end
 
       # Use spotlight to get the image dimensions so we can calculate how
       # big the bitmap contexts need to be.
@@ -174,6 +216,11 @@ module MovingImages
       unless options[:softwarerender].nil?
         filterChain.softwarerender = options[:softwarender]
       end
+      
+      if async
+        filterChain.softwarerender = true
+      end
+
       # filterChain description has been created. Now make a create image
       # filter chain command.
       filterChainObject = theCommands.make_createimagefilterchain(
@@ -277,7 +324,7 @@ module MovingImages
       dimensions = { width: file_list[:width], height: file_list[:height] }
       if options[:exportfiletype].nil?
         # The export file type is the same as the file type of the first file.
-        firstItem = File.expand_path(fileList.first)
+        firstItem = fileList.first
         fileType = SpotlightCommand.get_imagefiletype(firstItem)
       else
         fileType = options[:exportfiletype]

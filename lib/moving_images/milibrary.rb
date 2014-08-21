@@ -135,6 +135,44 @@ module MovingImages
         end
         listof_list_offiles
       end
+
+      def self.make_imagefilelists_forprocessing(imagefilelist: [],
+                                    assume_images_have_same_dimensions: true,
+                                    maxlength_forprocessinglist: 50)
+        # First create all the collected lists, a collected list is one which
+        # is a hash with three attributes. A width and height attribute and
+        # an attribute which is a list of file paths with those dimensions.
+        image_lists = []
+        if assume_images_have_same_dimensions
+          file_path = File.expand_path(imagefilelist[0])
+          dimensions = SpotlightCommand.get_imagedimensions(file_path)
+          new_list = []
+          imagefilelist.each do |file_path|
+            new_list.push(File.expand_path(file_path))
+          end
+          image_list = { width: dimensions[:width],
+                         height: dimensions[:height],
+                         files: new_list }
+          image_lists.push(image_list)
+        else
+          image_lists = SpotlightCommand.sort_imagefilelist_bydimension(
+                                                                  imagefilelist)
+        end
+
+        # Now that the list of file paths to image files are broken up into
+        # lists of list of file paths, with each list being a collected list,
+        # we now need to break any lists down for asynchronous processing to
+        # maximize throughput.
+        processlists_ofimages = []
+        image_lists.each do |image_list|
+          num_lists = MILibrary::Utility.calculate_num_commandlist(image_list,
+                                                    maxlength_forprocessinglist)
+          new_lists = MILibrary::Utility.splitlist(image_list,
+                                                   num_lists: num_lists)
+          new_lists.each { |new_list| processlists_ofimages.push(new_list) }
+        end
+        processlists_ofimages
+      end
     end
 
     # Scale images using the lanczos CoreImage filter.    

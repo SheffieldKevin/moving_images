@@ -6,13 +6,12 @@
 # responsibility for liability. Please include the link to the documentation:
 # https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
 
-# FILE: scaleimage2
-# Scales images.
+# FILE: customcrop2
+# Crops images, each edge can be cropped by a specified amount.
 
 require 'optparse'
-require 'pp'
-
 require 'moving_images'
+require 'pp'
 
 include MovingImages
 
@@ -24,69 +23,70 @@ def verboseputs(input)
   end
 end
 
-class ScaleImageCommand
-  @@options = {}
-  #
-  # Return whether all mandatory options were included on command line
-  #
+def clamp_to_range(val, min, max)
+  if val < min
+    val = min
+  elsif val > max
+    val = max
+  end
+  return val
+end
+
+def clamp_to_min(val, min)
+  if val < min
+    val = min
+  end
+  return val
+end
+
+class CustomCropCommand
+  @@options = { }
+  
   def self.missing_mandatory_options?()
-    return (@@options[:scalex].nil? || @@options[:scaley].nil? ||
-            @@options[:outputdir].nil?)
+    return @@options[:outputdir].nil?
   end
 
   #
   # Return a hash describing the options.
   # 
   def self.parse!(theArgs)
-    @@options = MILibrary::Utility.make_scaleimages_options()
-    @@options[:scalex] = 1.0
-    @@options[:scaley] = 1.0
+    @@options = MILibrary::Utility.make_customcrop_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
-      opts.banner = "Usage: scaleimage [options] file1, file2, ..."
-      opts.separator "Assumes all input images have same dimensions."
-      opts.separator "At least one of --scale/--scalex/--scaley needs to be " +
-                      "specified. Lanczos scaling can't be used if scalex "
-      opts.separator  "and scaley are different."
+      opts.banner = "Usage: customcrop [options] file1, file2, ..."
+      
       opts.separator "If the output directory is the same as the directory " +
                      "containing the original image files, then if permissions"
-      opts.separator "allow the original images will be overwritten."
+      opts.separator "allow the original images will be overwritten. If the " +
+                     "output directory doesn't exist the " +
+                     "output directory will be created."
       opts.separator ""
       opts.separator "Options:"
 
-      opts.on("-s", "--scale [SCALE]", Float,
-              "Image scaling applied to both x and y dimensions " +
-              "of the image.") do |sc|
-        @@options[:scalex] = sc;
-        @@options[:scaley] = sc;
+      opts.on("-l", "--left [LEFT]", Integer,
+              "Crop LEFT pixels from left edge. Integer.") do |l|
+        @@options[:left] = clamp_to_min(l, 0)
       end
 
-      opts.on("-x", "--scalex [SCALEX]", Float,
-              "Image scaling applied to x dimension. Default 1.0") do |sx|
-        @@options[:scalex] = sx
+      opts.on("-r", "--right [RIGHT]", Integer,
+              "Crop RIGHT pixels from right edge. Integer") do |r|
+        @@options[:right] = clamp_to_min(r, 0)
       end
 
-      opts.on("-y", "--scaley [SCALEY]", Float,
-              "Image scaling applied to y dimension. Default 1.0") do |sy|
-        @@options[:scaley] = sy
+      opts.on("-t", "--top [TOP]", Integer,
+              "Crop TOP pixels from top edge. Integer") do |t|
+        @@options[:top] = clamp_to_min(t, 0)
+      end
+
+      opts.on("-b", "--bottom [BOTTOM]", Integer,
+            "Crop BOTTOM pixels from bottom edge. Integer") do |b|
+        @@options[:bottom] = clamp_to_min(b, 0)
       end
 
       opts.on("-q", "--quality [QUALITY]", Float,
-            "Export quality. 0.0 = max compression, min quality. " +
+            "Export quality. 0.0 = max compression, min quality " +
             "1.0 = best quality min compression") do |qual|
-        if qual > 1.0
-            qual = 1.0
-        elsif qual < 0.0
-            qual = 0.0
-        end
-        @@options[:quality] = qual
-      end
-
-      opts.on("-i", "--interpqual [INTERPQUAL]",
-            [:default, :none, :low, :medium, :high, :lanczos],
-            "Interpolation quality to use for image scaling (default, none, " +
-            "low, medium, high, lanczos)") do |iq|
-        @@options[:interpqual] = iq
+        @@options[:quality] = clamp_to_range(qual, 0.0, 1.0)
       end
 
       opts.on("-t", "--exportfiletype [FILETYPE]",
@@ -132,52 +132,43 @@ class ScaleImageCommand
 
       # Now add an example of using the command.
       opts.separator "Examples:"
-      opts.separator "Scale images by 0.5 and apply a quality setting of 0.8." +
-                     " Process image files listed in current directory."
-      opts.separator "  scaleimages --scale 0.5 --outputdir " +
-                     "~/scaledimages --verbose --quality 0.8 " +
-                     "--interpqual medium file01.jpg " +
-                     "file02.jpg file03.jpg file04.jpg file05.jpg"
+      opts.separator "  customcrop2 --left 100 --right 100 " +
+                     "--outputdir ~/Desktop/croppedimages --verbose " +
+                     "--quality 0.8 " +
+                     "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
       opts.separator ""
-      opts.separator "Scale vertical by 2.0 leave horizontal unchanged. " +
-                     "Copy the metadata. Process all jpg files in junkimages"
-      opts.separator "  scaleimages --scaley 2.0 --outputdir ~/scaledimages " +
-                     "--copymetadata ~/Desktop/junkimages/*.JPG"
+      opts.separator "  customcrop2 --top 200 --bottom 300 " +
+                     "--outputdir ~/Desktop/croppedimages --copymetadata " +
+                     "~/Desktop/junkimages/*.jpg"
+      
     end # parse!
-
     begin
       opt_parser.parse!(theArgs)
-      # If we have one of scalex, scaley then replace set other factor to 1.0
-      if @@options[:scalex].nil?
-        if !@@options[:scaley].nil?
-          @@options[:scalex] = 1.0
-        end
-      elsif @@options[:scaley].nil?
-        @@options[:scaley] = 1.0
-      end
       if self.missing_mandatory_options?()
         raise "Missing mandatory options."
       end
+
+      if @@options[:left].zero? && @@options[:right].zero? &&
+         @@options[:top].zero? && @@options[:bottom].zero?
+         raise "No cropping needed."
+      end
+
     rescue Exception => e
       puts e.message
       puts opt_parser
       exit 240
     end
+
     @@options
   end
 
-  def self.scaleimages
+  def self.customcrop
     if ARGV.length < 1
       puts "No image files to process"
       exit(1)
     end
 
     begin
-      if @@options[:interpqual].eql?(:lanczos)
-        unless @@options[:scalex].eql?(@@options[:scaley])
-          @@options[:interpqual] = :high
-        end
-      end
 
       start_time = Time.now
       have_samedims = @@options[:assume_images_have_same_dimensions]
@@ -187,14 +178,23 @@ class ScaleImageCommand
                               maxlength_forprocessinglist: 50)
 
       verboseputs "Time to prepare processing: #{Time.now - start_time} sec"
-      
+
+      width_subtract = @@options[:left] + @@options[:right]
+      height_subtract = @@options[:top] + @@options[:bottom]
+
       start_time = Time.now
       num_lists = process_imageslists.size
       @@options[:async] = num_lists > 1
       list_num = 0
       process_imageslists.each do |image_list|
-        MILibrary.scale_files(@@options, image_list)
-        verboseputs "Processed list #{list_num + 1} of #{num_lists}"
+        width_remaining = image_list[:width] - width_subtract
+        height_remaining = image_list[:height] - height_subtract
+        if width_remaining <= 0 || height_remaining <= 0
+          verboseputs "Images would be cropped to nothing if processed."
+        else
+          MILibrary.customcrop_files(@@options, image_list)
+          verboseputs "Processed list #{list_num + 1} of #{num_lists}"
+        end
         list_num = list_num.succ
       end
       verboseputs "Time to process: #{Time.now - start_time} sec"
@@ -214,17 +214,16 @@ class ScaleImageCommand
 end
 
 def localmain()
-  options = ScaleImageCommand.parse!(ARGV)
+  options = CustomCropCommand.parse!(ARGV)
   $verbose = options[:verbose]
   if $verbose
     pp options
   end
 
-  result = ScaleImageCommand.scaleimages()
+  result = CustomCropCommand.customcrop()
   if !result.zero?
-    verboseputs "Error fail code: " + result.to_s
+    verboseputs("Error fail code: " + result.to_s)
   end
-  puts Smig.exitstring
   result
 end
 

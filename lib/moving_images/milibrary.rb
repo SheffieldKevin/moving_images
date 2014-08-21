@@ -216,6 +216,7 @@ module MovingImages
       #   check each image file to determine it's file size, use first file to
       #   get image dimensions from and assume all others are the same.
       # @verbose [true, false] Output info about script status.
+      # @return [Hash] The options hash.
       def self.make_scaleimages_options(
                                     scalex: nil,
                                     scaley: nil,
@@ -225,13 +226,146 @@ module MovingImages
                                     interpqual: :default,
                                     copymetadata: false,
                                     assume_images_have_same_dimensions: false,
+                                    async: false,
                                     verbose: false)
         { scalex: scalex, scaley: scaley, quality: quality, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir,
-          exportfiletype: exportfiletype,
+          exportfiletype: exportfiletype, async: async,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions
         }
       end
+
+      # Make an options hash with all attributes specified for customcrop.    
+      # At least one of left, right, top or bottom needs to be set to a non
+      # zero value. The parameter outputdir needs to be set to a non nil value.
+      # The exportfiletype parameter if left as nil will
+      # result in all exported images being exported in the image file format
+      # of the first image. The supplied values for the other named parameters
+      # represent default values.
+      # @param left [Fixnum] The distance to crop from the left edge in pixels.
+      # @param right [Fixnum] The distance to crop from right edge in pixels.
+      # @param top [Fixnum] The distance to crop from the top edge in pixels.
+      # @param bottom [Fixnum] The distance to crop from bottom edge in pixels.
+      # @param outputdir [Path] A path to the directory where files exported to
+      # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
+      # @param quality [Float] The export compression quality. 0.0 - 1.0.
+      #    Small file size, low quality 0.1, higher quality & larger file size
+      #    use 0.9
+      # @param copymetadata [true, false] If true copy metadata to new file.
+      # @param assume_images_have_same_dimensions [true, false]. If true don't
+      #   check each image file to determine it's file size, use first file to
+      #   get image dimensions from and assume all others are the same.
+      # @verbose [true, false] Output info about script status.
+      # @return [Hash] The options hash.
+      def self.make_customcrop_options(
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    outputdir: nil,
+                                    exportfiletype: nil,
+                                    quality: 0.7,
+                                    copymetadata: false,
+                                    assume_images_have_same_dimensions: false,
+                                    async: false,
+                                    verbose: false)
+        { left: left, right: right, top: top, bottom: bottom, verbose: verbose,
+          copymetadata: copymetadata, outputdir: outputdir, quality: quality, 
+          exportfiletype: exportfiletype, async: async,
+          assume_images_have_same_dimensions: assume_images_have_same_dimensions
+        }
+      end
+    end
+
+    def self.customcrop_files(options, file_list)
+      fail "No output directory specified." if options[:outputdir].nil?
+      outputDirectory = File.expand_path(options[:outputdir])
+      FileUtils.mkdir_p(outputDirectory)
+      fileList = file_list[:files]
+      firstItem = File.expand_path(fileList.first)
+
+      # Create the command list object that we can then add commands to.
+      theCommands = CommandModule::SmigCommands.new
+
+      theCommands.run_asynchronously = options[:async]
+      # The export file type will be the same as the input file type so get
+      # the fileType from the first file as well.
+      if options[:exportfiletype].nil?
+        # The export file type is the same as the input file type
+        fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      else
+        fileType = options[:exportfiletype]
+      end
+      nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
+
+      # Calculate the size of the cropped image.
+      size = MIShapes.make_size(
+                        file_list[:width] - options[:left] - options[:right],
+                        file_list[:height] - options[:top] - options[:bottom])
+      
+      # make the create bitmap context and add it to list of commands.
+      # setting addtocleanup to true means when commands have been completed
+      # the bitmap context object will be closed in cleanup.
+      bitmapObject = theCommands.make_createbitmapcontext(addtocleanup: true,
+                                                          size: size)
+
+      exporterObject = theCommands.make_createexporter("~/placeholder.jpg",
+                                      export_type: fileType, addtocleanup: true)
+
+      destinationRect = MIShapes.make_rectangle(size: size)
+      sourceRect = MIShapes.make_rectangle(size: size,
+                                           xloc: options[:left],
+                                           yloc: options[:right])
+      fileList.each do |filePath|
+        importerObject = theCommands.make_createimporter(filePath,
+                                                            addtocleanup: false)
+        drawImageElement = MIDrawImageElement.new
+        drawImageElement.set_imagesource(source_object: importerObject, 
+                                         imageindex: 0)
+        drawImageElement.sourcerectangle = sourceRect
+        drawImageElement.destinationrectangle = destinationRect
+
+        cropImageCommand = CommandModule.make_drawelement(bitmapObject,
+                                          drawinstructions: drawImageElement)
+        theCommands.add_command(cropImageCommand)
+
+        fileName = File.basename(filePath, '.*') + nameExtension
+        exportPath = File.join(options[:outputdir], fileName)
+        setExportPathCommand = CommandModule.make_set_objectproperty(
+                                                  exporterObject,
+                                                  propertykey: :exportfilepath,
+                                                  propertyvalue: exportPath)
+        theCommands.add_command(setExportPathCommand)
+        addImageCommand = CommandModule.make_addimage(exporterObject,
+                                                      bitmapObject)
+        theCommands.add_command(addImageCommand)
+        if options[:copymetadata]
+          copyImagePropertiesCommand = CommandModule.make_copymetadata(
+                                              exporterObject,
+                                              importersource: importerObject,
+                                              importerimageindex: 0,
+                                              imageindex: 0)
+          theCommands.add_command(copyImagePropertiesCommand)
+        end
+        
+        unless options[:quality].nil?
+          setExportCompressionQuality = CommandModule.make_set_objectproperty(
+                                        exporterObject,
+                                        propertykey: :exportcompressionquality,
+                                        propertyvalue: options[:quality])
+          setExportCompressionQuality.add_option(key: :imageindex,
+                                                 value: 0)
+          theCommands.add_command(setExportCompressionQuality)
+        end
+        exportCommand = CommandModule.make_export(exporterObject)
+        theCommands.add_command(exportCommand)
+        closeCommand = CommandModule.make_close(importerObject)
+        theCommands.add_command(closeCommand)
+      end
+      # The full command list has been built up. Nothing has been run yet.
+      # Smig.perform_commands sends the commands to MovingImages, and will
+      # wait for the commands to be completed in this case.
+      Smig.perform_commands(theCommands)
     end
 
     # Scale images using the lanczos CoreImage filter.    
@@ -250,15 +384,8 @@ module MovingImages
       # Create the command list object that we can then add commands to.
       theCommands = CommandModule::SmigCommands.new
 
-      async = false
-      unless options[:async].nil?
-        theCommands.run_asynchronously = options[:async]
-        async = options[:async]
-      end
+      theCommands.run_asynchronously = options[:async]
 
-      # Use spotlight to get the image dimensions so we can calculate how
-      # big the bitmap contexts need to be.
-      # dimensions = SpotlightCommand.get_imagedimensions(firstItem)
       dimensions = { width: file_list[:width], height: file_list[:height] }
 
       # The export file type will be the same as the input file type so get
@@ -272,10 +399,6 @@ module MovingImages
       name_extension = Utility.get_extension_fromimagefiletype(
                                                           filetype: fileType)
 
-      if dimensions.size.zero?
-        fail "Spotlight couldn't get dimensions from image file: "
-      end
-      
       # Calculated the dimensions of the scaled image
       scaledWidth = dimensions[:width].to_f * options[:scalex]
       scaledHeight = dimensions[:height].to_f * options[:scaley]
@@ -313,8 +436,8 @@ module MovingImages
       unless options[:softwarerender].nil?
         filterChain.softwarerender = options[:softwarender]
       end
-      
-      if async
+
+      if options[:async]
         filterChain.softwarerender = true
       end
 

@@ -1,0 +1,234 @@
+#!/usr/bin/env ruby
+# Copyright (C) 2013 Kevin Meaney
+# Please refer to the file LICENSE for the license agreement.
+# You are granted the rights to modify this file for your own purposes
+# or for distribution to third parties. In either case you accept all
+# responsibility for liability. Please include the link to the documentation:
+# https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
+
+# FILE: scaleimage2
+# Scales images.
+
+require 'Open3'
+require 'optparse'
+require 'pp'
+require 'JSON'
+
+require 'moving_images'
+
+include MovingImages
+
+$verbose = false
+
+def verboseputs(input)
+  if $verbose
+    puts input
+  end
+end
+
+class ScaleImageCommand
+  @@options = {}
+  #
+  # Return whether all mandatory options were included on command line
+  #
+  def self.missing_mandatory_options?()
+    return (@@options[:scalex].nil? || @@options[:scaley].nil? ||
+            @@options[:outputdir].nil?)
+  end
+
+  #
+  # Return a hash describing the options.
+  # 
+  def self.parse!(theArgs)
+    @@options = MILibrary::Utility.make_scaleimages_options()
+    @@options[:scalex] = 1.0
+    @@options[:scaley] = 1.0
+    opt_parser = OptionParser.new do |opts|
+      opts.version = "0.1a"
+      opts.banner = "Usage: scaleimage [options] file1, file2, ..."
+      opts.separator "Assumes all input images have same dimensions."
+      opts.separator "At least one of --scale/--scalex/--scaley needs to be " +
+                      "specified. Lanczos scaling can't be used if scalex "
+      opts.separator  "and scaley are different."
+      opts.separator "If the output directory is the same as the directory " +
+                     "containing the original image files, then if permissions"
+      opts.separator "allow the original images will be overwritten."
+      opts.separator ""
+      opts.separator "Options:"
+
+      opts.on("-s", "--scale [SCALE]", Float,
+              "Image scaling applied to both x and y dimensions " +
+              "of the image.") do |sc|
+        @@options[:scalex] = sc;
+        @@options[:scaley] = sc;
+      end
+
+      opts.on("-x", "--scalex [SCALEX]", Float,
+              "Image scaling applied to x dimension. Default 1.0") do |sx|
+        @@options[:scalex] = sx
+      end
+
+      opts.on("-y", "--scaley [SCALEY]", Float,
+              "Image scaling applied to y dimension. Default 1.0") do |sy|
+        @@options[:scaley] = sy
+      end
+
+      opts.on("-q", "--quality [QUALITY]", Float,
+            "Export quality. 0.0 = max compression, min quality. " +
+            "1.0 = best quality min compression") do |qual|
+        if qual > 1.0
+            qual = 1.0
+        elsif qual < 0.0
+            qual = 0.0
+        end
+        @@options[:quality] = qual
+      end
+
+      opts.on("-i", "--interpqual [INTERPQUAL]",
+            [:default, :none, :low, :medium, :high, :lanczos],
+            "Interpolation quality to use for image scaling (default, none, " +
+            "low, medium, high, lanczos)") do |iq|
+        @@options[:interpqual] = iq
+      end
+
+      opts.on("-t", "--exportfiletype [FILETYPE]",
+              [:'public.jpeg', :'public.png', :'com.compuserve.gif',
+               :'public.tiff', :'public.jpeg-2000', :'com.apple.icns',
+               :'com.adobe.photoshop-image', :'com.apple.rjpeg' ],
+               "The export file type. If not specified then the export file "\
+               "type will be set to the file type of the first input image. "\
+               "(public.jpeg, public.png, public.tiff, " \
+               "com.compuserve.gif, public.jpeg-2000, com.apple.icns, "\
+               "com.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
+        @@options[:exportfiletype] = eft
+      end
+
+      opts.on("-m", "--copymetadata",
+              "Copy metadata from the original image to the new image") do
+        @@options[:copymetadata] = true
+      end
+
+      # Now get the directory where the scaled images are to be saved.
+      opts.on("-o", "--outputdir PATH",
+              "Directory where images to be saved.") do |od|
+        @@options[:outputdir] = od
+      end
+
+      opts.on("--assumesamedimensions",
+              "Assume all image files will have the same dimensions.") do
+        @@options[:assume_images_have_same_dimensions] = true
+      end
+
+      # Now for options common to many command line scripts.
+      opts.separator "Common options"
+
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+        @@options[:verbose] = v
+      end
+
+      # Add the help option at the end of the list of options.
+      opts.on("-h", "--help", "Display this screen") do
+        raise "Display help screen"
+        exit
+      end
+
+      # Now add an example of using the command.
+      opts.separator "Examples:"
+      opts.separator "Scale images by 0.5 and apply a quality setting of 0.8." +
+                     " Process image files listed in current directory."
+      opts.separator "  scaleimage --scale 0.5 --outputdir " +
+                     "~/scaledimages --verbose --quality 0.8 " +
+                     "--interpqual medium file01.jpg " +
+                     "file02.jpg file03.jpg file04.jpg file05.jpg"
+      opts.separator ""
+      opts.separator "Scale vertical by 2.0 leave horizontal unchanged. " +
+                     "Copy the metadata. Process all jpg files in junkimages"
+      opts.separator "  scaleimage --scaley 2.0 --outputdir ~/scaledimages " +
+                     "--copymetadata ~/Desktop/junkimages/*.JPG"
+    end # parse!
+
+    begin
+      opt_parser.parse!(theArgs)
+      # If we have one of scalex, scaley then replace set other factor to 1.0
+      if @@options[:scalex].nil?
+        if !@@options[:scaley].nil?
+          @@options[:scalex] = 1.0
+        end
+      elsif @@options[:scaley].nil?
+        @@options[:scaley] = 1.0
+      end
+      if self.missing_mandatory_options?()
+        raise "Missing mandatory options."
+      end
+    rescue Exception => e
+      puts e.message
+      puts opt_parser
+      exit 240
+    end
+    @@options
+  end
+
+  def self.scaleimages
+    if ARGV.length < 1
+      puts "No image files to process"
+      exit(1)
+    end
+
+    begin
+      if @@options[:interpqual].eql?(:lanczos)
+        unless @@options[:scalex].eql?(@@options[:scaley])
+          @@options[:interpqual] = :high
+        end
+      end
+
+      start_time = Time.now
+      have_samedims = @@options[:assume_images_have_same_dimensions]
+      process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
+                              imagefilelist: ARGV,
+                              assume_images_have_same_dimensions: have_samedims,
+                              maxlength_forprocessinglist: 50)
+
+      verboseputs "Time to prepare processing: #{Time.now - start_time} sec"
+      
+      start_time = Time.now
+      num_lists = process_imageslists.size
+      @@options[:async] = num_lists > 1
+      list_num = 0
+      process_imageslists.each do |image_list|
+        MILibrary.scale_files(@@options, image_list)
+        verboseputs "Processed list #{list_num + 1} of #{num_lists}"
+        list_num = list_num.succ
+      end
+      verboseputs "Time to process: #{Time.now - start_time} sec"
+
+    rescue Exception => e
+      $errorcode = Smig.exitvalue
+      unless $errorcode.zero?
+        verboseputs "Exit string: " + Smig.exitstring
+        verboseputs "Exit status: " + $errorcode.to_s
+      end
+      puts e.message
+      puts e.backtrace.to_s
+      exit 240
+    end
+    Smig.exitvalue
+  end
+end
+
+def localmain()
+  options = ScaleImageCommand.parse!(ARGV)
+  $verbose = options[:verbose]
+  if $verbose
+    pp options
+  end
+
+  result = ScaleImageCommand.scaleimages()
+  if !result.zero?
+    verboseputs "Error fail code: " + result.to_s
+  end
+  puts Smig.exitstring
+  result
+end
+
+result = localmain()
+exit(result)

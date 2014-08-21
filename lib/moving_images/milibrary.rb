@@ -197,16 +197,34 @@ module MovingImages
       end
 
       # Make an options hash with all attributes specified for scale images.    
-      # 
+      # The parameters scalex, scaley, and outputdir all need to be specified
+      # with non nil values. The exportfiletype parameter if left as nil will
+      # result in all exported images being exported in the image file format
+      # of the first image. The supplied values for the other named parameters
+      # represent default values.
+      # @param scalex [Float] A floating point number typical range: 0.1 - 4.0
+      # @param scalex [Float] A floating point number typical range: 0.1 - 4.0
+      # @param outputdir [Path] A path to the directory where files exported to
+      # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
+      # @param quality [Float] The export compression quality. 0.0 - 1.0.
+      #    Small file size, low quality 0.1, higher quality & larger file size
+      #    use 0.9
+      # @param interpqual [Symbol] The scaling interpolation value. Values are:
+      #    :default, :low, :medium, :high, :lanczos
+      # @param copymetadata [true, false] If true copy metadata to new file.
+      # @param assume_images_have_same_dimensions [true, false]. If true don't
+      #   check each image file to determine it's file size, use first file to
+      #   get image dimensions from and assume all others are the same.
+      # @verbose [true, false] Output info about script status.
       def self.make_scaleimages_options(
                                     scalex: nil,
                                     scaley: nil,
-                                    quality: 0.7,
+                                    outputdir: nil,
                                     exportfiletype: nil,
+                                    quality: 0.7,
                                     interpqual: :default,
                                     copymetadata: false,
-                                    outputdir: nil,
-                                    assume_images_have_same_dimensions: true,
+                                    assume_images_have_same_dimensions: false,
                                     verbose: false)
         { scalex: scalex, scaley: scaley, quality: quality, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir,

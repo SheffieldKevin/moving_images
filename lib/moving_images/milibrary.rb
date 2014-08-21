@@ -26,8 +26,10 @@ module MovingImages
       # @return [String] A file extension with the dot.
       def self.get_extension_fromimagefiletype(filetype: 'public.jpeg')
         filetype_dict = { :'public.jpeg' => '.jpg', :'public.png' => '.png',
-                      :'com.compuserve.gif' => '.gif',
-                      :'public.tiff' => '.tiff', :'public.jpeg-2000' => '.jp2' }
+                  :'com.compuserve.gif' => '.gif',
+                  :'public.tiff' => '.tiff', :'public.jpeg-2000' => '.jp2',
+                  :'com.apple.icns' => '.icns', :'com.apple.rjpeg' => '.rjpeg',
+                  :'com.adobe.photoshop-image' => '.psd' }
         return filetype_dict[filetype.to_sym]
       end
 
@@ -136,6 +138,26 @@ module MovingImages
         listof_list_offiles
       end
 
+      # Make lists of processing hashes.    
+      # This method takes a list of image file paths, it first splits the list
+      # into lists of hashes:
+      #   !{ width: images_width, height: images_height,
+      #      files: list_of_imagefilepaths }
+      # where the list of image file paths in the hash is the list of files 
+      # which have the width and height in the hash. It takes a bit of time to
+      # sort the image files into the different lists, so if you know that
+      # all the images have the same dimension, then you can set the
+      # assume_images_have_same_dimensions to true which saves lots of time.
+      # After that the script then splits any list so that there are no more 
+      # than maxlength_forprocessinglist image file paths in each list.
+      # @param imagefilelist [Array<Paths>] A list of image file paths.
+      # @param assume_images_have_same_dimensions [true, false]
+      #   If true method assumes all image files in the list have same dims.
+      # @param maxlength_forprocessinglist [Fixnum] Maximum number of files
+      #   allowed in each processing list. Default value works well.
+      # @return [Array<Hash>] An array of processing lists. Each processing
+      #   list is a hash containing three attributes, width, height, and files.
+      #   The files attributes is the list of files to be processed.
       def self.make_imagefilelists_forprocessing(imagefilelist: [],
                                     assume_images_have_same_dimensions: true,
                                     maxlength_forprocessinglist: 50)
@@ -172,6 +194,25 @@ module MovingImages
           new_lists.each { |new_list| processlists_ofimages.push(new_list) }
         end
         processlists_ofimages
+      end
+
+      # Make an options hash with all attributes specified for scale images.    
+      # 
+      def self.make_scaleimages_options(
+                                    scalex: nil,
+                                    scaley: nil,
+                                    quality: 0.7,
+                                    exportfiletype: nil,
+                                    interpqual: :default,
+                                    copymetadata: false,
+                                    outputdir: nil,
+                                    assume_images_have_same_dimensions: true,
+                                    verbose: false)
+        { scalex: scalex, scaley: scaley, quality: quality, verbose: verbose,
+          copymetadata: copymetadata, outputdir: outputdir,
+          exportfiletype: exportfiletype,
+          assume_images_have_same_dimensions: assume_images_have_same_dimensions
+        }
       end
     end
 
@@ -358,7 +399,6 @@ module MovingImages
         theCommands.saveresultstype = :jsonfile
       end
 
-#      dimensions = SpotlightCommand.get_imagedimensions(firstItem)
       dimensions = { width: file_list[:width], height: file_list[:height] }
       if options[:exportfiletype].nil?
         # The export file type is the same as the file type of the first file.
@@ -369,7 +409,6 @@ module MovingImages
       end
       name_extension = Utility.get_extension_fromimagefiletype(
                                                         filetype: fileType)
-      fail "Couldn't get dimensions from image file: " if dimensions.size.zero?
       scaledWidth = dimensions[:width].to_f * options[:scalex]
       scaledHeight = dimensions[:height].to_f * options[:scaley]
       bitmapObject = theCommands.make_createbitmapcontext(addtocleanup: true,

@@ -911,14 +911,14 @@ module MovingImages
       createImageImporterCommand = CommandModule.make_createimporter(
                                                       imagefile,
                                                       name: imageImporterName)
-      imageImporterObject = SmigIDHash.makeid_withobjecttypeandname(
-                                              :imageimporter, imageImporterName)
+      imageImporterObject = SmigIDHash.make_objectid(objecttype: :imageimporter,
+                                                objectname: imageImporterName)
       theCommands.add_command(createImageImporterCommand)
       theCommands.add_tocleanupcommands_closeobject(imageImporterObject)
       drawImageElement.set_imagesource(source_object: imageImporterObject,
                                        imageindex: imageindex)
       drawImageCommand = CommandModule.make_drawelement(
-                                destination, drawInstructions: drawImageElement)
+                                destination, drawinstructions: drawImageElement)
       theCommands.add_command(drawImageCommand)
       Smig.perform_commands(theCommands)
       ""

@@ -44,7 +44,8 @@ class ScaleImageCommand
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
       opts.banner = "Usage: scaleimage [options] file1, file2, ..."
-      opts.separator "Assumes all input images have same dimensions."
+      opts.separator "Scale images, with option to scale horizontal and "\
+                     "vertical independently."
       opts.separator "At least one of --scale/--scalex/--scaley needs to be " +
                       "specified. Lanczos scaling can't be used if scalex "
       opts.separator  "and scaley are different."
@@ -93,11 +94,11 @@ class ScaleImageCommand
               [:'public.jpeg', :'public.png', :'com.compuserve.gif',
                :'public.tiff', :'public.jpeg-2000', :'com.apple.icns',
                :'com.adobe.photoshop-image', :'com.apple.rjpeg' ],
-               "The export file type. If not specified then the export file "\
-               "type will be set to the file type of the first input image. "\
-               "(public.jpeg, public.png, public.tiff, " \
-               "com.compuserve.gif, public.jpeg-2000, com.apple.icns, "\
-               "com.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
+               "The export file type. If not specified then the export "\
+               "type will be set to the type of the first input file.\n"\
+               "\t\t\t\t\t(public.jpeg, public.png, public.tiff, " \
+               "com.compuserve.gif, public.jpeg-2000, com.apple.icns,\n"\
+               "\t\t\t\t\tcom.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
         @@options[:exportfiletype] = eft
       end
 

@@ -171,8 +171,10 @@ class CustomCropCommand
     begin
       start_time = Time.now
       have_samedims = @@options[:assume_images_have_same_dimensions]
+      expanded_filelist = []
+      ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }
       process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
-                              imagefilelist: ARGV,
+                              imagefilelist: expanded_filelist,
                               assume_images_have_same_dimensions: have_samedims,
                               maxlength_forprocessinglist: 50)
 

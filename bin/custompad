@@ -6,7 +6,7 @@
 # responsibility for liability. Please include the link to the documentation:
 # https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
 
-# FILE: customcrop
+# FILE: custompad
 # Crops images, each edge can be cropped by a specified amount.
 
 require 'optparse'
@@ -50,11 +50,11 @@ class CustomCropCommand
   # Return a hash describing the options.
   # 
   def self.parse!(theArgs)
-    @@options = MILibrary::Utility.make_customcrop_options()
+    @@options = MILibrary::Utility.make_customcpad_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
       opts.banner = "Usage: customcrop [options] file1, file2, ..."
-      opts.separator "Crop the image by specifying how much to crop from each "\
+      opts.separator "Pad the image by specifying how much to pad from each "\
                      "edge independently."
       opts.separator "If the output directory is the same as the directory " +
                      "containing the original image files, then if permissions"
@@ -64,24 +64,42 @@ class CustomCropCommand
       opts.separator ""
       opts.separator "Options:"
 
-      opts.on("-l", "--left [LEFT]", Integer,
-              "Crop LEFT pixels from left edge. Integer.") do |l|
-        @@options[:left] = clamp_to_min(l, 0)
+      opts.on("--left [LEFT]", Integer,
+              "Pad LEFT pixels from left edge. Integer.") do |l|
+        @@options[:left] = clamp_to_range(l, 0, 1024)
       end
 
-      opts.on("-r", "--right [RIGHT]", Integer,
-              "Crop RIGHT pixels from right edge. Integer") do |r|
-        @@options[:right] = clamp_to_min(r, 0)
+      opts.on("--right [RIGHT]", Integer,
+              "Pad RIGHT pixels from right edge. Integer") do |r|
+        @@options[:right] = clamp_to_range(r, 0, 1024)
       end
 
-      opts.on("-t", "--top [TOP]", Integer,
-              "Crop TOP pixels from top edge. Integer") do |t|
-        @@options[:top] = clamp_to_min(t, 0)
+      opts.on("--top [TOP]", Integer,
+              "Pad TOP pixels from top edge. Integer") do |t|
+        @@options[:top] = clamp_to_range(t, 0, 1024)
       end
 
-      opts.on("-b", "--bottom [BOTTOM]", Integer,
-            "Crop BOTTOM pixels from bottom edge. Integer") do |b|
-        @@options[:bottom] = clamp_to_min(b, 0)
+      opts.on("--bottom [BOTTOM]", Integer,
+            "Pad BOTTOM pixels from bottom edge. Integer") do |b|
+        @@options[:bottom] = clamp_to_range(b, 0, 1024)
+      end
+
+      opts.on("-r", "--red [RED]", Float,
+            "Red color component for the padding color. " +
+            "Range: 0.0...1.0, default 1.0") do |r|
+         @@options[:red] = clamp_to_range(r, 0.0, 1.0)
+      end
+
+      opts.on("-g", "--green [GREEN]", Float,
+            "Green color component for the padding color. " +
+            "Range: 0.0...1.0, default 1.0") do |g|
+        @@options[:green] = clamp_to_range(g, 0.0, 1.0)
+      end
+
+      opts.on("-b", "--blue [BLUE]", Float,
+            "Blue color component for the padding color. " +
+            "Range: 0.0...1.0, default 1.0") do |b|
+        @@options[:blue] = clamp_to_range(b, 0.0, 1.0)
       end
 
       opts.on("-q", "--quality [QUALITY]", Float,
@@ -133,11 +151,11 @@ class CustomCropCommand
 
       # Now add an example of using the command.
       opts.separator "Examples:"
-      opts.separator "  customcrop2 --left 100 --right 100 " +
+      opts.separator "  custompad --left 100 --right 100 -r 0.4 -g 0.3 -b 0.1" +
                      "--outputdir ~/Desktop/croppedimages --verbose " +
                      "--quality 0.8 " +
                      "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
-      opts.separator "  customcrop2 --top 200 --bottom 300 " +
+      opts.separator "  custompad --top 200 --bottom 300 -r 0.9 -g 0.5 -b 0.3" +
                      "--outputdir ~/Desktop/croppedimages --copymetadata " +
                      "~/Desktop/junkimages/*.jpg"
       
@@ -179,9 +197,6 @@ class CustomCropCommand
 
       verboseputs "Time to prepare processing: #{Time.now - start_time} sec"
 
-      width_subtract = @@options[:left] + @@options[:right]
-      height_subtract = @@options[:top] + @@options[:bottom]
-
       start_time = Time.now
       num_lists = process_imageslists.size
       @@options[:async] = num_lists > 1
@@ -189,12 +204,8 @@ class CustomCropCommand
       process_imageslists.each do |image_list|
         width_remaining = image_list[:width] - width_subtract
         height_remaining = image_list[:height] - height_subtract
-        if width_remaining <= 0 || height_remaining <= 0
-          verboseputs "Images would be cropped to nothing if processed."
-        else
-          MILibrary.customcrop_files(@@options, image_list)
-          verboseputs "Processed list #{list_num + 1} of #{num_lists}"
-        end
+        MILibrary.custompad_files(@@options, image_list)
+        verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ
       end
       verboseputs "Time to process: #{Time.now - start_time} sec"

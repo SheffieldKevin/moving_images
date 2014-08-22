@@ -187,7 +187,6 @@ class CustomCropCommand
     end
 
     begin
-
       start_time = Time.now
       have_samedims = @@options[:assume_images_have_same_dimensions]
       process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
@@ -202,6 +201,9 @@ class CustomCropCommand
       @@options[:async] = num_lists > 1
       list_num = 0
       process_imageslists.each do |image_list|
+        if process_imageslists.last.object_id.eql? image_list.object_id
+          @@options[:async] = false
+        end
         MILibrary.custompad_files(@@options, image_list)
         verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ

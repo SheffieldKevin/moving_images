@@ -194,6 +194,9 @@ class ScaleImageCommand
       @@options[:async] = num_lists > 1
       list_num = 0
       process_imageslists.each do |image_list|
+        if process_imageslists.last.object_id.eql? image_list.object_id
+          @@options[:async] = false
+        end
         MILibrary.scale_files(@@options, image_list)
         verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ

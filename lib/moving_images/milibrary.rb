@@ -138,6 +138,22 @@ module MovingImages
         listof_list_offiles
       end
 
+      # Split the input list into a list of lists.    
+      # This function will split the items evenly between the new lists.
+      # There will be a maximum of max_number items in each list. The files
+      # attribute of the input_list parameter contains the list of items to
+      # be split. The method will return an array of hashes.
+      # @param input_list [Hash] Contains three attribs, :width, :height, :files
+      # @param max_number [Fixnum] Maximum number of items in each list.
+      # @return [Array<Hash>] An array of hash objects. :width, :height, :files
+      def self.splitlists_intolists_withmaxnum(input_list, max_number = 50)
+        num_lists = MILibrary::Utility.calculate_num_commandlist(input_list,
+                                                                 max_number)
+        new_lists = MILibrary::Utility.splitlist(input_list,
+                                                 num_lists: num_lists)
+        new_lists
+      end
+
       # Make lists of processing hashes.    
       # This method takes a list of image file paths, it first splits the list
       # into lists of hashes:
@@ -187,10 +203,8 @@ module MovingImages
         # maximize throughput.
         processlists_ofimages = []
         image_lists.each do |image_list|
-          num_lists = MILibrary::Utility.calculate_num_commandlist(image_list,
+          new_lists = self.splitlists_intolists_withmaxnum(image_list,
                                                     maxlength_forprocessinglist)
-          new_lists = MILibrary::Utility.splitlist(image_list,
-                                                   num_lists: num_lists)
           new_lists.each { |new_list| processlists_ofimages.push(new_list) }
         end
         processlists_ofimages
@@ -325,6 +339,66 @@ module MovingImages
       end
     end
 
+    # A module of methods used by MILibrary and not really intended for 
+    # general use.
+    module Private
+      # This method assumes the file type has already been applied to
+      # the exporter object.
+      # The method adds commands to the commands objects. These commands are:
+      # 1. Set the property file path
+      # 2. Add image
+      # 3. Copy metadata if metadata option set, and metadata source defined.
+      # 4. Set the export compression quality level.
+      # 5. Make the export command.
+      # All arguments except metadata_source are required.
+      # @param commands [SmigCommands] The object to add the commands to.
+      # @param exporter [Hash] The exporter object id.
+      # @param image_source [Hash] The image source object id. Likely a bitmap
+      # @param file_path [Path] A file path to where image file will be saved.
+      # @param options [Hash] The script configuration options.
+      # @param metadata_source [Hash] Image importer object id.
+      # @return [SmigCommands] The smig commands object with commands added.
+      def self.make_commands_forexport(commands: nil, exporter: nil,
+                                       image_source: nil, file_path: nil,
+                                       options: nil, metadata_source: nil)
+        # Set the export file location to the exporter object
+        setExportPathCommand = CommandModule.make_set_objectproperty(
+                                                  exporter,
+                                                  propertykey: :exportfilepath,
+                                                  propertyvalue: file_path)
+        commands.add_command(setExportPathCommand)
+
+        # Add the image to the exporter object
+        addImageCommand = CommandModule.make_addimage(exporter,
+                                                      image_source)
+        commands.add_command(addImageCommand)
+        if options[:copymetadata] && !metadata_source.nil?
+          copyImagePropertiesCommand = CommandModule.make_copymetadata(
+                                              exporter,
+                                              importersource: metadata_source,
+                                              importerimageindex: 0,
+                                              imageindex: 0)
+          commands.add_command(copyImagePropertiesCommand)
+        end
+
+        # If requested copy the metadata from original file to scaled file.
+        unless options[:quality].nil?
+          setExportCompressionQuality = CommandModule.make_set_objectproperty(
+                                        exporter,
+                                        propertykey: :exportcompressionquality,
+                                        propertyvalue: options[:quality])
+          setExportCompressionQuality.add_option(key: :imageindex,
+                                                 value: 0)
+          commands.add_command(setExportCompressionQuality)
+        end
+
+        # Make the export command and add it to the list of commands.
+        exportCommand = CommandModule.make_export(exporter)
+        commands.add_command(exportCommand)
+        commands
+      end
+    end
+
     # Crop the image files list in the files attribute of the file_list hash.    
     # Usually called from the customcrop script, but can be called from
     # anywhere. The options hash is the same as generated by parsing the
@@ -335,10 +409,26 @@ module MovingImages
     # @param file_list [Hash] A hash with attributes, :width, :height, :files
     # return [void]
     def self.customcrop_files(options, file_list)
+      width_subtract = options[:left] + options[:right]
+      height_subtract = options[:top] + options[:bottom]
+      width_remaining = file_list[:width] - width_subtract
+      height_remaining = file_list[:height] - height_subtract
+      if width_remaining <= 0 || height_remaining <= 0
+        puts "Crop - negative size images" if options[:verbose]
+        return
+      end
+
       fail "No output directory specified." if options[:outputdir].nil?
       outputDirectory = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDirectory)
       fileList = file_list[:files]
+      fail "No files list." if fileList.nil?
+      
+      if fileList.size.zero?
+        puts "No files to scale." if options[:verbose]
+        return
+      end
+
       firstItem = File.expand_path(fileList.first)
 
       # Create the command list object that we can then add commands to.
@@ -356,10 +446,8 @@ module MovingImages
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
       # Calculate the size of the cropped image.
-      size = MIShapes.make_size(
-                        file_list[:width] - options[:left] - options[:right],
-                        file_list[:height] - options[:top] - options[:bottom])
-      
+      size = MIShapes.make_size(width_remaining, height_remaining)
+
       # make the create bitmap context and add it to list of commands.
       # setting addtocleanup to true means when commands have been completed
       # the bitmap context object will be closed in cleanup.
@@ -388,34 +476,12 @@ module MovingImages
 
         fileName = File.basename(filePath, '.*') + nameExtension
         exportPath = File.join(options[:outputdir], fileName)
-        setExportPathCommand = CommandModule.make_set_objectproperty(
-                                                  exporterObject,
-                                                  propertykey: :exportfilepath,
-                                                  propertyvalue: exportPath)
-        theCommands.add_command(setExportPathCommand)
-        addImageCommand = CommandModule.make_addimage(exporterObject,
-                                                      bitmapObject)
-        theCommands.add_command(addImageCommand)
-        if options[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_copymetadata(
-                                              exporterObject,
-                                              importersource: importerObject,
-                                              importerimageindex: 0,
-                                              imageindex: 0)
-          theCommands.add_command(copyImagePropertiesCommand)
-        end
-        
-        unless options[:quality].nil?
-          setExportCompressionQuality = CommandModule.make_set_objectproperty(
-                                        exporterObject,
-                                        propertykey: :exportcompressionquality,
-                                        propertyvalue: options[:quality])
-          setExportCompressionQuality.add_option(key: :imageindex,
-                                                 value: 0)
-          theCommands.add_command(setExportCompressionQuality)
-        end
-        exportCommand = CommandModule.make_export(exporterObject)
-        theCommands.add_command(exportCommand)
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: bitmapObject,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
       end
@@ -439,6 +505,13 @@ module MovingImages
       outputDirectory = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDirectory)
       fileList = file_list[:files]
+      fail "No files list." if fileList.nil?
+
+      if fileList.size.zero?
+        puts "No files to scale." if options[:verbose]
+        return
+      end
+
       firstItem = File.expand_path(fileList.first)
 
       # Create the command list object that we can then add commands to.
@@ -494,34 +567,12 @@ module MovingImages
 
         fileName = File.basename(filePath, '.*') + nameExtension
         exportPath = File.join(options[:outputdir], fileName)
-        setExportPathCommand = CommandModule.make_set_objectproperty(
-                                                  exporterObject,
-                                                  propertykey: :exportfilepath,
-                                                  propertyvalue: exportPath)
-        theCommands.add_command(setExportPathCommand)
-        addImageCommand = CommandModule.make_addimage(exporterObject,
-                                                      bitmapObject)
-        theCommands.add_command(addImageCommand)
-        if options[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_copymetadata(
-                                              exporterObject,
-                                              importersource: importerObject,
-                                              importerimageindex: 0,
-                                              imageindex: 0)
-          theCommands.add_command(copyImagePropertiesCommand)
-        end
-        
-        unless options[:quality].nil?
-          setExportCompressionQuality = CommandModule.make_set_objectproperty(
-                                        exporterObject,
-                                        propertykey: :exportcompressionquality,
-                                        propertyvalue: options[:quality])
-          setExportCompressionQuality.add_option(key: :imageindex,
-                                                 value: 0)
-          theCommands.add_command(setExportCompressionQuality)
-        end
-        exportCommand = CommandModule.make_export(exporterObject)
-        theCommands.add_command(exportCommand)
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: bitmapObject,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
       end
@@ -542,6 +593,13 @@ module MovingImages
       outputDirectory = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDirectory)
       fileList = file_list[:files]
+      fail "No files list." if fileList.nil?
+
+      if fileList.size.zero?
+        puts "No files to scale." if options[:verbose]
+        return
+      end
+
       firstItem = File.expand_path(fileList.first)
 
       # Create the command list object that we can then add commands to.
@@ -638,32 +696,13 @@ module MovingImages
         # Combine it with the output directory.
         exportPath = File.join(options[:outputdir], fileName)
         
-        # Set the export location to the exporter object
-        setExportPathCommand = CommandModule.make_set_objectproperty(
-                                                  exporterObject,
-                                                  propertykey: :exportfilepath,
-                                                  propertyvalue: exportPath)
-        theCommands.add_command(setExportPathCommand)
-        
-        # Add the image to the exporter
-        addImageCommand = CommandModule.make_addimage(exporterObject,
-                                                      bitmapObject)
-        theCommands.add_command(addImageCommand)
-        
-        # If requested copy the metadata from original file to scaled file.
-        if options[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_copymetadata(
-                                              exporterObject,
-                                              importersource: importerObject,
-                                              importerimageindex: 0,
-                                              imageindex: 0)
-          theCommands.add_command(copyImagePropertiesCommand)
-        end
-        
-        # make the export command
-        exportCommand = CommandModule.make_export(exporterObject)
-        theCommands.add_command(exportCommand)
-        
+        # Do all the prep work for saving scaled image to a file.
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: bitmapObject,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
         # Close the importer
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
@@ -684,7 +723,11 @@ module MovingImages
       outputDirectory = File.expand_path(options[:outputdir])
       fileList = file_list[:files]
       fail "No files list." if fileList.nil?
-      fail "No files to scale." if fileList.size.zero?
+
+      if fileList.size.zero?
+        puts "No files to scale." if options[:verbose]
+        return
+      end
 
       # make the output directory. The p version of mkdir will make all
       # directories to ensure path is complete. It will also not generate
@@ -742,34 +785,14 @@ module MovingImages
 
         fileName = File.basename(filePath, '.*') + name_extension
         exportPath = File.join(options[:outputdir], fileName)
-        setExportPathCommand = CommandModule.make_set_objectproperty(
-                                                  exporterObject,
-                                                  propertykey: :exportfilepath,
-                                                  propertyvalue: exportPath)
-        theCommands.add_command(setExportPathCommand)
-        addImageCommand = CommandModule.make_addimage(exporterObject,
-                                                      bitmapObject)
-        theCommands.add_command(addImageCommand)
-        if options[:copymetadata]
-          copyImagePropertiesCommand = CommandModule.make_copymetadata(
-                                              exporterObject,
-                                              importersource: importerObject,
-                                              importerimageindex: 0,
-                                              imageindex: 0)
-          theCommands.add_command(copyImagePropertiesCommand)
-        end
-        
-        unless options[:quality].nil?
-          setExportCompressionQuality = CommandModule.make_set_objectproperty(
-                                        exporterObject,
-                                        propertykey: :exportcompressionquality,
-                                        propertyvalue: options[:quality])
-          setExportCompressionQuality.add_option(key: :imageindex,
-                                                 value: 0)
-          theCommands.add_command(setExportCompressionQuality)
-        end
-        exportCommand = CommandModule.make_export(exporterObject)
-        theCommands.add_command(exportCommand)
+
+        # Do all the prep work for saving scaled image to a file.
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: bitmapObject,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
         closeCommand = CommandModule.make_close(importerObject)
         theCommands.add_command(closeCommand)
       end

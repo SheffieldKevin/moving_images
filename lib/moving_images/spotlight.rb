@@ -78,34 +78,73 @@ module MovingImages
       self.runquerycommand(the_command)
     end
 
+    # Return an array of hashes containing image dimensions for file_list.    
+    # Takes a list of image files and returns a list of dimensions of those
+    # files.
+    # @param file_list [Array<Path>] A list of file paths.
+    # @return [Array<Hash>] An array of hashes, each has attribs :width, :height
+    def self.get_dimensions_forfiles(file_list)
+      base_command = [ "mdls", "-name", "kMDItemPixelWidth",
+                               "-name", "kMDItemPixelHeight" ]
+      command = base_command + file_list
+      the_result = self.runquerycommand(command)
+      dimensions_list = []
+      index = 0
+      dimension = {}
+      the_result.each do |line|
+        result = line.partition(' = ').last.to_i
+        if (index % 2).eql?(0)
+          if line.include?('kMDItemPixelWidth')
+            dimension[:width] = line.partition(' = ').last.to_i # width
+          else
+            dimension[:height] = line.partition(' = ').last.to_i # height
+          end
+        else
+          if line.include?('kMDItemPixelWidth')
+            dimension[:width] = line.partition(' = ').last.to_i # width
+          else
+            dimension[:height] = line.partition(' = ').last.to_i # height
+          end
+          dimensions_list.push(dimension)
+          dimension = {}
+        end
+        index = index.succ
+      end
+      dimensions_list
+    end
+
     # Sort a list of image files into lists of images with same dimensions.    
     # @param the_files [Array<String>] A list of file paths to images.
     # @return [Array<Hash>] A list of hashes containing dimensions and a list of
     #    files containing images with those dimensions.
     def self.sort_imagefilelist_bydimension(the_files)
-      # start_time = Time.now
+      group_size = 100
       collected_lists = []
-      the_files.each do |image_file|
-        image_file = File.expand_path(image_file)
-        dimensions = self.get_imagedimensions(image_file)
-        found_list = nil
-        collected_lists.each do |file_list|
-          if file_list[:width].eql?(dimensions[:width]) &&
-                                  file_list[:height].eql?(dimensions[:height])
-              found_list = file_list
+      num_splits = (the_files.size / group_size) + 1
+      num_splits.times do |i|
+        sublist = the_files.slice(i * group_size, group_size)
+        sublist_dimensions = self.get_dimensions_forfiles(sublist)
+        sublist.each_index do |index|
+          found_list = nil
+          d = sublist_dimensions[index]
+          collected_lists.each do |list|
+            if list[:width].eql?(d[:width]) && list[:height].eql?(d[:height])
+              found_list = list
               break
+            end
+          end
+          unless d[:width].zero? || d[:height].zero?
+            if found_list.nil?
+              new_list = { files: [ sublist[index] ],
+                           width: d[:width],
+                          height: d[:height] }
+              collected_lists.push(new_list)
+            else
+              found_list[:files].push(sublist[index])
+            end
           end
         end
-        if found_list.nil?
-          new_list = { files: [ image_file ],
-                       width: dimensions[:width],
-                      height: dimensions[:height] }
-          collected_lists.push(new_list)
-        else
-          found_list[:files].push(image_file)
-        end
       end
-      # puts "Time to sort image files into list: #{Time.now - start_time}"
       collected_lists
     end
 

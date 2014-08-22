@@ -182,11 +182,11 @@ module MovingImages
         # an attribute which is a list of file paths with those dimensions.
         image_lists = []
         if assume_images_have_same_dimensions
-          file_path = File.expand_path(imagefilelist[0])
+          file_path = imagefilelist[0]
           dimensions = SpotlightCommand.get_imagedimensions(file_path)
           new_list = []
           imagefilelist.each do |file_path|
-            new_list.push(File.expand_path(file_path))
+            new_list.push(file_path)
           end
           image_list = { width: dimensions[:width],
                          height: dimensions[:height],

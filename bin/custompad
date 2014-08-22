@@ -50,7 +50,7 @@ class CustomCropCommand
   # Return a hash describing the options.
   # 
   def self.parse!(theArgs)
-    @@options = MILibrary::Utility.make_customcpad_options()
+    @@options = MILibrary::Utility.make_custompad_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
       opts.banner = "Usage: customcrop [options] file1, file2, ..."
@@ -202,8 +202,6 @@ class CustomCropCommand
       @@options[:async] = num_lists > 1
       list_num = 0
       process_imageslists.each do |image_list|
-        width_remaining = image_list[:width] - width_subtract
-        height_remaining = image_list[:height] - height_subtract
         MILibrary.custompad_files(@@options, image_list)
         verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ

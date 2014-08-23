@@ -13,6 +13,8 @@ require 'optparse'
 require 'JSON'
 require 'moving_images'
 
+include MovingImages
+
 $verbose = false
 
 def verboseputs(input)
@@ -216,12 +218,16 @@ class AddShadowCommand
       puts e.backtrace.to_s
       exit 240
     end
+    Smig.exitvalue
   end
 end
 
 def localmain()
-  options = AddShadowCommand.parse!(ARGV)  $verbose = options[:verbose]
-  verboseputs(options)
+  options = AddShadowCommand.parse!(ARGV)
+  $verbose = options[:verbose]
+  if $verbose
+    puts JSON.pretty_generate(options)
+  end
   result = AddShadowCommand.addshadow()
   if !result.zero?
     verboseputs("Error fail code: " + result.to_s)

@@ -211,8 +211,8 @@ module MovingImages
     # Find image files with dimensions greater than the height & width specified
     # @param width [Fixnum] Find image files which are wider than width.
     # @param height [Fixnum] Find image files which are taller than height.
-    # @param fileType [String] Find image files with file type fileType
-    # @param onlyin_dirpath [String] Option directory to find files within.
+    # @param filetype [String] Find image files with file type fileType
+    # @param onlyin [String] Option directory to find files within.
     # @return [Array<String>] A list of paths, one path per result.
     def self.find_imagefiles_largerthan(width: 800, height: 600,
                                   filetype: "public.image", onlyin: nil)
@@ -226,7 +226,7 @@ module MovingImages
 
     # Find image files created monthsAgo number of months ago.    
     # @param months_ago [Fixnum] How long ago (months) an image file was created
-    # @param fileType [String] Find image files with type. Default is any
+    # @param filetype [String] Find image files with type. Default is any
     # @param onlyin [String] Option directory to find files within.
     # @return [Array<String>] A list of path, one path per result.
     def self.find_imagefilescreated(months_ago: 3, filetype: "public.image",

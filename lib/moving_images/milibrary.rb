@@ -122,7 +122,7 @@ module MovingImages
 
       # Split the input list into a list of lists
       # @param input_list [Array] A list of objects
-      # @param num_list [Fixnum] The number of lists to split input list into.
+      # @param num_lists [Fixnum] The number of lists to split input list into.
       # @return [Array<Array>] An array of an array of items
       def self.splitlist(input_list, num_lists: 4)
         listof_list_offiles = []
@@ -217,7 +217,7 @@ module MovingImages
       # of the first image. The supplied values for the other named parameters
       # represent default values.
       # @param scalex [Float] A floating point number typical range: 0.1 - 4.0
-      # @param scalex [Float] A floating point number typical range: 0.1 - 4.0
+      # @param scaley [Float] A floating point number typical range: 0.1 - 4.0
       # @param outputdir [Path] A path to the directory where files exported to
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
       # @param quality [Float] The export compression quality. 0.0 - 1.0.
@@ -229,7 +229,7 @@ module MovingImages
       # @param assume_images_have_same_dimensions [true, false]. If true don't
       #   check each image file to determine it's file size, use first file to
       #   get image dimensions from and assume all others are the same.
-      # @verbose [true, false] Output info about script status.
+      # @param verbose [true, false] Output info about script status.
       # @return [Hash] The options hash.
       def self.make_scaleimages_options(
                                     scalex: nil,
@@ -269,7 +269,7 @@ module MovingImages
       # @param assume_images_have_same_dimensions [true, false]. If true don't
       #   check each image file to determine it's file size, use first file to
       #   get image dimensions from and assume all others are the same.
-      # @verbose [true, false] Output info about script status.
+      # @param verbose [true, false] Output info about script status.
       # @return [Hash] The options hash.
       def self.make_customcrop_options(
                                     left: 0,
@@ -313,9 +313,57 @@ module MovingImages
       # @param assume_images_have_same_dimensions [true, false]. If true don't
       #   check each image file to determine it's file size, use first file to
       #   get image dimensions from and assume all others are the same.
-      # @verbose [true, false] Output info about script status.
+      # @param verbose [true, false] Output info about script status.
       # @return [Hash] The options hash.
       def self.make_custompad_options(
+                                    left: 0,
+                                    right: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    red: 0.0,
+                                    green: 0.0,
+                                    blue: 0.0,
+                                    outputdir: nil,
+                                    exportfiletype: nil,
+                                    quality: 0.7,
+                                    copymetadata: false,
+                                    assume_images_have_same_dimensions: false,
+                                    async: false,
+                                    verbose: false)
+        { left: left, right: right, top: top, bottom: bottom, 
+          red: red, green: green, blue: blue, verbose: verbose,
+          copymetadata: copymetadata, outputdir: outputdir, quality: quality, 
+          exportfiletype: exportfiletype, async: async,
+          assume_images_have_same_dimensions: assume_images_have_same_dimensions
+        }
+      end
+
+      # Make an options hash with all attributes specified for customaddshadow.    
+      # At least one of left, right, top or bottom needs to be set to a non
+      # zero value. The parameter outputdir needs to be set to a non nil value.
+      # The exportfiletype parameter if left as nil will
+      # result in all exported images being exported in the image file format
+      # of the first image. The supplied values for the other named parameters
+      # represent default values.
+      # @param left [Fixnum] The distance to crop from the left edge in pixels.
+      # @param right [Fixnum] The distance to crop from right edge in pixels.
+      # @param top [Fixnum] The distance to crop from the top edge in pixels.
+      # @param bottom [Fixnum] The distance to crop from bottom edge in pixels.
+      # @param red [Float] The red color component of the pad color 0 - 1.
+      # @param green [Float] The green color component of the pad color 0 - 1
+      # @param blue [Float] The blue color component of the pad color 0 - 1
+      # @param outputdir [Path] A path to the directory where files exported to
+      # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
+      # @param quality [Float] The export compression quality. 0.0 - 1.0.
+      #    Small file size, low quality 0.1, higher quality & larger file size
+      #    use 0.9
+      # @param copymetadata [true, false] If true copy metadata to new file.
+      # @param assume_images_have_same_dimensions [true, false]. If true don't
+      #   check each image file to determine it's file size, use first file to
+      #   get image dimensions from and assume all others are the same.
+      # @param verbose [true, false] Output info about script status.
+      # @return [Hash] The options hash.
+      def self.make_customaddshadow_options(
                                     left: 0,
                                     right: 0,
                                     top: 0,
@@ -397,6 +445,54 @@ module MovingImages
         commands.add_command(exportCommand)
         commands
       end
+      
+      # Create shadow colors is used by customaddshadow.   
+      # Used to create an array of color hashes where the alpha component
+      # changes between each color hash. This creates the shadow colors for
+      # one edge of the image.
+      # @param options [Hash] The customaddshadow script options.
+      # @param width [Fixnum] The width of the shadow for one edge.
+      # @param min_alpha [Float] The min alpha component.
+      # @param alpha_inc [Float] The alpha component increment.
+      # @return [Array<Hash>] An array of color objects.
+      def self.create_shadow_colors(options, width, min_alpha, alpha_inc)
+        alpha = min_alpha
+        theColors = []
+        while width > 0
+          theColors << { :red => options[:red], :green => options[:green],
+                          :blue => options[:blue], :alpha => alpha,
+                          :colorcolorprofilename => "kCGColorSpaceSRGB" }
+          alpha += alpha_inc
+          width = width - 1
+        end
+        theColors
+      end
+      
+      # Create an object with info about the shadow to be added on one side.    
+      # @param options [Hash] The customaddshadow script options.
+      # @param shadow_scalar [Fixnum] The width or height of shadow on the side
+      # @param min_alpha [Float] The minimum alpha value on image edge.
+      # @param alpha_range [Float] The range of values alpha will vary over.
+      # @param add1 [true, false] Bottom & left shadow edges need 1 added.
+      # @return [Hash] A hash describing the shadow to be drawn for one edge.
+      #   has attributes: :hashshadow, :scalar_i, :colors
+      def self.create_shadowhash(options, shadow_scalar, min_alpha,
+                                 alpha_range, add1: false)
+        shadowHash = {}
+        extra = add1 ? 1 : 0
+        if shadow_scalar <= 0
+          shadowHash[:hasshadow] = false
+        else
+          shadowHash[:hasshadow] = true
+          shadowHash[:scalar_i] = shadow_scalar
+          alphaDiff = alpha_range / shadow_scalar.to_f
+          shadowHash[:colors] = self.create_shadow_colors(options,
+                                                          shadow_scalar + extra,
+                                                          min_alpha,
+                                                          alphaDiff)
+        end
+        shadowHash
+      end
     end
 
     # Crop the image files list in the files attribute of the file_list hash.    
@@ -428,8 +524,6 @@ module MovingImages
         puts "No files to scale." if options[:verbose]
         return
       end
-
-      firstItem = File.expand_path(fileList.first)
 
       # Create the command list object that we can then add commands to.
       theCommands = CommandModule::SmigCommands.new
@@ -512,8 +606,6 @@ module MovingImages
         return
       end
 
-      firstItem = File.expand_path(fileList.first)
-
       # Create the command list object that we can then add commands to.
       theCommands = CommandModule::SmigCommands.new
 
@@ -528,7 +620,7 @@ module MovingImages
       end
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
-      # Calculate the size of the cropped image.
+      # Calculate the size of the padded image.
       size = MIShapes.make_size(
                         file_list[:width] + options[:left] + options[:right],
                         file_list[:height] + options[:top] + options[:bottom])
@@ -565,6 +657,222 @@ module MovingImages
                                           drawinstructions: drawImageElement)
         theCommands.add_command(drawImageCommand)
 
+        fileName = File.basename(filePath, '.*') + nameExtension
+        exportPath = File.join(options[:outputdir], fileName)
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: bitmapObject,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
+        closeCommand = CommandModule.make_close(importerObject)
+        theCommands.add_command(closeCommand)
+      end
+      # The full command list has been built up. Nothing has been run yet.
+      # Smig.perform_commands sends the commands to MovingImages, and will
+      # wait for the commands to be completed in this case.
+      Smig.perform_commands(theCommands)
+    end
+
+    # Add a semi-transparent shadow to images in files attribute of file_list.    
+    # Usually called from the customaddshadow script, but can be called from
+    # anywhere. The options hash is the same as generated by parsing the
+    # command line options, and same as that generated from:
+    # {Utility.make_custompad_options}. The file_list hash attribute :files
+    # has a list of file paths which are the image files to be processed.
+    # @param options [Hash] As created by {Utility.make_custompad_options}
+    # @param file_list [Hash] A hash with attributes, :width, :height, :files
+    # return [void]
+    def self.customaddshadow_files(options, file_list)
+      fail "No output directory specified." if options[:outputdir].nil?
+      outputDirectory = File.expand_path(options[:outputdir])
+      FileUtils.mkdir_p(outputDirectory)
+      fileList = file_list[:files]
+      fail "No files list." if fileList.nil?
+
+      if fileList.size.zero?
+        puts "No files to scale." if options[:verbose]
+        return
+      end
+
+      # Create the command list object that we can then add commands to.
+      theCommands = CommandModule::SmigCommands.new
+
+      theCommands.run_asynchronously = options[:async]
+      # The export file type will be set to public.png unless set. At
+      # present only 2 choices are provided because the export file type needs
+      # to support transparency.
+      if options[:exportfiletype].nil?
+        # The export file type is the same as the input file type
+        fileType = :'public.png'
+      else
+        fileType = options[:exportfiletype]
+      end
+      nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
+
+      # Calculate the size of the cropped image.
+      size = MIShapes.make_size(
+                        file_list[:width] + options[:left] + options[:right],
+                        file_list[:height] + options[:top] + options[:bottom])
+      
+      # make the create bitmap context and add it to list of commands.
+      # setting addtocleanup to true means when commands have been completed
+      # the bitmap context object will be closed in cleanup.
+      bitmapObject = theCommands.make_createbitmapcontext(addtocleanup: true,
+                                                          size: size)
+
+      exporterObject = theCommands.make_createexporter("~/placeholder.png",
+                                      export_type: fileType, addtocleanup: true)
+
+      # Create hashes which describe the drawing of the customshadow on
+      # each edge of the image.
+      minAlpha = 0.03
+      maxAlpha = 0.7
+      alphaRange = maxAlpha - minAlpha
+      leftShadowhash = Private.create_shadowhash(options,
+                                                  options[:left],
+                                                  minAlpha,
+                                                  alphaRange,
+                                                  add1: true)
+
+      rightShadowhash = Private.create_shadowhash(options,
+                                                   options[:right],
+                                                   minAlpha,
+                                                   alphaRange,
+                                                   add1: false)
+
+      bottomShadowhash = Private.create_shadowhash(options,
+                                                    options[:bottom],
+                                                    minAlpha,
+                                                    alphaRange,
+                                                    add1: true)
+
+      topShadowhash = Private.create_shadowhash(options,
+                                                 options[:top],
+                                                 minAlpha,
+                                                 alphaRange,
+                                                 add1: false)
+
+      destinationRect = MIShapes.make_rectangle(
+              size: MIShapes.make_size(file_list[:width], file_list[:height]),
+              origin: MIShapes.make_point(options[:left], options[:bottom]))
+
+      # We need three different draws to the bitmap context for each image
+      # generated. Two of them can be setup before iterating through the files.
+      # The bitmap context should be wiped clean to remove old
+      # transparency information. So that is a draw fill rectangle covering the
+      # full size of the bitmap context of an opaque white color using the
+      # copy blend mode. Since that is the same for each image lets create
+      # the draw command here.
+      drawBackground = MIDrawElement.new(:fillrectangle)
+      drawBackground.fillcolor = MIColor.make_rgbacolor(1,1,1)
+      drawBackground.rectangle = MIShapes.make_rectangle(size: size)
+      drawBackground.blendmode = :kCGBlendModeCopy
+      drawBackgroundCommand = CommandModule.make_drawelement(bitmapObject,
+                                              drawinstructions: drawBackground)
+
+      # Background draw command is prepped, now prep shadow drawing command.
+      shadowDrawElements = MIDrawElement.new(:arrayofelements)
+      shadowDrawElements.linewidth = 1.0
+      shadowDrawElements.blendmode = :kCGBlendModeCopy
+      # Since the shadow is made by drawing a series of lines, we want those
+      # lines to be drawn on pixel boundaries. To achieve that we need to offset
+      # the drawing by half a pixel.
+      contextTransform = MITransformations.make_contexttransformation
+      MITransformations.add_translatetransform(contextTransform,
+                                               MIShapes.make_point(0.5, 0.5))
+      shadowDrawElements.contexttransformations = contextTransform
+      
+      # OK, the next shit is hard, at least for me. Calculating all the lines
+      # to draw to create the shadow.
+      bmcWidthM05 = size[:width].to_f - 0.5
+      bmcHeightM05 = size[:height].to_f - 0.5
+      
+      if bottomShadowhash[:hasshadow]
+        bottomHeight = bottomShadowhash[:scalar_i]
+        while bottomHeight >= 0
+          pos = bottomHeight.to_f
+          scaleFactor = 1.0 - pos / bottomShadowhash[:scalar_i].to_f
+          startPoint = MIShapes.make_point(
+                      leftShadowhash[:scalar_i].to_f * (1.0 - scaleFactor), pos)
+          endPoint = MIShapes.make_point(bmcWidthM05 -
+                     rightShadowhash[:scalar_i].to_f * (1.0 - scaleFactor), pos)
+          lineDrawElement = MIDrawElement.new(:drawline)
+          lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
+          lineDrawElement.strokecolor = bottomShadowhash[:colors][bottomHeight]
+          shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+          bottomHeight = bottomHeight.pred
+        end
+      end
+
+      if leftShadowhash[:hasshadow]
+        leftWidth = leftShadowhash[:scalar_i]
+        while leftWidth >= 0
+          pos = leftWidth.to_f
+          scaleFactor = 1.0 - pos / leftShadowhash[:scalar_i].to_f
+          startPoint = MIShapes.make_point(pos,
+                    (1.0 - scaleFactor) * bottomShadowhash[:scalar_i].to_f)
+          endPoint = MIShapes.make_point(pos,
+            bmcHeightM05 - (1.0 - scaleFactor) * topShadowhash[:scalar_i].to_f)
+          lineDrawElement = MIDrawElement.new(:drawline)
+          lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
+          lineDrawElement.strokecolor = leftShadowhash[:colors][leftWidth]
+          shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+          leftWidth = leftWidth.pred
+        end
+      end
+
+      if rightShadowhash[:hasshadow]
+        rightWidth = rightShadowhash[:scalar_i]
+        while rightWidth > 0
+          rightWidth = rightWidth.pred
+          pos = rightWidth.to_f
+          scaleFactor = 1.0 - pos / rightShadowhash[:scalar_i].to_f
+          startPoint = MIShapes.make_point(bmcWidthM05 - pos,
+                      (1.0 - scaleFactor) * bottomShadowhash[:scalar_i].to_f)
+          endPoint = MIShapes.make_point(bmcWidthM05 - pos,
+            bmcHeightM05 - (1.0 - scaleFactor) * topShadowhash[:scalar_i].to_f)
+          lineDrawElement = MIDrawElement.new(:drawline)
+          lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
+          lineDrawElement.strokecolor = rightShadowhash[:colors][rightWidth]
+          shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+        end
+      end
+
+      if topShadowhash[:hasshadow]
+        topHeight = topShadowhash[:scalar_i]
+        while topHeight > 0
+          topHeight = topHeight.pred
+          pos = topHeight.to_f
+          scaleFactor = 1.0 - pos / topShadowhash[:scalar_i].to_f
+          startPoint = MIShapes.make_point(
+                          leftShadowhash[:scalar_i].to_f * (1.0 - scaleFactor),
+                          bmcHeightM05 - pos)
+          endPoint = MIShapes.make_point(bmcWidthM05 - 
+                          rightShadowhash[:scalar_i].to_f * (1.0 - scaleFactor),
+                          bmcHeightM05 - pos)
+          lineDrawElement = MIDrawElement.new(:drawline)
+          lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
+          lineDrawElement.strokecolor = topShadowhash[:colors][topHeight]
+          shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+        end
+      end
+
+      drawShadowCommand = CommandModule.make_drawelement(bitmapObject,
+                                      drawinstructions: shadowDrawElements)
+
+      fileList.each do |filePath|
+        importerObject = theCommands.make_createimporter(filePath,
+                                                         addtocleanup: false)
+        theCommands.add_command(drawBackgroundCommand)
+        drawImageElement = MIDrawImageElement.new
+        drawImageElement.set_imagesource(source_object: importerObject, 
+                                         imageindex: 0)
+        drawImageElement.destinationrectangle = destinationRect
+        drawImageCommand = CommandModule.make_drawelement(bitmapObject,
+                                          drawinstructions: drawImageElement)
+        theCommands.add_command(drawImageCommand)
+        theCommands.add_command(drawShadowCommand)
         fileName = File.basename(filePath, '.*') + nameExtension
         exportPath = File.join(options[:outputdir], fileName)
         Private.make_commands_forexport(commands: theCommands,

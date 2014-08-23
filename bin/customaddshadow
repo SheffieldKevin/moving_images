@@ -1,19 +1,17 @@
 #!/usr/bin/env ruby
-# Copyright (C) 2013-2014 Kevin Meaney
+# Copyright (C) 2013 Kevin Meaney
 # Please refer to the file LICENSE for the license agreement.
 # You are granted the rights to modify this file for your own purposes
 # or for distribution to third parties. In either case you accept all
 # responsibility for liability. Please include the link to the documentation:
 # https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
 
-# FILE: customcrop
-# Crops images, each edge can be cropped by a specified amount.
+# FILE: customaddshadow
+# Add a shadow to the image, will save the new image as a png file.
 
 require 'optparse'
+require 'JSON'
 require 'moving_images'
-require 'pp'
-
-include MovingImages
 
 $verbose = false
 
@@ -39,23 +37,32 @@ def clamp_to_min(val, min)
   return val
 end
 
-class CustomCropCommand
-  @@options = { }
-  
+class AddShadowCommand
+  @@options = {}
+  #
+  # Return whether all mandatory options were included on command line
+  #
   def self.missing_mandatory_options?()
     return @@options[:outputdir].nil?
+  end
+
+  def self.smig_close_base_object(objectRef)
+    if !objectRef.nil?
+      Open3.capture2($smig, "doaction", "-close", "-object", objectRef)
+    end
   end
 
   #
   # Return a hash describing the options.
   # 
   def self.parse!(theArgs)
-    @@options = MILibrary::Utility.make_customcrop_options()
+    @@options = MILibrary::Utility.make_customaddshadow_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
-      opts.banner = "Usage: customcrop [options] file1, file2, ..."
-      opts.separator "Crop the image by specifying how much to crop from each "\
-                     "edge independently."
+      opts.banner = "Usage: customaddshadow [options] file1, file2, ..."
+      opts.separator "Adds a shadow border to images. "
+      opts.separator "The new image will be saved as a png or tiff file."
+      opts.separator ""
       opts.separator "If the output directory is the same as the directory " +
                      "containing the original image files, then if permissions"
       opts.separator "allow the original images will be overwritten. If the " +
@@ -64,47 +71,60 @@ class CustomCropCommand
       opts.separator ""
       opts.separator "Options:"
 
-      opts.on("-l", "--left [LEFT]", Integer,
-              "Crop LEFT pixels from left edge. Integer.") do |l|
-        @@options[:left] = clamp_to_min(l, 0)
+      opts.on("--left [LEFT]", Integer,
+              "The width of the shadow drawn to the left of the image. " +
+              "Range 0..200. Default 0.") do |left|
+        @@options[:left] = clamp_to_range(left, 0, 200)
       end
 
-      opts.on("-r", "--right [RIGHT]", Integer,
-              "Crop RIGHT pixels from right edge. Integer") do |r|
-        @@options[:right] = clamp_to_min(r, 0)
+      opts.on("--right [RIGHT]", Integer,
+              "The width of the shadow drawn to the right of the image. " +
+              "Range 0..200. Default 0.") do |rt|
+        @@options[:right] = clamp_to_range(rt, 0, 200)
+      end
+     
+      opts.on("--top [TOP]", Integer,
+              "The height of the shadow drawn above the top of the image. " +
+              "Range 0..200. Default 0.") do |top|
+        @@options[:top] = clamp_to_range(top, 0, 200)
       end
 
-      opts.on("-t", "--top [TOP]", Integer,
-              "Crop TOP pixels from top edge. Integer") do |t|
-        @@options[:top] = clamp_to_min(t, 0)
+      opts.on("--bottom [BOTTOM]", Integer,
+              "The height of the shadow drawn below the bottom of the image. " +
+              "Range 0..200. Default 0.") do |bottom|
+        @@options[:bottom] = clamp_to_range(bottom, 0, 200)
       end
 
-      opts.on("-b", "--bottom [BOTTOM]", Integer,
-            "Crop BOTTOM pixels from bottom edge. Integer") do |b|
-        @@options[:bottom] = clamp_to_min(b, 0)
+      opts.on("-r", "--red [RED]", Float,
+            "Red color component for the shadow color. " +
+            "Range: 0.0...1.0, default 0.0") do |r|
+         @@options[:red] = clamp_to_range(r, 0.0, 1.0)
+      end
+
+      opts.on("-g", "--green [GREEN]", Float,
+            "Green color component for the shadow color. " +
+            "Range: 0.0...1.0, default 0.0") do |g|
+        @@options[:green] = clamp_to_range(g, 0.0, 1.0)
+      end
+
+      opts.on("-b", "--blue [BLUE]", Float,
+            "Blue color component for the shadow color. " +
+            "Range: 0.0...1.0, default 0.0") do |b|
+        @@options[:blue] = clamp_to_range(b, 0.0, 1.0)
       end
 
       opts.on("-q", "--quality [QUALITY]", Float,
-            "Export quality. 0.0 = max compression, min quality " +
+            "Export quality. 0.0 = max compression, min quality. " +
             "1.0 = best quality min compression") do |qual|
         @@options[:quality] = clamp_to_range(qual, 0.0, 1.0)
       end
 
       opts.on("-t", "--exportfiletype [FILETYPE]",
-              [:'public.jpeg', :'public.png', :'com.compuserve.gif',
-               :'public.tiff', :'public.jpeg-2000', :'com.apple.icns',
-               :'com.adobe.photoshop-image', :'com.apple.rjpeg' ],
+              [:'public.png', :'public.tiff' ],
                "The export file type. If not specified then the export "\
-               "type will be set to the type of the first input file.\n"\
-               "\t\t\t\t\t(public.jpeg, public.png, public.tiff, " \
-               "com.compuserve.gif, public.jpeg-2000, com.apple.icns,\n"\
-               "\t\t\t\t\tcom.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
+               "type will be set to public.png.\n"\
+               "\t\t\t\t\t(public.png, public.tiff)") do |eft|
         @@options[:exportfiletype] = eft
-      end
-
-      opts.on("-m", "--copymetadata",
-              "Copy metadata from the original image to the new image") do
-        @@options[:copymetadata] = true
       end
 
       # Now get the directory where the scaled images are to be saved.
@@ -113,14 +133,10 @@ class CustomCropCommand
         @@options[:outputdir] = od
       end
 
-      opts.on("--assumesamedimensions",
-              "Assume all image files will have the same dimensions.") do
-        @@options[:assume_images_have_same_dimensions] = true
-      end
-
       # Now for options common to many command line scripts.
       opts.separator "Common options"
-
+    
+      @@options[:verbose] = false
       opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
         @@options[:verbose] = v
       end
@@ -128,31 +144,25 @@ class CustomCropCommand
       # Add the help option at the end of the list of options.
       opts.on("-h", "--help", "Display this screen") do
         raise "Display help screen"
-        exit
       end
 
       # Now add an example of using the command.
       opts.separator "Examples:"
-      opts.separator "  customcrop2 --left 100 --right 100 " +
-                     "--outputdir ~/Desktop/croppedimages --verbose " +
-                     "--quality 0.8 " +
-                     "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
-      opts.separator "  customcrop2 --top 200 --bottom 300 " +
-                     "--outputdir ~/Desktop/croppedimages --copymetadata " +
-                     "~/Desktop/junkimages/*.jpg"
-      
+      opts.separator "Add a shadow by 30 pixels down, 30 right."
+      opts.separator "  customaddshadow --bottom 30 --right 30 --red 0.1 " +
+                     "--green 0.1 --blue 0.1 --outputdir ~/shadowimages " +
+                     "--verbose --quality 0.8 ~/Desktop/junkimages/*.JPG"
     end # parse!
+
     begin
       opt_parser.parse!(theArgs)
       if self.missing_mandatory_options?()
         raise "Missing mandatory options."
       end
-
       if @@options[:left].zero? && @@options[:right].zero? &&
-         @@options[:top].zero? && @@options[:bottom].zero?
-         raise "No cropping needed."
+          @@options[:bottom].zero? && @@options[:top].zero?
+         raise "Missing one of left, right, top, bottom shadow."
       end
-
     rescue Exception => e
       puts e.message
       puts opt_parser
@@ -161,8 +171,8 @@ class CustomCropCommand
 
     @@options
   end
-
-  def self.customcrop
+  
+  def self.addshadow
     if ARGV.length < 1
       puts "No image files to process"
       exit(1)
@@ -191,12 +201,11 @@ class CustomCropCommand
         if process_imageslists.last.object_id.eql? image_list.object_id
           @@options[:async] = false
         end
-        MILibrary.customcrop_files(@@options, image_list)
+        MILibrary.customaddshadow_files(@@options, image_list)
         verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ
       end
       verboseputs "Time to process: #{Time.now - start_time} sec"
-
     rescue Exception => e
       $errorcode = Smig.exitvalue
       unless $errorcode.zero?
@@ -207,18 +216,13 @@ class CustomCropCommand
       puts e.backtrace.to_s
       exit 240
     end
-    Smig.exitvalue
   end
 end
 
 def localmain()
-  options = CustomCropCommand.parse!(ARGV)
-  $verbose = @@options[:verbose]
-  if $verbose
-    puts JSON.pretty_generate(options)
-  end
-
-  result = CustomCropCommand.customcrop()
+  options = AddShadowCommand.parse!(ARGV)  $verbose = options[:verbose]
+  verboseputs(options)
+  result = AddShadowCommand.addshadow()
   if !result.zero?
     verboseputs("Error fail code: " + result.to_s)
   end

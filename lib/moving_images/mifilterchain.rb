@@ -384,7 +384,7 @@ module MovingImages
     # @param filter_index [Fixnum] The index into the filter chain.
     def self.make_renderproperty_updateimage_now(key: :inputImage,
                                                  filtername_id: nil,
-                                                 file_index: nil)
+                                                 filter_index: nil)
       render_prop = { cifilterkey: key,
                       cisourceimageforceupdate: true }
       render_prop[:cifilterindex] = filter_index unless filter_index.nil?

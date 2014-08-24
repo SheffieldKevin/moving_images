@@ -739,7 +739,7 @@ module MovingImages
                                                    options[:right],
                                                    minAlpha,
                                                    alphaRange,
-                                                   add1: false)
+                                                   add1: true)
 
       bottomShadowhash = Private.create_shadowhash(options,
                                                     options[:bottom],
@@ -751,7 +751,7 @@ module MovingImages
                                                  options[:top],
                                                  minAlpha,
                                                  alphaRange,
-                                                 add1: false)
+                                                 add1: true)
 
       destinationRect = MIShapes.make_rectangle(
               size: MIShapes.make_size(file_list[:width], file_list[:height]),
@@ -785,9 +785,9 @@ module MovingImages
       
       # OK, the next shit is hard, at least for me. Calculating all the lines
       # to draw to create the shadow.
-      bmcWidthM05 = size[:width].to_f - 0.5
-      bmcHeightM05 = size[:height].to_f - 0.5
-      
+      bmcWidthM05 = size[:width].to_f #
+      bmcHeightM05 = size[:height].to_f #
+
       if bottomShadowhash[:hasshadow]
         bottomHeight = bottomShadowhash[:scalar_i]
         while bottomHeight >= 0
@@ -824,8 +824,7 @@ module MovingImages
 
       if rightShadowhash[:hasshadow]
         rightWidth = rightShadowhash[:scalar_i]
-        while rightWidth > 0
-          rightWidth = rightWidth.pred
+        while rightWidth >= 0 #
           pos = rightWidth.to_f
           scaleFactor = 1.0 - pos / rightShadowhash[:scalar_i].to_f
           startPoint = MIShapes.make_point(bmcWidthM05 - pos,
@@ -836,13 +835,13 @@ module MovingImages
           lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
           lineDrawElement.strokecolor = rightShadowhash[:colors][rightWidth]
           shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+          rightWidth = rightWidth.pred #
         end
       end
 
       if topShadowhash[:hasshadow]
         topHeight = topShadowhash[:scalar_i]
-        while topHeight > 0
-          topHeight = topHeight.pred
+        while topHeight >= 0 #
           pos = topHeight.to_f
           scaleFactor = 1.0 - pos / topShadowhash[:scalar_i].to_f
           startPoint = MIShapes.make_point(
@@ -855,6 +854,7 @@ module MovingImages
           lineDrawElement.line = MIShapes.make_line(startPoint, endPoint)
           lineDrawElement.strokecolor = topShadowhash[:colors][topHeight]
           shadowDrawElements.add_drawelement_toarrayofelements(lineDrawElement)
+          topHeight = topHeight.pred #
         end
       end
 

@@ -267,7 +267,7 @@ module MovingImages
       return Smig.perform_commands( { :commands => [ commandHash ] } )
     end
 
-    # Get a list of the commands handled by objects of class type.    
+    # Get the attributes of a particular core image filter.    
     # @param filtername [String] The type to get list of commands from.
     # @return [String] A JSON object describing the filter attributes
     def self.filterattributes(filtername: "CIBoxBlur")

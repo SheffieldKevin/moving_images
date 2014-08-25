@@ -11,7 +11,7 @@ module MovingImages
     # can also have values like "backgroundImage".
     # @param key [String] The filter property key used to assign the image.
     # @param value [Hash] The object to get the image from. See {SmigIDHash}
-    # @param keep_static [Bool, nil] Keep the image even if it changes.
+    # @param keep_static [Bool, nil] Keep the image even if source changes.
     # @return [Hash] The filter property image hash.
     def self.make_ciimageproperty(key: :inputImage,
                                   value: nil,
@@ -182,6 +182,14 @@ module MovingImages
       return { :cifilterkey => key, :cifiltervalue => affineHash,
               :cifiltervalueclass => "NSAffineTransform" }
     end
+    
+    # Return the class of the property value.    
+    # @param property [Hash] The filter property to get the value class from
+    # @return [String, Symbol] The property value class.
+    def self.get_propertyvalue_class(property)
+      return :NSNumber if property[:cifiltervalueclass].nil?
+      return property[:cifiltervalueclass]
+    end
   end
 
   # The MIFilter class.    
@@ -237,6 +245,83 @@ module MovingImages
     # @return void
     def properties=(filter_properties)
       @filter_hash[:cifilterproperties] = filter_properties
+    end
+
+    # Add the image obtained from source as the filters input image.
+    # @param image_source [Hash] Object or filter to get image from.
+    def add_inputimage_property(image_source)
+      unless image_source.nil?
+        imageProperty = MIFilterProperty.make_ciimageproperty(
+                                                    key: :inputImage,
+                                                    value: image_source)
+        self.add_property(imageProperty)
+      end
+    end
+
+    # Return the property from the property list with key.    
+    # @param key [String, Symbol] The key of the property to be returned
+    # @return [Hash, nil] The filter property which has key.
+    def get_property_withkey(key: :inputImage)
+      return nil if @filter_hash[:cifilterproperties].nil?
+      key_index = @filter_hash[:cifilterproperties].index do |prop|
+        prop[:key] == key
+      end
+      return nil if key_index.nil?
+      return @filter_hash[:cifilterproperties][key_index]
+    end
+
+    # Return the class of the value for the property with key.
+    # @param key [String, Symbol] The property key, to get property value class
+    # @return [String, Symbol, nil] The class of the property value
+    def get_propertyvalueclass_withkey(key: :inputImage)
+      theProperty = self.get_property_withkey(key)
+      return nil if theProperty.nil?
+      return MIFilterProperty.get_propertyvalue_class(theProperty)
+    end
+
+    def set_propertyvalue_propertywith_key(key, value)
+      theProperty = self.get_property_withkey(key: key)
+      theProperty[:cifiltervalue] = value unles theProperty.nil?
+    end
+  end
+
+  # The transition filter class.    
+  class MITransitionFilter < MIFilter
+    # Return the list of transition filters.    
+    # @return [String] A space delimited string of core image transition filters
+    def self.listtransitionfilters
+      MIMeta.listfilters(category: CICategoryTransition)
+    end
+
+    # Initialize a transition filter representation.    
+    # @param filter [String, Symbol] The CoreImage filter name
+    # @param identifier [String] The filter name identifier
+    # @param input_time [Float] The transition time. Range 0.0 .. 1.0.
+    # @param input_image_source [Hash] Image source, see {SmigIDHash}
+    # @param input_targetimage_source [Hash] Image source, see {SmigIDHash}
+    # @return [MITransitionFilter] A transition filter object
+    def initialize(filter, identifier: nil, input_time: 0,
+                   input_image_source: nil, input_targetimage_source: nil)
+      super(filter, identifier)
+      # lets assume for now that input time is within range. 0.0 to 1.0
+      time_property = MIFilterProperty.make_cinumberproperty(
+                                                  key: :inputTime,
+                                                  value: input_time)
+
+      unless input_image.nil?
+        timeProperty = MIFilterProperty.make_ciimageproperty(
+                                                    key: :inputImage,
+                                                    value: input_time)
+        self.add_property(timeProperty)
+      end
+      
+      self.add_inputimage_property(input_image_source)
+      
+      unless target_image.nil?
+        targetImageProperty = MIFilterProperty.make_ciimageproperty(
+                                              key: :inputTargetImage,
+                                              value: input_targetimage_source)
+      end
     end
   end
 

@@ -41,6 +41,13 @@ module MovingImages
                 :cifiltervalueclass => "CIVector" }
     end
 
+    # Make a core image vector property without a value.    
+    # @param key [String, Symbol] The filter property to be assigned the vector.
+    # @return [Hash] The vector filter property hash.
+    def self.make_civectorproperty(key: "inputExtent")
+      return { :cifilterkey => key, :cifiltervalueclass => "CIVector" }
+    end
+
     # Make a core image vector property, taking an array of Floats.    
     # @param key [String] The filter property key used to assign the vector.
     # @param value [Array<Float>] 
@@ -51,6 +58,13 @@ module MovingImages
       value.each { |item| stringVal += " " + item.to_s }
       stringVal += " ]"
       return self.make_civectorproperty_fromstring(key: key, value: stringVal)
+    end
+
+    # Make a core image color property without a value.    
+    # @param key [String, Symbol] The filter property to be assigned the color
+    # @return [Hash] The color filter property hash
+    def self.make_cicolorproperty(key: "inputColor")
+      return { :cifilterkey => key, :cifiltervalueclass => "CIColor" }
     end
 
     # Make a core image color property, taking a string representation of the 
@@ -105,7 +119,7 @@ module MovingImages
     # @param key [String] The filter property to be assigned the numeric value.
     # @param value [Float] The numeric value to be assigned.
     # @return [Hash] The core image numeric property hash.
-    def self.make_cinumberproperty(key: "inputRadius", value: 100.0)
+    def self.make_cinumberproperty(key: "inputRadius", value: nil)
       return { :cifilterkey => key, :cifiltervalue => value }
     end
 
@@ -159,6 +173,22 @@ module MovingImages
       end
       numberProperty[:cifiltervalue] = theVal
       numberProperty
+    end
+
+    # Set the filter property value from the information in the options hash.    
+    # Assumes that the value in the options hash is correctly formatted to
+    # be assigned to filter property hash
+    # @param filter_prop [Hash] The filter property for the value to be assigned
+    # @param options [Hash] The options hash as generated from opts.parse.
+    # @return [true, false] Whether the value was able to be assigned or not.
+    def self.set_propertyvalue_fromoptions(filter_prop, options)
+      if options[:verbose]
+        puts JSON.pretty_generate(filter_prop)
+      end
+      value = options[filter_prop[:cifilterkey]]
+      return false if value.nil?
+      filter_prop[:cifiltervalue] = value
+      return true
     end
 
     # Make an affine transform filter property.    
@@ -247,15 +277,14 @@ module MovingImages
       @filter_hash[:cifilterproperties] = filter_properties
     end
 
-    # Add the image obtained from source as the filters input image.
+    # Add the image obtained from source as the filters input image.    
+    # If you pass nil for image source then the property will be created but
+    # the value will not be set.
     # @param image_source [Hash] Object or filter to get image from.
     def add_inputimage_property(image_source)
-      unless image_source.nil?
-        imageProperty = MIFilterProperty.make_ciimageproperty(
-                                                    key: :inputImage,
-                                                    value: image_source)
-        self.add_property(imageProperty)
-      end
+      imageProperty = MIFilterProperty.make_ciimageproperty(key: :inputImage,
+                                                            value: image_source)
+      self.add_property(imageProperty)
     end
 
     # Return the property from the property list with key.    
@@ -264,7 +293,7 @@ module MovingImages
     def get_property_withkey(key: :inputImage)
       return nil if @filter_hash[:cifilterproperties].nil?
       key_index = @filter_hash[:cifilterproperties].index do |prop|
-        prop[:key] == key
+        prop[:cifilterkey] == key
       end
       return nil if key_index.nil?
       return @filter_hash[:cifilterproperties][key_index]
@@ -279,9 +308,28 @@ module MovingImages
       return MIFilterProperty.get_propertyvalue_class(theProperty)
     end
 
+    # Set the property value for the property with key.
+    # @param key [String, Symbol] The key for the property to set the value of
+    # @param value [Hash, Fixnum, Float, String] The value to be set.
     def set_propertyvalue_propertywith_key(key, value)
       theProperty = self.get_property_withkey(key: key)
       theProperty[:cifiltervalue] = value unles theProperty.nil?
+    end
+
+    # Get the first property in the list of properties with an unset value
+    # @return [Hash, nil] The property with an unset value.
+    def get_property_withunset_value()
+      index = @filter_hash[:cifilterproperties].index do |prop|
+        prop[:cifiltervalue].nil?
+      end
+      return nil if index.nil?
+      @filter_hash[:cifilterproperties][index]
+    end
+    
+    # Make a filter object with the CoreImage filter name and identifier.
+    # @param filtername [String, Symbol] CoreImage name to create object from 
+    def self.make_filter_withname(filtername: :CIBoxBlur, identifier: nil)
+      MovingImages.const_get(filtername).new(identifier)
     end
   end
 
@@ -302,26 +350,96 @@ module MovingImages
     # @return [MITransitionFilter] A transition filter object
     def initialize(filter, identifier: nil, input_time: 0,
                    input_image_source: nil, input_targetimage_source: nil)
-      super(filter, identifier)
+      super(filter, identifier: identifier)
       # lets assume for now that input time is within range. 0.0 to 1.0
-      time_property = MIFilterProperty.make_cinumberproperty(
+      timeProperty = MIFilterProperty.make_cinumberproperty(
                                                   key: :inputTime,
                                                   value: input_time)
-
-      unless input_image.nil?
-        timeProperty = MIFilterProperty.make_ciimageproperty(
-                                                    key: :inputImage,
-                                                    value: input_time)
-        self.add_property(timeProperty)
-      end
-      
+      self.add_property(timeProperty)
       self.add_inputimage_property(input_image_source)
-      
-      unless target_image.nil?
-        targetImageProperty = MIFilterProperty.make_ciimageproperty(
-                                              key: :inputTargetImage,
-                                              value: input_targetimage_source)
-      end
+      imageProperty = MIFilterProperty.make_ciimageproperty(
+                            key: :inputTargetImage, value: input_image_source)
+      self.add_property(imageProperty)
+    end
+  end
+
+  # The CIAccordionFolderTransition filter.    
+  class CIAccordionFoldTransition < MITransitionFilter
+    # Initialize the CIAccordionFolderTransition object.    
+    # @param identifier [String] The filter name identifier
+    # @return [CIAccordionFoldTransition] The object
+    def initialize(identifier)
+      super(:CIAccordionFoldTransition, identifier: identifier)
+      numberOfFolds = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputNumberOfFolds) # range 1..10
+      self.add_property(numberOfFolds)
+      foldShadowAmount = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputFoldShadowAmount) # range 0..1
+      self.add_property(foldShadowAmount)
+    end
+  end
+
+  # The CIBarsSwipeTransition filter.    
+  class CIBarsSwipeTransition < MITransitionFilter
+    # Initialize the CIBarsSwipeTransition object.    
+    # @param identifier [String] The filter name identifier
+    # @return [CIBarsSwipeTransition] The object
+    def initialize(identifier)
+      super(:CIBarsSwipeTransition, identifier: identifier)
+      angle = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputAngle) # range 0 - 2π
+      self.add_property(angle)
+      width = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputWidth) # range 2..30
+      self.add_property(width)
+      barOffset = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputBarOffset) # range 1..100
+      self.add_property(barOffset)
+    end
+  end
+
+  # The CIRippleTransition filter.    
+  class CIRippleTransition < MITransitionFilter
+    # Initialize the CIBarsSwipeTransition object.    
+    # @param identifier [String] The filter name identifier
+    # @return [CIBarsSwipeTransition] The object
+    def initialize(identifier)
+      super(:CIRippleTransition, identifier: identifier)
+      width = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputWidth) # range 2..30
+      self.add_property(width)
+      color = MIFilterProperty.make_cicolorproperty(
+                                      key: :inputColor)
+      self.add_property(color)
+      extent = MIFilterProperty.make_civectorproperty(
+                                      key: :inputExtent)
+      self.add_property(extent)
+      fail "CIRippleTransition not fully implemented"
+    end
+  end
+
+  # The CISwipeTransition filter.    
+  class CISwipeTransition < MITransitionFilter
+    # Initialize the CIBarsSwipeTransition object.    
+    # @param identifier [String] The filter name identifier
+    # @return [CISwipeTransition] The object
+    def initialize(identifier)
+      super(:CISwipeTransition, identifier: identifier)
+      angle = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputAngle) # range 0 - π
+      self.add_property(angle)
+      width = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputWidth) # range 0.1..800
+      self.add_property(width)
+      color = MIFilterProperty.make_cicolorproperty(
+                                      key: :inputColor)
+      self.add_property(color)
+      extent = MIFilterProperty.make_civectorproperty(
+                                      key: :inputExtent)
+      self.add_property(extent)
+      opacity = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputOpacity) # range 0 .. 1
+      self.add_property(opacity)
     end
   end
 
@@ -546,5 +664,4 @@ module MovingImages
       return @renderHash.to_json
     end
   end
-
 end

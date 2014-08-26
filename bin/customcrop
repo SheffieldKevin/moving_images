@@ -153,7 +153,7 @@ class CustomCropCommand
          raise "No cropping needed."
       end
 
-    rescue Exception => e
+    rescue RuntimeError => e
       puts e.message
       puts opt_parser
       exit 240
@@ -197,7 +197,7 @@ class CustomCropCommand
       end
       verboseputs "Time to process: #{Time.now - start_time} sec"
 
-    rescue Exception => e
+    rescue RuntimeError => e
       $errorcode = Smig.exitvalue
       unless $errorcode.zero?
         verboseputs "Exit string: " + Smig.exitstring

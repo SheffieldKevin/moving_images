@@ -165,7 +165,7 @@ class AddShadowCommand
           @@options[:bottom].zero? && @@options[:top].zero?
          raise "Missing one of left, right, top, bottom shadow."
       end
-    rescue Exception => e
+    rescue RuntimeError => e
       puts e.message
       puts opt_parser
       exit 240
@@ -208,7 +208,7 @@ class AddShadowCommand
         list_num = list_num.succ
       end
       verboseputs "Time to process: #{Time.now - start_time} sec"
-    rescue Exception => e
+    rescue RuntimeError => e
       $errorcode = Smig.exitvalue
       unless $errorcode.zero?
         verboseputs "Exit string: " + Smig.exitstring

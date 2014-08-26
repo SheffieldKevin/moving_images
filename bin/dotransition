@@ -1,0 +1,473 @@
+#!/usr/bin/env ruby
+# Copyright (C) 2014 Kevin Meaney
+# Please refer to the file LICENSE for the license agreement.
+# You are granted the rights to modify this file for your own purposes
+# or for distribution to third parties. In either case you accept all
+# responsibility for liability. Please include the link to the documentation:
+# https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
+
+# FILE: dotransition
+# Create an image using a single simple core image filter.
+
+require 'optparse'
+require 'moving_images'
+require 'pp'
+
+include MovingImages
+
+$verbose = false
+
+def verboseputs(input)
+  if $verbose
+    puts input
+  end
+end
+
+def verbosepp(input)
+  if $verbose
+    pp input
+  end
+end
+
+class DoTransition
+  @@options = {}
+  @@smigExitVal = 0
+  @@listOfExtraObjectsToClose = []
+  
+  #
+  # Return whether all mandatory options were included on command line
+  #
+  def self.missing_mandatory_options?()
+    return @@options[:outputdir].nil? ||
+           @@options[:sourceimage].nil? ||
+           @@options[:destinationimage].nil? ||
+           @@options[:basename].nil? ||
+           @@options[:count].nil? ||
+           @@options[:transitionfilter].nil?
+  end
+
+  #
+  # Return a hash describing the options.
+  #
+  def self.parse!(theArgs)
+    opt_parser = OptionParser.new do |opts|
+      opts.version = "0.1b"
+      opts.banner = "Usage: dotransition [options]"
+      opts.separator ""
+      opts.separator "Apply a transition starting with the source " + 
+                     "image and ending up with the destination image. If " + 
+                     "permissions allow, dotransition will overwrite " +
+                     "existing files."
+      opts.separator ""
+      opts.separator "The default number of transition steps is 20. " +
+                     "This can be changed using the --count option."
+      opts.separator ""
+      opts.separator "Many options are required for specific filters, but in " +
+                     "terms of how these options are interpreted on the " +
+                     "command line they are treated as optional properties."
+      opts.separator ""
+      opts.separator "The options --sourceimage, --targetimage, " +
+                     "--basename, --count, --exportfiletype, --outputdir, " +
+                     "--transitionfilter, --verbose are options common to " + 
+                     "all transition filters."
+      opts.separator ""
+      opts.separator "If the output directory doesn't exist the " +
+                     "directory will be created."
+      opts.separator ""
+      opts.separator "Options:"
+
+      @@options[:sourceimage] = nil
+      opts.on("-s", "--sourceimage SOURCEIMAGE",
+              "Path to image the dissolve transition starts from.") do |source|
+        @@options[:sourceimage] = source
+      end
+
+      # Should replace :destinationimage with :targetimage.
+      @@options[:targetimage] = nil
+      opts.on("-d", "--targetimage TARGETIMAGE", String,
+            "Path to image the dissolve transition ends at.") do |dest|
+        @@options[:targetimage] = dest
+      end
+
+      @@options[:basename] = nil
+      opts.on("-b", "--basename BASENAME", String,
+            "The base file name which will have appended the sequence number " +
+            "and file extension.") do |basename|
+        @@options[:basename] = basename
+      end
+
+      @@options[:count] = 30
+      opts.on("-c", "--count [COUNT]", Integer,
+            "Number of steps to transition from source to destination. " +
+            "Default number of steps is 30.") do |n|
+        @@options[:count] = n
+      end
+
+      @@options[:exportfiletype] = :"public.tiff"
+      opts.on("-t", "--exportfiletype [FILETYPE]",
+                  [ :"public.png", :"public.jpeg", :"public.tiff" ],
+            "Export image file type. Default is public.tiff") do |exft|
+        @@options[:exportfiletype] = exft
+      end
+
+      @@options[:outputdir] = nil
+      opts.on("-o", "--outputdir OUTPUTDIR", String,
+            "Directory where transition images are saved.") do |od|
+        @@options[:outputdir] = od
+      end
+
+      @@options[:transitionfilter] = nil
+      opts.on("--transitionfilter TRANSITIONFILTER", String,
+            "The filter to use to transition from source to ." +
+            "destination image.") do |tf|
+        @@options[:transitionfilter] = tf
+      end
+
+      @@options[:listtransitionfilters] = false
+      opts.on("-l", "--listtransitionfilters",
+              "List the transition filters handled by this script.") do
+        @@options[:listtransitionfilters] = true
+      end
+
+      #
+      # Get the properties of the filter with filter name FILTERNAME
+      #
+      @@options[:getfilterproperties] = nil
+      opts.on("--filterproperties [FILTERNAME]",
+              "Get filter properties for filter with name.") do |filterName|
+        @@options[:getfilterproperties] = filterName
+      end
+
+      opts.on("--angle [RADIANS]", Float,
+              "Angle in radians for filter input \"inputAngle\". " +
+              "Filters: CIBarsSwipeTransition, CISwipeTranstion,\n\t\t\t\t\t" +
+              "CICopyMachineTransition, CIModTransition, CIPageCurlTransition,"+
+              " CIPageCurlWithShadowTransition.") do |angle|
+        @@options[:inputAngle] = angle
+      end
+
+      opts.on("--width [PIXELS]", Float,
+              "Width in pixels for filter input \"inputWidth\". " +
+              "Filters: CIBarsSwipeTransition, CIRippleTranstion, " +
+              "CISwipeTranstion, CICopyMachineTransition.") do |width|
+        @@options[:inputWidth] = width
+      end
+
+      opts.on("--scale [SCALE]", Float,
+              "Z scale for ripple to start with a dimple or a bulge. "+
+              "For filter input \"inputScale\". Filters: CIRippleTransition. " +
+              "Range: -50 to 50. negative is dimple.") do |scale|
+        @@options[:inputScale] = scale
+      end
+
+      opts.on("--opacity [OPACITY]", Float,
+              "The opacity of the swipe. For filter input \"inputOpacity\". "+
+              "Filters: CISwipeTransition, CICopyMachineTransition. " +
+              "Range: 0 to 1. 0 is transparent.") do |opacity|
+        @@options[:inputOpacity] = opacity
+      end
+
+      opts.on("--radius [RADIUS]", Float,
+              "The radius in pixels. For filter input \"inputRadius\". "+
+              "Filters: CIModTranstion, CIPageCurlTransition, " +
+              "CIPageCurlWidthShadowTransition.") do |radius|
+        @@options[:inputRadius] = radius
+      end
+
+      opts.on("--baroffset [OFFSET]", Float,
+              "The offset in pixels. For filter input \"inputBarOffset\". " +
+              "The offset of one bar with respect to another. " +
+              "Filters: CIBarSwipeTranstion.") do |offset|
+        @@options[:inputBarOffset] = offset
+      end
+
+      opts.on("--center [CENTER]", String,
+              "The center of the effect. For filter input \"inputCenter\". " +
+              "Specified as two numbers separated by a comma without\n\t\t\t" +
+              "\t\tspaces. x,y specified as numbers: 250,150. " + 
+              "Filters: CIRippleTranstion, " +
+              " CIFlashTranstion, CIModTranstion.") do |centreString|
+        vals = centreString.split(",")
+        # Any exception thrown here if failure of any kind will be caught
+        # in the rescue section in the begin block below. ref exception.
+        if vals.length.equal? 2
+            x = Float(vals[0])
+            y = Float(vals[1])
+            # basically the above is to just throw if the values aren't floats.
+            textCenter = "[" + vals[0] + " " + vals[1] + "]"
+            @@options[:inputCenter] = textCenter
+        else
+          raise "--center not correctly specified"
+        end
+      end
+
+      opts.on("--extent [EXTENT]", String,
+              "The extent of the effect. For input \"inputExtent\". " +
+              "Four numbers separated by a comma without spaces." +
+              " x,y,width,height as numbers: 0,0,600,400.\n\t\t\t\t" + 
+              "\tFilters: CIRippleTranstion, CISwipeTranstion, " +
+              "CICopyMachineTransition, CIPageCurlWithShadowTranstion, " +
+              "CIPageCurlTransition, CIFlashTransition.") do |extentString|
+        vals = extentString.split(",")
+        # Any exception thrown here if failure of any kind will be caught
+        # in the rescue section in the begin block below. ref exception.
+        if vals.length.equal? 4
+            x = Float(vals[0])
+            y = Float(vals[1])
+            width = Float(vals[2])
+            height = Float(vals[3])
+            # basically the above is to just throw if the values aren't floats.
+            textExtent = "[" + vals[0] + " " + vals[1] + " " + vals[2]
+            textExtent += " " + vals[3] + "]"
+            @@options[:inputExtent] = textExtent
+            @@options[:sourceRectangle] = { :origin => { :x => x, :y => y },
+                              :size => { :width => width, :height => height } }
+        else
+          raise "--extent not correctly specified"
+        end
+      end
+
+      opts.on("--color [COLOR]", String,
+              "The color to be used. For filter input \"inputColor\". " +
+              "Four numbers separated by a comma without spaces.\n\t\t\t\t\t" +
+              "r,g,b,a specified as numbers 0-1: 0.8,0.7,0.1,1.0. " + 
+              "Filters: CISwipeTranstion, CIFlashTransition, " +
+              "CICopyMachineTransition.") do |colorString|
+        vals = colorString.split(",")
+        # Any exception thrown here if failure of any kind will be caught
+        # in the rescue section in the begin block below. ref exception.
+        if vals.length.equal? 4
+            r = Float(vals[0])
+            g = Float(vals[1])
+            b = Float(vals[2])
+            a = Float(vals[3])
+            # basically the above is to just throw if the values aren't floats.
+            textColor = vals[0] + " " + vals[1] + " " + vals[2] + " " + vals[3]
+            @@options[:inputColor] = textColor
+        else
+          raise "--color not correctly specified"
+        end
+      end
+
+      opts.on("--shadowextent [SHADOWEXTENT]", String,
+              "The shadow extent. For filter input \"inputShadowExtent\". " +
+              "Specified as four numbers separated by commas without\n\t\t\t" +
+              "\t\tspaces. x,y,width,height specified as numbers: " + 
+              "0,0,600,400. Filters: CIPageCurlWithShadowTranstition.") do |es|
+        vals = es.split(",")
+        # Any exception thrown here if failure of any kind will be caught
+        # in the rescue section in the begin block below. ref exception.
+        if vals.length.equal? 4
+            x = Float(vals[0])
+            y = Float(vals[1])
+            width = Float(vals[2])
+            height = Float(vals[3])
+            # basically the above is to just throw if the values aren't floats.
+            textExtent = "[" + vals[0] + " " + vals[1] + " " + vals[2]
+            textExtent += " " + vals[3] + "]"
+            @@options[:inputShadowExtent] = textExtent
+        else
+          raise "--shadowextent not correctly specified"
+        end
+      end
+
+      opts.on("--shadowoffset [SHADOWOFFSET]", String,
+              "The shadow offset. For filter input \"inputShadowOffset\". " +
+              "Specified as two numbers separated by a comma without\n\t\t\t" + 
+              "\t\tspaces. x,y specified as numbers: 250,150. " + 
+              "Filters: CIDisintegrateWithMaskTransition.") do |offsetString|
+        vals = offsetString.split(",")
+        # Any exception thrown here if failure of any kind will be caught
+        # in the rescue section in the begin block below. ref exception.
+        if vals.length.equal? 2
+            x = Float(vals[0])
+            y = Float(vals[1])
+            # basically the above is to just throw if the values aren't floats.
+            textOffset = "[" + vals[0] + " " + vals[1] + "]"
+            @@options[:inputShadowOffset] = textOffset
+        else
+          raise "--shadowoffset not correctly specified"
+        end
+      end
+
+      opts.on("--shadowdensity [DENSITY]", Float,
+              "The shadow density 0.0-1.0 for filter input " +
+              "\"inputShadowDensity\". " +
+              "Filters: CIDisintegrateWithMaskTransition") do |sd|
+        @@options[:inputShadowDensity] = sd
+      end
+
+      opts.on("--shadowradius [SHADOWRADIUS]", Float,
+              "The shadow radius 0-50 for filter input \"inputShadowRadius\"." +
+              " Filters: CIDisintegrateWithMaskTransition.") do |sr|
+        @@options[:inputShadowRadius] = sr
+      end
+
+      opts.on("--striationstrength [STRIATIONSTRENGTH]", Float,
+              "The striation strength 0.0-3.0 for filter input " +
+              "\"inputStriationStrength\". Strength of rays emanating from " +
+              "the flash. Filters: CIFlashTransition.") do |ss|
+        @@options[:inputStriationStrength] = ss
+      end
+
+      opts.on("--fadethreshold [FADETHRESHHOLD]", Float,
+              "The fade threshold 0.0-1.0 for filter input " +
+              "\"inputFadeThreshold\". " +
+              "Filters: CIFlashTransition.") do |fs|
+        @@options[:inputFadeThreshold] = fs
+      end
+
+      opts.on("--striationcontrast [STRIATIONCONTRAST]", Float,
+              "The striationcontrast 0.0-5.0 for filter input " +
+              "\"inputStriationContrast\". " +
+              "Filters: CIFlashTransition.") do |sc|
+        @@options[:inputStriationContrast] = sc
+      end
+
+      opts.on("--compression [COMPRESSION]", Float,
+              "The compression 0-100 for filter input \"inputCompression\". " +
+              "Filters: CIModTransition.") do |sc|
+        @@options[:inputStriationContrast] = sc
+      end
+
+      opts.on("--shadowamount [SHADOWAMOUNT]", Float,
+              "The shadow amount 0.0-1.0 for filter input " +
+              "\"inputShadowAmount\". " +
+              "Filters: CIPageCurlWithShadowTransition.") do |sa|
+        @@options[:inputShadowAmount] = sa
+      end
+
+      opts.on("--shadowsize [SHADOWSIZE]", Float,
+              "The shadow size 0.0-1.0 for filter input " +
+              "\"inputShadowSize\". " +
+              "Filters: CIPageCurlWithShadowTransition.") do |ss|
+        @@options[:inputShadowAmount] = ss
+      end
+
+      opts.on("--shadingimage [SHADINGIMAGE]", String,
+              "The path to an image that looks like a shaded sphere " +
+              "enclosed in a square image. If not provided then the " +
+              "image will be generated.\n\t\t\t\t\t Filter input " +
+              "\"inputShadingImage\". Filters: " +
+              "CIRippleTransition, CIPageCurlTransition.") do |si|
+        @@options[:inputShadingImage] = si
+      end
+
+      opts.on("--backsideimage [BACKSIDEIMAGE]", String,
+              "Path to an image that is on the backside of the page " +
+              "turned over in the page curl transitions.\n\t\t\t\t\t " +
+              "Filter input \"inputBacksideImage\". Filters: " +
+              "CIPageCurlTransition, CIPageCurlWithShadowTransition.") do |bsi|
+        @@options[:inputBacksideImage] = bsi
+      end
+
+      opts.on("--maskimage [MASKIMAGE]", String,
+              "The path to an image that defines the shape to use when " +
+              "transitioning. Filter input \"inputMaskImage\". Filters: " +
+              "CIRippleTransition, CIPageCurlTransition.") do |mi|
+        @@options[:inputMaskImage] = mi
+      end
+
+      @@options[:verbose] = false
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do
+        @@options[:verbose] = true
+      end
+
+      @@options[:displayhelp] = false
+      opts.on("-h", "--help", "Display this screen") do
+        @@options[:displayhelp] = true
+      end
+
+      # Now add an example of using the command.
+      opts.separator "Examples:"
+      opts.separator "Perform a dissolve transition in 20 steps:"
+      opts.separator "  dotransition --count 20 " +
+                     "--sourceimage \"~/Pictures/sourceimage.png\" " +
+                     "--destinationimage \"~/Pictures/destinationimage.png\" " +
+                     "--basename Dissolve " +
+                     "--transitionfilter CIDissolveTransition " +
+                     "--outputdir \"~/Desktop/deleteme/\""
+      opts.separator ""
+      opts.separator "  dotransition --transitionfilter CIFlashTransition " +
+                " --basename FlashTransition " +
+                " --outputdir ~/Desktop/deleteme --sourceimage " +
+                "\"~/Desktop/exampleimages/DSCN0733.JPG\"" +
+                "--destinationimage \"~/Desktop/exampleimages/DSCN0724.JPG\" "+ 
+                "--verbose --color 0.8,0.7,0.1,1.0 --extent 0,0,908,681 " +
+                "--center 610,450"
+    end # parse!
+
+    begin
+      opt_parser.parse!(theArgs)
+
+      if @@options[:displayhelp]
+        raise opt_parser.to_s
+      end
+
+      if @@options[:listtransitionfilters]
+        raise self.create_transitionfilter_namelist()
+      end
+
+      unless @@options[:getfilterproperties].nil?
+        json = self.getfilterproperties_jsonpretty(
+                                            @@options[:getfilterproperties])
+        if json.nil?
+          raise "Not a transition filter: " + @@options[:getfilterproperties]
+        else
+          raise json
+        end
+      end
+
+      if self.missing_mandatory_options?()
+        puts(JSON.pretty_generate(@@options))
+        raise "Missing mandatory options."
+      end
+
+    rescue Exception => e
+      exitVal = 0
+      if @@options[:displayhelp] || @@options[:listtransitionfilters] ||
+                                !@@options[:getfilterproperties].nil?
+        puts e.message
+      else
+        exitVal = 240
+        puts e.message
+        puts opt_parser
+      end
+      exit exitVal
+    end
+
+    @@options
+  end # self.parse!
+
+  def self.apply
+    begin
+      start_time = Time.now
+      MILibrary.dotransition(@@options)
+      verboseputs "Time to process: #{Time.now - start_time} sec"
+
+    rescue Exception => e
+      $errorcode = Smig.exitvalue
+      unless $errorcode.zero?
+        verboseputs "Exit string: " + Smig.exitstring
+        verboseputs "Exit status: " + $errorcode.to_s
+      end
+      puts e.message
+      puts e.backtrace.to_s
+      exit 240
+    end
+    Smig.exitvalue
+end
+
+def localmain()
+  options = DoTransition.parse!(ARGV)
+  $verbose = options[:verbose]
+  verbosepp(options)
+  result = DoTransition.apply()
+  unless result.zero?
+    verboseputs("Error fail code: " + result.to_s)
+  end
+  result
+end
+
+result = localmain()
+exit(result)

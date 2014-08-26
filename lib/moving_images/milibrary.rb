@@ -495,21 +495,97 @@ module MovingImages
       end
     end
 
+    # Apply a transition filter, starting with source, ends with target.    
+    # The options hash contains all the information necessary for performing
+    # the transition. Save the results of applying the transition filter to
+    # a sequence of image files.
+    # @param options [Hash] As created by the dotransition script
     def self.dotransition(options)
+      fail "No output directory specified." if options[:outputdir].nil?
       outputDir = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDir)
-      
+
       sourceImagePath = File.expand_path(options[:sourceimage])
       targetImagePath = File.expand_path(options[:targetimage])
-      transitionFilter = options[:transitionfilter]
+
       dimensions = SpotlightCommand.get_imagedimensions(sourceImagePath)
       # Assume target image dimensions are the same.
-      theCommands = SmigCommands.new
+      theCommands = CommandModule::SmigCommands.new
       sourceImage = theCommands.make_createimporter(sourceImagePath)
       targetImage = theCommands.make_createimporter(targetImagePath)
       bitmap = theCommands.make_createbitmapcontext(size: dimensions)
-      filterChain = MIFilterChain.new(bitmap, nil)
-      
+      filterChain = MIFilterChain.new(bitmap)
+      filter = MIFilter.make_filter_withname(
+                          filtername: options[:transitionfilter],
+                          identifier: :maintransitionfilter)
+      if filter.nil?
+        puts "CoreImage filter name not recognized."
+        return
+      end
+
+      unless filter.is_a?(MITransitionFilter)
+        puts "CoreImage filter is not a transition filter"
+        return
+      end
+
+      filter_prop = filter.get_property_withunset_value()
+      until filter_prop.nil?
+        case filter_prop[:cifilterkey]
+          when :inputImage
+            filter_prop[:cifiltervalue] = sourceImage
+          when :inputTargetImage
+            filter_prop[:cifiltervalue] = targetImage
+          else
+            assigned = MIFilterProperty.set_propertyvalue_fromoptions(
+                                                            filter_prop,
+                                                            options)
+            unless assigned
+              puts "Error assigning property #{filter_prop[:cifilterkey]}"
+              return
+            end #unless
+          end # case
+        filter_prop = filter.get_property_withunset_value()
+      end # until
+      if options[:verbose]
+        puts JSON.pretty_generate(filter.filterhash)
+      end
+      filterChain.add_filter(filter)
+      filterChainObject = theCommands.make_createimagefilterchain(filterChain)
+      type = options[:exportfiletype]
+      nameExtension = Utility.get_extension_fromimagefiletype(filetype: type)
+      exporter = theCommands.make_createexporter("temp/file/path.tiff",
+                                                 export_type: type)
+      options[:count].times do |i|
+        time = i.to_f / (options[:count] - 1).to_f
+        prop = MIFilterRenderProperty.make_renderproperty_withfilternameid(
+                              key: :inputTime,
+                            value: time,
+                    filtername_id: :maintransitionfilter)
+        filterChainRender = MIFilterChainRender.new
+        filterChainRender.add_filterproperty(prop)
+#        if options[:transitionfilter].to_sym.eql?(:CIAccordionFoldTransition)
+#          destination_rect = MIShapes.make_rectangle(
+#                                    width: dimensions[:width] * (1.0 - time),
+#                                    height: dimensions[:height])
+#          filterChainRender.destinationrectangle = destination_rect
+#          filterChainRender.sourcerectangle = destination_rect
+#        end
+        renderCommand = CommandModule.make_renderfilterchain(filterChainObject,
+                                        renderinstructions: filterChainRender)
+#        if options[:verbose]
+#          puts JSON.pretty_generate(renderCommand.commandhash)
+#        end
+        theCommands.add_command(renderCommand)
+        fileName = options[:basename] + i.to_s.rjust(3, '0') + nameExtension
+        exportPath = File.join(outputDir, fileName)
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporter,
+                                        image_source: bitmap,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: nil)
+      end # options[:count].times do
+      Smig.perform_commands(theCommands)
     end
 
     # Crop the image files list in the files attribute of the file_list hash.    
@@ -586,7 +662,7 @@ module MovingImages
         theCommands.add_command(cropImageCommand)
 
         fileName = File.basename(filePath, '.*') + nameExtension
-        exportPath = File.join(options[:outputdir], fileName)
+        exportPath = File.join(outputDirectory, fileName)
         Private.make_commands_forexport(commands: theCommands,
                                         exporter: exporterObject,
                                         image_source: bitmapObject,
@@ -675,7 +751,7 @@ module MovingImages
         theCommands.add_command(drawImageCommand)
 
         fileName = File.basename(filePath, '.*') + nameExtension
-        exportPath = File.join(options[:outputdir], fileName)
+        exportPath = File.join(outputDirectory, fileName)
         Private.make_commands_forexport(commands: theCommands,
                                         exporter: exporterObject,
                                         image_source: bitmapObject,
@@ -891,7 +967,7 @@ module MovingImages
         theCommands.add_command(drawImageCommand)
         theCommands.add_command(drawShadowCommand)
         fileName = File.basename(filePath, '.*') + nameExtension
-        exportPath = File.join(options[:outputdir], fileName)
+        exportPath = File.join(outputDirectory, fileName)
         Private.make_commands_forexport(commands: theCommands,
                                         exporter: exporterObject,
                                         image_source: bitmapObject,
@@ -1019,7 +1095,7 @@ module MovingImages
         fileName = File.basename(filePath, '.*') + name_extension
 
         # Combine it with the output directory.
-        exportPath = File.join(options[:outputdir], fileName)
+        exportPath = File.join(outputDirectory, fileName)
         
         # Do all the prep work for saving scaled image to a file.
         Private.make_commands_forexport(commands: theCommands,
@@ -1109,7 +1185,7 @@ module MovingImages
         theCommands.add_command(scaleImageCommand)
 
         fileName = File.basename(filePath, '.*') + name_extension
-        exportPath = File.join(options[:outputdir], fileName)
+        exportPath = File.join(outputDirectory, fileName)
 
         # Do all the prep work for saving scaled image to a file.
         Private.make_commands_forexport(commands: theCommands,

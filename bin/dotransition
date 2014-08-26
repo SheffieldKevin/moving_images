@@ -40,7 +40,7 @@ class DoTransition
   def self.missing_mandatory_options?()
     return @@options[:outputdir].nil? ||
            @@options[:sourceimage].nil? ||
-           @@options[:destinationimage].nil? ||
+           @@options[:targetimage].nil? ||
            @@options[:basename].nil? ||
            @@options[:count].nil? ||
            @@options[:transitionfilter].nil?
@@ -330,6 +330,20 @@ class DoTransition
         @@options[:inputStriationContrast] = sc
       end
 
+      @@options[:inputNumberOfFolds] = 3 # range is 1 .. 10
+      opts.on("--numberoffolds [NUMFOLDS]", Integer, 
+              "The number of folds in CIAccordionFoldTransition. "\
+              "\"inputNumberOfFolds\"") do |n|
+        @@options[:inputNumberOfFolds] = n
+      end
+
+      @@options[:inputFoldShadowAmount] = 0.25 # range is 0 .. 0.25
+      opts.on("--foldshadowamount [FOLDSHADOWAMOUNT]", Float, 
+              "The amount of shadow to apply in CIAccordionFoldTransition. "\
+              "\"inputFoldShadowAmount\"") do |n|
+        @@options[:inputFoldShadowAmount] = n
+      end
+
       opts.on("--shadowamount [SHADOWAMOUNT]", Float,
               "The shadow amount 0.0-1.0 for filter input " +
               "\"inputShadowAmount\". " +
@@ -423,7 +437,7 @@ class DoTransition
         raise "Missing mandatory options."
       end
 
-    rescue Exception => e
+    rescue RuntimeError => e
       exitVal = 0
       if @@options[:displayhelp] || @@options[:listtransitionfilters] ||
                                 !@@options[:getfilterproperties].nil?
@@ -445,7 +459,7 @@ class DoTransition
       MILibrary.dotransition(@@options)
       verboseputs "Time to process: #{Time.now - start_time} sec"
 
-    rescue Exception => e
+    rescue RuntimeError => e
       $errorcode = Smig.exitvalue
       unless $errorcode.zero?
         verboseputs "Exit string: " + Smig.exitstring
@@ -456,6 +470,7 @@ class DoTransition
       exit 240
     end
     Smig.exitvalue
+  end
 end
 
 def localmain()

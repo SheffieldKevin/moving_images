@@ -120,7 +120,7 @@ class DoTransition
       opts.on("--transitionfilter TRANSITIONFILTER", String,
             "The filter to use to transition from source to ." +
             "destination image.") do |tf|
-        @@options[:transitionfilter] = tf
+        @@options[:transitionfilter] = tf.to_sym
       end
 
       @@options[:listtransitionfilters] = false
@@ -194,8 +194,9 @@ class DoTransition
             x = Float(vals[0])
             y = Float(vals[1])
             # basically the above is to just throw if the values aren't floats.
-            textCenter = "[" + vals[0] + " " + vals[1] + "]"
-            @@options[:inputCenter] = textCenter
+            # textCenter = "[" + vals[0] + " " + vals[1] + "]"
+            # @@options[:inputCenter] = textCenter
+            @@options[:inputCenter] = { point: MIShapes.make_point(x, y) }
         else
           raise "--center not correctly specified"
         end
@@ -216,12 +217,11 @@ class DoTransition
             y = Float(vals[1])
             width = Float(vals[2])
             height = Float(vals[3])
-            # basically the above is to just throw if the values aren't floats.
-            textExtent = "[" + vals[0] + " " + vals[1] + " " + vals[2]
-            textExtent += " " + vals[3] + "]"
-            @@options[:inputExtent] = textExtent
-            @@options[:sourceRectangle] = { :origin => { :x => x, :y => y },
-                              :size => { :width => width, :height => height } }
+            @@options[:inputExtent] = { rect: MIShapes.make_rectangle(
+                                                          width: width,
+                                                          height: height,
+                                                          xloc: x,
+                                                          yloc: y) }
         else
           raise "--extent not correctly specified"
         end
@@ -242,8 +242,9 @@ class DoTransition
             b = Float(vals[2])
             a = Float(vals[3])
             # basically the above is to just throw if the values aren't floats.
-            textColor = vals[0] + " " + vals[1] + " " + vals[2] + " " + vals[3]
-            @@options[:inputColor] = textColor
+            #textColor = vals[0] + " " + vals[1] + " " + vals[2] + " " + vals[3]
+            # @@options[:inputColor] = textColor
+            @@options[:inputColor] = MIColor.make_rgbacolor(r, g, b, a: a)
         else
           raise "--color not correctly specified"
         end
@@ -327,7 +328,7 @@ class DoTransition
       opts.on("--compression [COMPRESSION]", Float,
               "The compression 0-100 for filter input \"inputCompression\". " +
               "Filters: CIModTransition.") do |sc|
-        @@options[:inputStriationContrast] = sc
+        @@options[:inputCompression] = sc
       end
 
       @@options[:inputNumberOfFolds] = 3 # range is 1 .. 10
@@ -344,6 +345,13 @@ class DoTransition
         @@options[:inputFoldShadowAmount] = n
       end
 
+      @@options[:inputBottomHeight] = 50 # range is 1 .. 300 ????
+      opts.on("--bottomheight [BOTTOMHEIGHT]", Integer, 
+              "The bottom height in CIAccordionFoldTransition. "\
+              "\"inputBottomHeight\"") do |bh|
+        @@options[:inputBottomHeight] = bh
+      end
+
       opts.on("--shadowamount [SHADOWAMOUNT]", Float,
               "The shadow amount 0.0-1.0 for filter input " +
               "\"inputShadowAmount\". " +
@@ -355,17 +363,17 @@ class DoTransition
               "The shadow size 0.0-1.0 for filter input " +
               "\"inputShadowSize\". " +
               "Filters: CIPageCurlWithShadowTransition.") do |ss|
-        @@options[:inputShadowAmount] = ss
+        @@options[:inputShadowSize] = ss
       end
 
-      opts.on("--shadingimage [SHADINGIMAGE]", String,
-              "The path to an image that looks like a shaded sphere " +
-              "enclosed in a square image. If not provided then the " +
-              "image will be generated.\n\t\t\t\t\t Filter input " +
-              "\"inputShadingImage\". Filters: " +
-              "CIRippleTransition, CIPageCurlTransition.") do |si|
-        @@options[:inputShadingImage] = si
-      end
+#      opts.on("--shadingimage [SHADINGIMAGE]", String,
+#              "The path to an image that looks like a shaded sphere " +
+#              "enclosed in a square image. If not provided then the " +
+#              "image will be generated.\n\t\t\t\t\t Filter input " +
+#              "\"inputShadingImage\". Filters: " +
+#              "CIRippleTransition, CIPageCurlTransition.") do |si|
+#        @@options[:inputShadingImage] = si
+#      end
 
       opts.on("--backsideimage [BACKSIDEIMAGE]", String,
               "Path to an image that is on the backside of the page " +

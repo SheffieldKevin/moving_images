@@ -468,7 +468,8 @@ module MovingImages
         theColors
       end
       
-      # Create an object with info about the shadow to be added on one side.    
+      # Create an object with info about the shadow to be added.    
+      # Called from the customaddshadow script.
       # @param options [Hash] The customaddshadow script options.
       # @param shadow_scalar [Fixnum] The width or height of shadow on the side
       # @param min_alpha [Float] The minimum alpha value on image edge.
@@ -493,6 +494,46 @@ module MovingImages
         end
         shadowHash
       end
+
+      # Create a shading image from a radial gradient and crop filter.    
+      # @param filter_chain [MIFilterChain] Filter chain to add filters to.
+      # @return void
+      def self.create_cifilter_shadingimage(filter_chain)
+        radial_filter = MIFilter.new(:CIRadialGradient,
+                                     identifier: :shading_radialgradient)
+        large_radius = 400
+        small_radius = large_radius * 0.05
+        center = MIShapes.make_point(large_radius, large_radius)
+        center_property = MIFilterProperty.make_civectorproperty_frompoint(
+                                            key: :inputCenter, value: center)
+        radial_filter.add_property(center_property)
+        inner_radius_property = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputRadius0, value: small_radius)
+        radial_filter.add_property(inner_radius_property)
+        outer_radius_property = MIFilterProperty.make_cinumberproperty(
+                                      key: :inputRadius1, value: large_radius)
+        radial_filter.add_property(outer_radius_property)
+        color0 = MIColor.make_rgbacolor(1, 1, 1, a: 0)
+        color0_property = MIFilterProperty.make_cicolorproperty(
+                                      key: :inputColor0, value: color0)
+        radial_filter.add_property(color0_property)
+        color1 = MIColor.make_rgbacolor(0, 0, 0, a: 0.7)
+        color1_property = MIFilterProperty.make_cicolorproperty(
+                                      key: :inputColor1, value: color1)
+        radial_filter.add_property(color1_property)
+        filter_chain.add_filter(radial_filter)
+        crop_filter = MIFilter.new(:CICrop, identifier: :shading_crop)
+        diameter = large_radius * 2
+        crop_rect = MIShapes.make_rectangle(width: diameter, height: diameter)
+        croprect_property =MIFilterProperty.make_civectorproperty_fromrectangle(
+                                      key: :inputRectangle, value: crop_rect)
+        crop_filter.add_property(croprect_property)
+        inputimage_property = MIFilterProperty.make_ciimageproperty(
+                               key: :inputImage,
+                               value: { mifiltername: :shading_radialgradient })
+        crop_filter.add_property(inputimage_property)
+        filter_chain.add_filter(crop_filter)
+      end
     end
 
     # Apply a transition filter, starting with source, ends with target.    
@@ -501,20 +542,37 @@ module MovingImages
     # a sequence of image files.
     # @param options [Hash] As created by the dotransition script
     def self.dotransition(options)
-      fail "No output directory specified." if options[:outputdir].nil?
+      theCommands = CommandModule::SmigCommands.new
+      if options[:outputdir].nil?
+        puts "No output directory specified."
+        return
+      end
+
       outputDir = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDir)
 
       sourceImagePath = File.expand_path(options[:sourceimage])
       targetImagePath = File.expand_path(options[:targetimage])
 
+      unless File.exists?(sourceImagePath)
+        puts "Source file doesn't exist: #{sourceImagePath}"
+        return
+      end
+      unless File.exists?(targetImagePath)
+        puts "Target file doesn't exist: #{targetImagePath}"
+        return
+      end
+
       dimensions = SpotlightCommand.get_imagedimensions(sourceImagePath)
       # Assume target image dimensions are the same.
-      theCommands = CommandModule::SmigCommands.new
       sourceImage = theCommands.make_createimporter(sourceImagePath)
       targetImage = theCommands.make_createimporter(targetImagePath)
       bitmap = theCommands.make_createbitmapcontext(size: dimensions)
       filterChain = MIFilterChain.new(bitmap)
+      # don't add the filter to the filter chain until after the filter 
+      # properties have been setup, this is so that the shading image property
+      # can be created from filters which will need to precede the transition
+      # filter in the filter list.
       filter = MIFilter.make_filter_withname(
                           filtername: options[:transitionfilter],
                           identifier: :maintransitionfilter)
@@ -535,6 +593,42 @@ module MovingImages
             filter_prop[:cifiltervalue] = sourceImage
           when :inputTargetImage
             filter_prop[:cifiltervalue] = targetImage
+          when :inputShadingImage
+            Private.create_cifilter_shadingimage(filterChain)
+            filter_prop[:cifiltervalue] = { mifiltername: :shading_crop }
+          when :inputMaskImage
+            if options[:inputMaskImage].nil?
+              puts "Missing option: inputMaskImage (file path)"
+              return
+            end
+            mask_path = File.expand_path(options[:inputMaskImage])
+            unless File.exists?(mask_path)
+              puts "Mask file doesn't exist: #{mask_path}"
+              return
+            end
+            importer_object = theCommands.make_createimporter(mask_path)
+            mask_object = theCommands.make_createbitmapcontext(size: dimensions)
+            drawImageElement = MIDrawImageElement.new
+            drawImageElement.interpolationquality = :kCGInterpolationHigh
+            rect = MIShapes.make_rectangle(size: dimensions)
+            drawImageElement.destinationrectangle = rect
+            drawImageElement.set_imagesource(source_object: importer_object)
+            drawImageCommand = CommandModule.make_drawelement(mask_object,
+                                          drawinstructions: drawImageElement)
+            theCommands.add_command(drawImageCommand)
+            filter_prop[:cifiltervalue] = mask_object
+          when :inputBacksideImage
+            if options[:inputBacksideImage].nil?
+              puts "Missing option: inputMaskImage (file path)"
+              return
+            end
+            backside_path = File.expand_path(options[:inputBacksideImage])
+            unless File.exists?(backside_path)
+              puts "Mask file doesn't exist: #{backside_path}"
+              return
+            end
+            backside_object = theCommands.make_createimporter(backside_path)
+            filter_prop[:cifiltervalue] = backside_object
           else
             assigned = MIFilterProperty.set_propertyvalue_fromoptions(
                                                             filter_prop,
@@ -555,7 +649,23 @@ module MovingImages
       nameExtension = Utility.get_extension_fromimagefiletype(filetype: type)
       exporter = theCommands.make_createexporter("temp/file/path.tiff",
                                                  export_type: type)
+      
+      redrawImage = nil
+      sourceRectange = nil
+      if options[:transitionfilter].to_sym.eql?(:CIPageCurlTransition) ||
+         options[:transitionfilter].to_sym.eql?(:CIPageCurlWithShadowTransition)
+        drawImageElement = MIDrawImageElement.new
+        drawImageElement.set_imagesource(source_object: sourceImage)
+        sourceRectangle = MIShapes.make_rectangle(size: dimensions)
+        drawImageElement.destinationrectangle = sourceRectangle
+        redrawImage = CommandModule.make_drawelement(bitmap,
+                                          drawinstructions: drawImageElement)
+      end
+      
       options[:count].times do |i|
+        unless redrawImage.nil?
+          theCommands.add_command(redrawImage)
+        end
         time = i.to_f / (options[:count] - 1).to_f
         prop = MIFilterRenderProperty.make_renderproperty_withfilternameid(
                               key: :inputTime,
@@ -563,18 +673,15 @@ module MovingImages
                     filtername_id: :maintransitionfilter)
         filterChainRender = MIFilterChainRender.new
         filterChainRender.add_filterproperty(prop)
-#        if options[:transitionfilter].to_sym.eql?(:CIAccordionFoldTransition)
-#          destination_rect = MIShapes.make_rectangle(
-#                                    width: dimensions[:width] * (1.0 - time),
-#                                    height: dimensions[:height])
-#          filterChainRender.destinationrectangle = destination_rect
-#          filterChainRender.sourcerectangle = destination_rect
-#        end
+        unless sourceRectangle.nil?
+          filterChainRender.sourcerectangle = sourceRectangle
+          filterChainRender.destinationrectangle = sourceRectangle
+        end
         renderCommand = CommandModule.make_renderfilterchain(filterChainObject,
                                         renderinstructions: filterChainRender)
-#        if options[:verbose]
-#          puts JSON.pretty_generate(renderCommand.commandhash)
-#        end
+        if options[:verbose]
+          puts JSON.pretty_generate(renderCommand.commandhash)
+        end
         theCommands.add_command(renderCommand)
         fileName = options[:basename] + i.to_s.rjust(3, '0') + nameExtension
         exportPath = File.join(outputDir, fileName)

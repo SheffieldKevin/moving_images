@@ -1,3 +1,5 @@
+require 'securerandom'
+
 # The MovingImages module wraps all the moving_images gem interface
 module MovingImages
   # The command module. Houston, all your commands are belong to us.    

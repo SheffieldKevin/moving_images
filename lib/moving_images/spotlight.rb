@@ -1,4 +1,3 @@
-
 require 'Open3'
 
 module MovingImages

@@ -1,7 +1,6 @@
 require 'Open3'
-require 'optparse'
-require 'pp'
 require 'JSON'
+require 'tmpdir'
 
 module MovingImages
   # A library of functions that do actual stuff
@@ -661,6 +660,9 @@ module MovingImages
         redrawImage = CommandModule.make_drawelement(bitmap,
                                           drawinstructions: drawImageElement)
       end
+      if options[:verbose]
+        puts JSON.pretty_generate(theCommands.commandshash)
+      end
       
       options[:count].times do |i|
         unless redrawImage.nil?
@@ -692,7 +694,12 @@ module MovingImages
                                         options: options,
                                         metadata_source: nil)
       end # options[:count].times do
-      Smig.perform_commands(theCommands)
+      if options[:generate_json]
+        JSON.pretty_generate(theCommands.commandshash)
+        # theCommands.commandshash.to_json
+      else
+        Smig.perform_commands(theCommands)
+      end
     end
 
     # Crop the image files list in the files attribute of the file_list hash.    
@@ -780,9 +787,13 @@ module MovingImages
         theCommands.add_command(closeCommand)
       end
       # The full command list has been built up. Nothing has been run yet.
-      # Smig.perform_commands sends the commands to MovingImages, and will
-      # wait for the commands to be completed in this case.
-      Smig.perform_commands(theCommands)
+      # Smig.perform_commands sends the commands to MovingImages or alternately
+      # we will return the generated json only.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
     end
 
     # Pad the image files list in the files attribute of the file_list hash.    
@@ -869,9 +880,12 @@ module MovingImages
         theCommands.add_command(closeCommand)
       end
       # The full command list has been built up. Nothing has been run yet.
-      # Smig.perform_commands sends the commands to MovingImages, and will
-      # wait for the commands to be completed in this case.
-      Smig.perform_commands(theCommands)
+      # Smig.perform_commands sends the commands to MovingImages.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
     end
 
     # Add a semi-transparent shadow to images in files attribute of file_list.    
@@ -1085,9 +1099,13 @@ module MovingImages
         theCommands.add_command(closeCommand)
       end
       # The full command list has been built up. Nothing has been run yet.
-      # Smig.perform_commands sends the commands to MovingImages, and will
-      # wait for the commands to be completed in this case.
-      Smig.perform_commands(theCommands)
+      # Smig.perform_commands sends the commands to MovingImages, otherwise
+      # return the generated json.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
     end
 
     # Scale images using the lanczos CoreImage filter.    
@@ -1216,9 +1234,13 @@ module MovingImages
         theCommands.add_command(closeCommand)
       end
       # The full command list has been built up. Nothing has been run yet.
-      # Smig.perform_commands sends the commands to MovingImages, and will
-      # wait for the commands to be completed in this case.
-      Smig.perform_commands(theCommands)
+      # Smig.perform_commands sends the commands to MovingImages, otherwise
+      # return the generated json.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
     end
 
     # Scale images using CoreGraphics transformations.    
@@ -1305,12 +1327,13 @@ module MovingImages
         theCommands.add_command(closeCommand)
       end
       # The full command list has been built up. Nothing has been run yet.
-      # Smig.perform_commands sends the commands to MovingImages, and if
-      # running the commands synchronously then will wait for the commands
-      # to be run before returning, if the commands are to be run
-      # asynchronously then perform_commands will return quickly and 
-      # MovingImages will process the images asynchronously.
-      Smig.perform_commands(theCommands)
+      # Smig.perform_commands sends the commands to MovingImages, otherwise
+      # return the generated json.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
     end # #scale_files_usequartz
     
     # Scale images transformations.    

@@ -243,7 +243,7 @@ module MovingImages
                                     verbose: false)
         { scalex: scalex, scaley: scaley, quality: quality, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir,
-          exportfiletype: exportfiletype, async: async,
+          exportfiletype: exportfiletype, async: async, interpqual: interpqual,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions
         }
       end
@@ -364,24 +364,53 @@ module MovingImages
       # @return [Hash] The options hash.
       def self.make_customaddshadow_options(
                                     left: 0,
-                                    right: 0,
-                                    top: 0,
-                                    bottom: 0,
-                                    red: 0.0,
-                                    green: 0.0,
+                                   right: 0,
+                                     top: 0,
+                                  bottom: 0,
+                                     red: 0.0,
+                                   green: 0.0,
                                     blue: 0.0,
-                                    outputdir: nil,
-                                    exportfiletype: nil,
-                                    quality: 0.7,
-                                    copymetadata: false,
-                                    assume_images_have_same_dimensions: false,
-                                    async: false,
-                                    verbose: false)
+                               outputdir: nil,
+                          exportfiletype: nil,
+                                 quality: 0.7,
+                            copymetadata: false,
+      assume_images_have_same_dimensions: false,
+                                   async: false,
+                                 verbose: false)
         { left: left, right: right, top: top, bottom: bottom, 
           red: red, green: green, blue: blue, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir, quality: quality, 
           exportfiletype: exportfiletype, async: async,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions
+        }
+      end
+      
+      # Make an options hash with all attributes specified for simplesinglefilter.    
+      # The default values represent setting up a CIBloom core image 
+      # filter. If the filter is one that takes 0 or 1 inputs then set 
+      # inputkey1 and or inputkey2 to nil. 
+      # @param cifitler [Symbol, String] The cifilter to apply to the images
+      # @param outputdir [Path] A path to the directory where files exported to.
+      # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
+      # @param softwarerender [true, false] Should the cifilter be software rendered
+      # @param inputkey1 [String] The core image filter input key for the filter
+      # @param inputvalue1 [Float] The value associated with inputkey1
+      # @param inputkey2 [String] The core image filter input key for the filter
+      # @param inputvalue2 [Float] The value associated with inputkey2
+      # @return [Hash] The options hash
+      def self.make_simplesinglecifilter_options(
+                                       cifilter: :CIBloom,
+                                      outputdir: nil,
+                                 exportfiletype: nil,
+                                 softwarerender: false,
+                                      inputkey1: :inputRadius,
+                                    inputvalue1: 10.0,
+                                      inputkey2: :inputIntensity,
+                                    inputvalue2: 0.7)
+        { cifilter: cifilter, outputdir: outputdir, exportfiletype: exportfiletype,
+          softwarerender: softwarerender,
+          inputkey1: inputkey1, inputvalue1: inputvalue1,
+          inputkey2: inputkey2, inputvalue2: inputvalue2
         }
       end
     end
@@ -440,7 +469,10 @@ module MovingImages
         end
 
         # Make the export command and add it to the list of commands.
+        # async_export = false
+        # async_export = options[:async_export] unless options[:async_export].nil?
         exportCommand = CommandModule.make_export(exporter)
+        #                                        runasynchronously: async_export)
         commands.add_command(exportCommand)
         commands
       end
@@ -540,6 +572,7 @@ module MovingImages
     # the transition. Save the results of applying the transition filter to
     # a sequence of image files.
     # @param options [Hash] As created by the dotransition script
+    # @return [String] The result of running commands or commands hash.
     def self.dotransition(options)
       theCommands = CommandModule::SmigCommands.new
       if options[:outputdir].nil?
@@ -568,6 +601,7 @@ module MovingImages
       targetImage = theCommands.make_createimporter(targetImagePath)
       bitmap = theCommands.make_createbitmapcontext(size: dimensions)
       filterChain = MIFilterChain.new(bitmap)
+      filterChain.softwarerender = options[:softwarerender]
       # don't add the filter to the filter chain until after the filter 
       # properties have been setup, this is so that the shading image property
       # can be created from filters which will need to precede the transition
@@ -702,6 +736,122 @@ module MovingImages
       end
     end
 
+    def self.simplesinglecifilter_files(options, file_list)
+      if options[:outputdir].nil?
+        puts  "Simple single cifilter: output directory not specified"
+        return
+      end
+      
+      fileList = file_list[:files]
+      if fileList.nil? || fileList.size.zero?
+        puts "No files to be processed."
+        return
+      end
+      
+      if options[:cifilter].nil?
+        puts "No filter specified."
+        return
+      end
+      
+      outputDirectory = File.expand_path(options[:outputdir])
+      FileUtils.mkdir_p(outputDirectory)
+      
+      theCommands = CommandModule::SmigCommands.new
+      run_async = false
+      run_async = options[:async] unless options[:async].nil?
+      theCommands.run_asynchronously = run_async
+      firstItem = File.expand_path(fileList.first)
+      if options[:exportfiletype].nil?
+        fileType = SpotlightCommand.get_imagefiletype(firstItem)
+      else
+        fileType = options[:exportfiletype]
+      end
+      nameExtension = Utility.get_extension_fromimagefiletype(filetype: fileType)
+      
+      size = MIShapes.make_size(file_list[:width], file_list[:height])
+      sourceBitmap = theCommands.make_createbitmapcontext(addtocleanup: true,
+                                                          size: size)
+      targetBitmap = theCommands.make_createbitmapcontext(addtocleanup: true,
+                                                          size: size)
+      filterChain = MIFilterChain.new(targetBitmap)
+      filterChain.softwarerender = false
+      unless options[:softwarerender].nil?
+        filterChain.softwarerender = options[:softwarerender]
+      end
+      if run_async
+        filterChain.softwarerender = true
+      end
+      filter = MIFilter.new(options[:cifilter])
+      unless options[:inputkey1].nil?
+        if [:inputvalue1].nil?
+          puts "Input key1 provided but no input value1 provided"
+          return
+        end
+        filter_property1 = { cifilterkey: options[:inputkey1],
+                             cifiltervalue: options[:inputvalue1] }
+        filter.add_property(filter_property1)
+      end
+      
+      unless options[:inputkey2].nil?
+        if [:inputvalue2].nil?
+          puts "Input key2 provided but no input value2 provided"
+          return
+        end
+        filter_property2 = { cifilterkey: options[:inputkey2],
+                             cifiltervalue: options[:inputvalue2] }
+        filter.add_property(filter_property2)
+      end
+      
+      filter.add_inputimage_property(sourceBitmap)
+      filterChain.add_filter(filter)
+      filterObject = theCommands.make_createimagefilterchain(filterChain)
+
+      exporterObject = theCommands.make_createexporter("~/placeholder.jpg",
+                                      export_type: fileType, addtocleanup: true)
+
+      destinationRect = MIShapes.make_rectangle(size: size)
+      filterRender = MIFilterChainRender.new
+      filterRender.destinationrectangle = destinationRect
+      filterRender.sourcerectangle = destinationRect
+
+      renderCommand = CommandModule.make_renderfilterchain(filterObject,
+                        renderinstructions: filterRender.renderfilterchainhash)
+
+      fileList.each do |filePath|
+        importerObject = theCommands.make_createimporter(filePath,
+                                                            addtocleanup: false)
+        drawImageElement = MIDrawImageElement.new
+        drawImageElement.set_imagesource(source_object: importerObject, 
+                                         imageindex: 0)
+        drawImageElement.sourcerectangle = destinationRect
+        drawImageElement.destinationrectangle = destinationRect
+
+        drawImageCommand = CommandModule.make_drawelement(sourceBitmap,
+                                          drawinstructions: drawImageElement)
+        theCommands.add_command(drawImageCommand)
+        theCommands.add_command(renderCommand)
+        fileName = File.basename(filePath, '.*') + nameExtension
+        exportPath = File.join(outputDirectory, fileName)
+        # options[:async_export] = true
+        Private.make_commands_forexport(commands: theCommands,
+                                        exporter: exporterObject,
+                                        image_source: targetBitmap,
+                                        file_path: exportPath,
+                                        options: options,
+                                        metadata_source: importerObject)
+        closeCommand = CommandModule.make_close(importerObject)
+        theCommands.add_command(closeCommand)
+      end
+      # The full command list has been built up. Nothing has been run yet.
+      # Smig.perform_commands sends the commands to MovingImages or alternately
+      # we will return the generated json only.
+      if options[:generate_json]
+      	JSON.pretty_generate(theCommands.commandshash)
+      else
+      	Smig.perform_commands(theCommands)
+      end
+    end
+
     # Crop the image files list in the files attribute of the file_list hash.    
     # Usually called from the customcrop script, but can be called from
     # anywhere. The options hash is the same as generated by parsing the
@@ -717,7 +867,12 @@ module MovingImages
       width_remaining = file_list[:width] - width_subtract
       height_remaining = file_list[:height] - height_subtract
       if width_remaining <= 0 || height_remaining <= 0
-        puts "Crop - negative size images" if options[:verbose]
+        puts "Crop - negative size images"
+        return
+      end
+
+      if options[:outputdir].nil?
+        puts "No output directory specified"
         return
       end
 
@@ -725,19 +880,20 @@ module MovingImages
       outputDirectory = File.expand_path(options[:outputdir])
       FileUtils.mkdir_p(outputDirectory)
       fileList = file_list[:files]
-      fail "No files list." if fileList.nil?
       
       if fileList.size.zero?
-        puts "No files to scale." if options[:verbose]
+        puts "No files to crop."
         return
       end
 
       # Create the command list object that we can then add commands to.
       theCommands = CommandModule::SmigCommands.new
-
-      theCommands.run_asynchronously = options[:async]
+      
+      theCommands.run_asynchronously = false
+      theCommands.run_asynchronously = options[:async] unless options[:async].nil?
       # The export file type will be the same as the input file type so get
       # the fileType from the first file as well.
+      firstItem = File.expand_path(fileList.first)
       if options[:exportfiletype].nil?
         # The export file type is the same as the input file type
         fileType = SpotlightCommand.get_imagefiletype(firstItem)
@@ -823,6 +979,7 @@ module MovingImages
       theCommands.run_asynchronously = options[:async]
       # The export file type will be the same as the input file type so get
       # the fileType from the first file as well.
+      firstItem = File.expand_path(fileList.first)
       if options[:exportfiletype].nil?
         # The export file type is the same as the input file type
         fileType = SpotlightCommand.get_imagefiletype(firstItem)

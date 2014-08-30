@@ -1,0 +1,208 @@
+{
+  "runasynchronously": true,
+  "commands": [
+    {
+      "command": "create",
+      "objecttype": "bitmapcontext",
+      "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4",
+      "size": {
+        "width": 454,
+        "height": 340
+      },
+      "preset": "AlphaPreMulFirstRGB8bpcInt"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageexporter",
+      "file": "~/placeholder.jpg",
+      "utifiletype": "public.tiff",
+      "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
+      "objectname": "4c661836-28ef-4eff-9826-8e4c5f849222"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "4c661836-28ef-4eff-9826-8e4c5f849222"
+        },
+        "imageindex": 0,
+        "contexttransformation": [
+          {
+            "transformationtype": "scale",
+            "scale": {
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ],
+        "destinationrectangle": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        },
+        "interpolationquality": "kCGInterpolationDefault"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.tiff"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.7,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "4c661836-28ef-4eff-9826-8e4c5f849222"
+      }
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
+      "objectname": "8c0e2c33-de1f-413d-9692-847fbc399d21"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "8c0e2c33-de1f-413d-9692-847fbc399d21"
+        },
+        "imageindex": 0,
+        "contexttransformation": [
+          {
+            "transformationtype": "scale",
+            "scale": {
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ],
+        "destinationrectangle": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        },
+        "interpolationquality": "kCGInterpolationDefault"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.tiff"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.7,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "8c0e2c33-de1f-413d-9692-847fbc399d21"
+      }
+    }
+  ],
+  "cleanupcommands": [
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e4ff2120-bd43-4a8a-a989-98423db55cf4"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "12a26111-b752-432d-933c-ffa4c6b7ea71"
+      }
+    }
+  ]
+}

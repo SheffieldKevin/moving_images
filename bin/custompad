@@ -193,9 +193,9 @@ class CustomCropCommand
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }
 
       process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
-                              imagefilelist: expanded_filelist,
-                              assume_images_have_same_dimensions: have_samedims,
-                              maxlength_forprocessinglist: 50)
+                                              imagefilelist: expanded_filelist,
+                         assume_images_have_same_dimensions: have_samedims,
+                                maxlength_forprocessinglist: 50)
 
       verboseputs "Time to prepare processing: #{Time.now - start_time} sec"
 
@@ -204,6 +204,9 @@ class CustomCropCommand
       @@options[:async] = num_lists > 1
       list_num = 0
       process_imageslists.each do |image_list|
+        # If we are processing the last list of images. Switch to synchronous
+        # processing. This way this script wont return until this list of images
+        # is processed.
         if process_imageslists.last.object_id.eql? image_list.object_id
           @@options[:async] = false
         end

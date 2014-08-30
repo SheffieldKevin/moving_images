@@ -1,0 +1,375 @@
+#!/usr/bin/env ruby
+# Copyright (C) 2014 Kevin Meaney
+# Please refer to the file LICENSE for the license agreement.
+# You are granted the rights to modify this file for your own purposes
+# or for distribution to third parties. In either case you accept all
+# responsibility for liability. Please include the link to the documentation:
+# https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
+
+# FILE: simplesinglecifilter
+# Create an image using a single simple core image filter.
+#
+
+require 'optparse'
+require 'moving_images'
+require 'pp'
+
+include MovingImages
+
+
+$verbose = false
+$smig = "smig"
+
+def verboseputs(input)
+  if $verbose
+    puts input
+  end
+end
+
+def verbosepp(input)
+  if $verbose
+    pp input
+  end
+end
+
+class ApplyCoreImageSimpleSingleFilter
+  @@options = {}
+  @@smigExitVal = 0
+  
+  @@filterList = nil
+
+  def self.createfilter_noinputs(filterName)
+    return { :cifiltername => filterName, :cifilterproperties => [ ] }
+  end
+
+  # Assumes input value is a floating point number
+  def self.createfilter_oneinput(filterName,
+                          input1key, input1min, input1default, input1max)
+    input1 = { :cifilterkey => input1key, :min => input1min, :max => input1max,
+                                          :default => input1default,
+                                          :cifiltervalue => input1default }
+    return { cifiltername: filterName, cifilterproperties: [ input1 ] }
+  end
+
+  def self.createfilter_twoinputs(filterName,
+                        input1key, input1min, input1default, input1max,
+                        input2key, input2min, input2default, input2max)
+    input1 = { :cifilterkey => input1key, :min => input1min, :max => input1max,
+                    :default => input1default, :cifiltervalue => input1default }
+    input2 = { :cifilterkey => input2key, :min => input2min, :max => input2max,
+                    :default => input2default, :cifiltervalue => input2default }
+    return { cifiltername: filterName, cifilterproperties: [ input1, input2 ] }
+  end
+
+  def self.createfilterlist()
+    filterList = [ ]
+    filterList << self.createfilter_twoinputs("CIBloom",
+                                              "inputRadius", 0.0, 10.0, 100.0,
+                                              "inputIntensity", 0.0, 1.0, 1.0)
+    filterList << self.createfilter_oneinput("CIBoxBlur",
+                                                "inputRadius", 1.0, 10.0, 100.0)
+    filterList << self.createfilter_noinputs("CIColorInvert")
+    filterList << self.createfilter_oneinput("CIColorPosterize",
+                                                "inputLevels", 2.0, 6.0, 30.0)
+    filterList << self.createfilter_noinputs("CIComicEffect")
+    filterList << self.createfilter_oneinput("CIDiscBlur",
+                                                "inputRadius", 0.0, 8.0, 100.0)
+    filterList << self.createfilter_oneinput("CIEdges",
+                                              "inputIntensity", 0.0, 2.0, 10.0)
+    filterList << self.createfilter_oneinput("CIEdgeWork",
+                                                "inputRadius", 0.0, 3.0, 20.0)
+    filterList << self.createfilter_oneinput("CIExposureAdjust",
+                                                "inputEV", -10.0, 0.5, 10.0)
+    filterList << self.createfilter_oneinput("CIGammaAdjust",
+                                                "inputPower", 0.1, 0.75, 3.0)
+    filterList << self.createfilter_oneinput("CIGaussianBlur",
+                                                "inputRadius", 0, 10, 100)
+    filterList << self.createfilter_oneinput("CIHeightFieldFromMask",
+                                                "inputRadius", 0, 10, 300)
+    filterList << self.createfilter_oneinput("CIHueAdjust",
+                                                "inputAngle", -3.142,2.09,3.142)
+    filterList << self.createfilter_noinputs("CIMaskToAlpha")
+    filterList << self.createfilter_noinputs("CIMaximumComponent")
+    filterList << self.createfilter_noinputs("CIMedianFilter")
+    filterList << self.createfilter_noinputs("CIMinimumComponent")
+    filterList << self.createfilter_twoinputs("CINoiseReduction",
+                                          "inputSharpness", 0.0, 0.4, 2.0,
+                                          "inputNoiseLevel", 0.0, 0.02, 0.1)
+    filterList << self.createfilter_noinputs("CIPhotoEffectChrome")
+    filterList << self.createfilter_noinputs("CIPhotoEffectFade")
+    filterList << self.createfilter_noinputs("CIPhotoEffectInstant")
+    filterList << self.createfilter_noinputs("CIPhotoEffectMono")
+    filterList << self.createfilter_noinputs("CIPhotoEffectNoir")
+    filterList << self.createfilter_noinputs("CIPhotoEffectProcess")
+    filterList << self.createfilter_noinputs("CIPhotoEffectTonal")
+    filterList << self.createfilter_noinputs("CIPhotoEffectTransfer")
+    filterList << self.createfilter_oneinput("CISepiaTone",
+                                              "inputIntensity", 0.0, 1.0, 1.0)
+    filterList << self.createfilter_oneinput("CISharpenLuminance",
+                                              "inputSharpness", 0.0, 0.4, 2.0)
+    filterList << self.createfilter_oneinput("CIStraightenFilter",
+                                              "inputAngle", -3.142, 0.5, 3.142)
+    filterList << self.createfilter_twoinputs("CIUnsharpMask",
+                                              "inputRadius", 0.0, 2.5, 100.0,
+                                              "inputIntensity", 0.0, 1.0, 2.0)
+  end
+  
+  def self.getfilterlist()
+    if @@filterList.nil?
+      @@filterList = self.createfilterlist()
+    end
+    return @@filterList
+  end
+
+  def self.getlistof_filternames()
+    filterList = self.getfilterlist()
+    filterNames = ""
+    filterList.each { |filter|
+      filterNames += filter[:cifiltername] + " "
+    }
+    return filterNames
+  end
+  
+  def self.getfilterproperties_hash(filterName)
+    filterHash = nil
+    filterList = self.getfilterlist()
+    filterList.each { |filter|
+      if filterName == filter[:cifiltername]
+        filterHash = filter
+      end
+    }
+    return filterHash
+  end
+  
+  # Return the properties of the filter as a JSON string.
+  def self.getfilterproperties_jsonpretty(filterName)
+    filterHash = self.getfilterproperties_hash(filterName)
+    filterProps = nil
+    unless filterHash.nil?
+      filterProps = JSON.pretty_generate(filterHash)
+    end
+    return filterProps
+  end
+
+  #
+  # Return whether all mandatory options were included on command line
+  #
+  def self.missing_mandatory_options?()
+    return @@options[:outputdir].nil? ||
+           @@options[:cifilter].nil?
+  end
+
+  #
+  # Return a hash describing the options.
+  # 
+  def self.parse!(theArgs)
+
+    opt_parser = OptionParser.new do |opts|
+      opts.version = "0.1b"
+      opts.banner = "Usage: simplesinglecifilter [options] files"
+      opts.separator ""
+      opts.separator "Apply a core image filter to images. If permissions " +
+                     "allow, simplesinglecifilter will overwrite " +
+                     "existing files."
+      opts.separator ""
+      opts.separator "This simple single ci filter script allows you to " +
+                     "apply a single simple core image filter to images. "
+      opts.separator "A simple core image filter, is one that takes a single " +
+                     "input image and up to two numerical inputs."
+      opts.separator "If a filter takes numerical inputs and these are not" +
+                     "specifed as arguments on the command line then the " +
+                     "default values will be used."
+      opts.separator ""
+      opts.separator "If the output directory doesn't exist the " +
+                     "directory will be created."
+      opts.separator ""
+      opts.separator "Options:"
+
+      @@options[:listfilters] = false
+      opts.on("-l", "--listfilters", "Return the list of filters.") do
+        @@options[:listfilters] = true
+      end
+
+      #
+      # Get the properties of the filter with filter name FILTERNAME
+      #
+      @@options[:getfilterproperties] = nil
+      opts.on("--filterproperties [FILTERNAME]",
+                            "Get filter properties.") do |filterName|
+        @@options[:getfilterproperties] = filterName
+      end
+
+      opts.on("--filter FILTERNAME", String,
+            "The filter to apply to the image.") do |filter|
+        @@options[:cifilter] = filter
+      end
+
+      opts.on("--inputkey1 [KEY1]", String,
+            "The property key for one input of the filter.") do |key1|
+        @@options[:inputkey1] = key1
+      end
+
+      opts.on("--inputvalue1 [VALUE1]", Float,
+            "The property value for the second input of the filter.") do |value1|
+        @@options[:inputvalue1] = value1
+      end
+
+      opts.on("--inputkey2 [KEY2]", String,
+            "The property key for the second input of the filter.") do |key2|
+        @@options[:inputkey2] = key2
+      end
+
+      opts.on("--inputvalue2 [VALUE2]", Float,
+            "The property key for the second input of the filter.") do |value2|
+        @@options[:inputvalue2] = value2
+      end
+
+      opts.on("--exportfiletype [EXPORTFILETYPE]", [ :'public.png', :'public.jpeg',
+                                                   :'public.tiff' ],
+            "Export image file type. Default is type of first file") do |exft|
+        @@options[:exportfiletype] = exft
+      end
+
+      opts.on("--outputdir OUTPUTDIR", String,
+            "Save images file to directory OUTPUTDIR.") do |od|
+        @@options[:outputdir] = od
+      end
+
+      @@options[:softwarerender] = false
+      opts.on("--softwarerender",
+            "Apply core image filter using a software render. Default false") do
+        @@options[:softwarerender] = true
+      end
+
+      @@options[:verbose] = false
+      opts.on("-v", "--[no-]verbose", "Run verbosely") do
+        @@options[:verbose] = true
+      end
+
+      @@options[:displayhelp] = false
+      opts.on("-h", "--help", "Display this screen") do
+        @@options[:displayhelp] = true
+      end
+
+      # Now add an example of using the command.
+      opts.separator "Examples:"
+      opts.separator "List the simple core image filters:"
+      opts.separator "  simplesinglecifilter --listfilters"
+      opts.separator "List the properties of the filter CIBloom:"
+      opts.separator "  simplesinglecifilter --filterproperties CIBloom"
+      opts.separator "Apply the CIMedianFilter filter:"
+      opts.separator "  simplesinglecifilter --filter CIMedianFilter " +
+                    "--outputdir \"~/Desktop/tempimages\" \"~/exampleimages/*.jpg\""
+      opts.separator "Apply the Unsharp mask filter, save as a tiff file:"
+      opts.separator "  simplesinglecifilter --filter CIUnsharpMask " +
+                     "--inputkey1 inputRadius --inputvalue1=10.0 " +
+                     "--inputkey2 inputIntensity --inputvalue2=0.7 " +
+                     "--exportfiletype public.tiff " +
+                     "--outputdir \"~/Desktop/tempimages\" ~/Pictures/*.JPG"
+    end # parse!
+
+    begin
+      opt_parser.parse!(theArgs)
+
+      if @@options[:displayhelp]
+        raise opt_parser.to_s
+      end
+
+      if @@options[:listfilters]
+        raise self.getlistof_filternames()
+      end
+
+      unless @@options[:getfilterproperties].nil?
+        json = self.getfilterproperties_jsonpretty(
+                                            @@options[:getfilterproperties])
+        if json.nil?
+          raise "Unknown filter for simplesinglecifilter"
+        else
+          raise json
+        end
+      end
+
+      if self.missing_mandatory_options?()
+        raise "Missing mandatory options."
+      end
+
+    rescue Exception => e
+      exitVal = 0
+      if @@options[:displayhelp] || @@options[:listfilters] ||
+                             !@@options[:getfilterproperties].nil?
+        puts e.message
+      else
+        exitVal = 240
+        puts e.message
+        puts opt_parser
+      end
+      exit exitVal
+    end
+
+    @@options
+  end # self.parse!
+
+  def self.apply
+    if ARGV.length < 1
+      puts "No image files to process"
+      exit(1)
+    end
+
+    begin
+      start_time = Time.now
+      have_samedims = @@options[:assume_images_have_same_dimensions]
+      expanded_filelist = []
+      ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }
+
+      process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
+                                              imagefilelist: expanded_filelist,
+                         assume_images_have_same_dimensions: have_samedims,
+                                maxlength_forprocessinglist: 50)
+
+      verboseputs "Time to prepare processing: #{Time.now - start_time} sec"
+
+      start_time = Time.now
+      num_lists = process_imageslists.size
+      @@options[:async] = num_lists > 1
+      @@options[:softwarerender] = true if @@options[:async]
+      list_num = 0
+      process_imageslists.each do |image_list|
+        # If we are processing the last list of images. Switch to synchronous
+        # processing. This way this script wont return until this list of images
+        # is processed.
+        if process_imageslists.last.object_id.eql? image_list.object_id
+          @@options[:async] = false
+        end
+        MILibrary.simplesinglecifilter_files(@@options, image_list)
+        verboseputs "Processed list #{list_num + 1} of #{num_lists}"
+        list_num = list_num.succ
+      end
+      verboseputs "Time to process: #{Time.now - start_time} sec"
+
+    rescue RuntimeError => e
+      $errorcode = Smig.exitvalue
+      unless $errorcode.zero?
+        verboseputs "Exit string: " + Smig.exitstring
+        verboseputs "Exit status: " + $errorcode.to_s
+      end
+      puts e.message
+      puts e.backtrace.to_s
+      exit 240
+    end
+    Smig.exitvalue
+  end
+end
+
+def localmain()
+  options = ApplyCoreImageSimpleSingleFilter.parse!(ARGV)
+  $verbose = options[:verbose]
+  verbosepp(options)
+  result = ApplyCoreImageSimpleSingleFilter.apply()
+  unless result.zero?
+    verboseputs("Error fail code: " + result.to_s)
+  end
+  result
+end
+
+result = localmain()
+exit(result)

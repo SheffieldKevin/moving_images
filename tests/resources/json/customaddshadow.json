@@ -1,0 +1,2450 @@
+{
+  "runasynchronously": true,
+  "commands": [
+    {
+      "command": "create",
+      "objecttype": "bitmapcontext",
+      "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6",
+      "size": {
+        "width": 933,
+        "height": 706
+      },
+      "preset": "AlphaPreMulFirstRGB8bpcInt"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageexporter",
+      "file": "~/placeholder.png",
+      "utifiletype": "public.png",
+      "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
+      "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "fillrectangle",
+        "fillcolor": {
+          "red": 1,
+          "green": 1,
+          "blue": 1,
+          "alpha": 1.0,
+          "colorcolorprofilename": "kCGColorSpaceSRGB"
+        },
+        "rect": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 933,
+            "height": 706
+          }
+        },
+        "blendmode": "kCGBlendModeCopy"
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+        },
+        "imageindex": 0,
+        "destinationrectangle": {
+          "origin": {
+            "x": 10,
+            "y": 20
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        }
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "arrayofelements",
+        "linewidth": 1.0,
+        "blendmode": "kCGBlendModeCopy",
+        "contexttransformation": [
+          {
+            "transformationtype": "translate",
+            "translation": {
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ],
+        "arrayofelements": [
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 20.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999997,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.5,
+                "y": 19.0
+              },
+              "endpoint": {
+                "x": 918.75,
+                "y": 19.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6664999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.0,
+                "y": 18.0
+              },
+              "endpoint": {
+                "x": 919.5,
+                "y": 18.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6329999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.5,
+                "y": 17.0
+              },
+              "endpoint": {
+                "x": 920.25,
+                "y": 17.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5994999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 16.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5659999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.5,
+                "y": 15.0
+              },
+              "endpoint": {
+                "x": 921.75,
+                "y": 15.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5324999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.0,
+                "y": 14.0
+              },
+              "endpoint": {
+                "x": 922.5,
+                "y": 14.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.49899999999999983,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.5,
+                "y": 13.0
+              },
+              "endpoint": {
+                "x": 923.25,
+                "y": 13.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.46549999999999986,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 12.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.4319999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.5,
+                "y": 11.0
+              },
+              "endpoint": {
+                "x": 924.75,
+                "y": 11.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.3984999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "endpoint": {
+                "x": 925.5,
+                "y": 10.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.36499999999999994,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.5,
+                "y": 9.0
+              },
+              "endpoint": {
+                "x": 926.25,
+                "y": 9.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.33149999999999996,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 8.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.298,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.5,
+                "y": 7.0
+              },
+              "endpoint": {
+                "x": 927.75,
+                "y": 7.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.2645,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.0000000000000004,
+                "y": 6.0
+              },
+              "endpoint": {
+                "x": 928.5,
+                "y": 6.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.231,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 2.5,
+                "y": 5.0
+              },
+              "endpoint": {
+                "x": 929.25,
+                "y": 5.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.1975,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.9999999999999996,
+                "y": 4.0
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 4.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.164,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.5000000000000002,
+                "y": 3.0
+              },
+              "endpoint": {
+                "x": 930.75,
+                "y": 3.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.1305,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.9999999999999998,
+                "y": 2.0
+              },
+              "endpoint": {
+                "x": 931.5,
+                "y": 2.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.097,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.5000000000000004,
+                "y": 1.0
+              },
+              "endpoint": {
+                "x": 932.25,
+                "y": 1.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.0635,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 0.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 10.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.0,
+                "y": 18.0
+              },
+              "endpoint": {
+                "x": 9.0,
+                "y": 701.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6329999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 8.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.566,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.0,
+                "y": 14.0
+              },
+              "endpoint": {
+                "x": 7.0,
+                "y": 702.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.499,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 6.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.432,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "endpoint": {
+                "x": 5.0,
+                "y": 703.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.365,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 4.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.298,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.0,
+                "y": 6.000000000000001
+              },
+              "endpoint": {
+                "x": 3.0,
+                "y": 704.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.23099999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 2.0,
+                "y": 3.999999999999999
+              },
+              "endpoint": {
+                "x": 2.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.0,
+                "y": 1.9999999999999996
+              },
+              "endpoint": {
+                "x": 1.0,
+                "y": 705.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.09699999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 0.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 918.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999996,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 919.0,
+                "y": 18.666666666666668
+              },
+              "endpoint": {
+                "x": 919.0,
+                "y": 701.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.655333333333333,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 920.0,
+                "y": 17.333333333333336
+              },
+              "endpoint": {
+                "x": 920.0,
+                "y": 701.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6106666666666664,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 921.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5659999999999997,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 922.0,
+                "y": 14.666666666666666
+              },
+              "endpoint": {
+                "x": 922.0,
+                "y": 702.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5213333333333331,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 923.0,
+                "y": 13.333333333333332
+              },
+              "endpoint": {
+                "x": 923.0,
+                "y": 702.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.47666666666666646,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 924.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.43199999999999983,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 925.0,
+                "y": 10.666666666666666
+              },
+              "endpoint": {
+                "x": 925.0,
+                "y": 703.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.3873333333333332,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 926.0,
+                "y": 9.333333333333334
+              },
+              "endpoint": {
+                "x": 926.0,
+                "y": 703.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.34266666666666656,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 927.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.29799999999999993,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 928.0,
+                "y": 6.666666666666665
+              },
+              "endpoint": {
+                "x": 928.0,
+                "y": 704.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.2533333333333333,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 929.0,
+                "y": 5.333333333333332
+              },
+              "endpoint": {
+                "x": 929.0,
+                "y": 704.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.20866666666666664,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 930.0,
+                "y": 3.999999999999999
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 931.0,
+                "y": 2.666666666666666
+              },
+              "endpoint": {
+                "x": 931.0,
+                "y": 705.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.11933333333333332,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 932.0,
+                "y": 1.333333333333333
+              },
+              "endpoint": {
+                "x": 932.0,
+                "y": 705.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.07466666666666666,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 933.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 701.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.7,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 702.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.566,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 703.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.43199999999999994,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 704.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.29799999999999993,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.9999999999999996,
+                "y": 705.0
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 706.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.7,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+      }
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
+      "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "fillrectangle",
+        "fillcolor": {
+          "red": 1,
+          "green": 1,
+          "blue": 1,
+          "alpha": 1.0,
+          "colorcolorprofilename": "kCGColorSpaceSRGB"
+        },
+        "rect": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 933,
+            "height": 706
+          }
+        },
+        "blendmode": "kCGBlendModeCopy"
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+        },
+        "imageindex": 0,
+        "destinationrectangle": {
+          "origin": {
+            "x": 10,
+            "y": 20
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        }
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      },
+      "drawinstructions": {
+        "elementtype": "arrayofelements",
+        "linewidth": 1.0,
+        "blendmode": "kCGBlendModeCopy",
+        "contexttransformation": [
+          {
+            "transformationtype": "translate",
+            "translation": {
+              "x": 0.5,
+              "y": 0.5
+            }
+          }
+        ],
+        "arrayofelements": [
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 20.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999997,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.5,
+                "y": 19.0
+              },
+              "endpoint": {
+                "x": 918.75,
+                "y": 19.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6664999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.0,
+                "y": 18.0
+              },
+              "endpoint": {
+                "x": 919.5,
+                "y": 18.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6329999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.5,
+                "y": 17.0
+              },
+              "endpoint": {
+                "x": 920.25,
+                "y": 17.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5994999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 16.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5659999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.5,
+                "y": 15.0
+              },
+              "endpoint": {
+                "x": 921.75,
+                "y": 15.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5324999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.0,
+                "y": 14.0
+              },
+              "endpoint": {
+                "x": 922.5,
+                "y": 14.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.49899999999999983,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.5,
+                "y": 13.0
+              },
+              "endpoint": {
+                "x": 923.25,
+                "y": 13.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.46549999999999986,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 12.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.4319999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.5,
+                "y": 11.0
+              },
+              "endpoint": {
+                "x": 924.75,
+                "y": 11.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.3984999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "endpoint": {
+                "x": 925.5,
+                "y": 10.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.36499999999999994,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.5,
+                "y": 9.0
+              },
+              "endpoint": {
+                "x": 926.25,
+                "y": 9.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.33149999999999996,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 8.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.298,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.5,
+                "y": 7.0
+              },
+              "endpoint": {
+                "x": 927.75,
+                "y": 7.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.2645,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.0000000000000004,
+                "y": 6.0
+              },
+              "endpoint": {
+                "x": 928.5,
+                "y": 6.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.231,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 2.5,
+                "y": 5.0
+              },
+              "endpoint": {
+                "x": 929.25,
+                "y": 5.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.1975,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.9999999999999996,
+                "y": 4.0
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 4.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.164,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.5000000000000002,
+                "y": 3.0
+              },
+              "endpoint": {
+                "x": 930.75,
+                "y": 3.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.1305,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.9999999999999998,
+                "y": 2.0
+              },
+              "endpoint": {
+                "x": 931.5,
+                "y": 2.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.097,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.5000000000000004,
+                "y": 1.0
+              },
+              "endpoint": {
+                "x": 932.25,
+                "y": 1.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.0635,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 0.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 10.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 9.0,
+                "y": 18.0
+              },
+              "endpoint": {
+                "x": 9.0,
+                "y": 701.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6329999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 8.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.566,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 7.0,
+                "y": 14.0
+              },
+              "endpoint": {
+                "x": 7.0,
+                "y": 702.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.499,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 6.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.432,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 5.0,
+                "y": 10.0
+              },
+              "endpoint": {
+                "x": 5.0,
+                "y": 703.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.365,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 4.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.298,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 3.0,
+                "y": 6.000000000000001
+              },
+              "endpoint": {
+                "x": 3.0,
+                "y": 704.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.23099999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 2.0,
+                "y": 3.999999999999999
+              },
+              "endpoint": {
+                "x": 2.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.0,
+                "y": 1.9999999999999996
+              },
+              "endpoint": {
+                "x": 1.0,
+                "y": 705.5
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.09699999999999999,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 0.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 918.0,
+                "y": 20.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6999999999999996,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 919.0,
+                "y": 18.666666666666668
+              },
+              "endpoint": {
+                "x": 919.0,
+                "y": 701.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.655333333333333,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 920.0,
+                "y": 17.333333333333336
+              },
+              "endpoint": {
+                "x": 920.0,
+                "y": 701.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.6106666666666664,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 921.0,
+                "y": 16.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5659999999999997,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 922.0,
+                "y": 14.666666666666666
+              },
+              "endpoint": {
+                "x": 922.0,
+                "y": 702.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.5213333333333331,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 923.0,
+                "y": 13.333333333333332
+              },
+              "endpoint": {
+                "x": 923.0,
+                "y": 702.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.47666666666666646,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 924.0,
+                "y": 12.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.43199999999999983,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 925.0,
+                "y": 10.666666666666666
+              },
+              "endpoint": {
+                "x": 925.0,
+                "y": 703.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.3873333333333332,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 926.0,
+                "y": 9.333333333333334
+              },
+              "endpoint": {
+                "x": 926.0,
+                "y": 703.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.34266666666666656,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 927.0,
+                "y": 8.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.29799999999999993,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 928.0,
+                "y": 6.666666666666665
+              },
+              "endpoint": {
+                "x": 928.0,
+                "y": 704.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.2533333333333333,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 929.0,
+                "y": 5.333333333333332
+              },
+              "endpoint": {
+                "x": 929.0,
+                "y": 704.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.20866666666666664,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 930.0,
+                "y": 3.999999999999999
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 931.0,
+                "y": 2.666666666666666
+              },
+              "endpoint": {
+                "x": 931.0,
+                "y": 705.3333333333334
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.11933333333333332,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 932.0,
+                "y": 1.333333333333333
+              },
+              "endpoint": {
+                "x": 932.0,
+                "y": 705.6666666666666
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.07466666666666666,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 933.0,
+                "y": 0.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 10.0,
+                "y": 701.0
+              },
+              "endpoint": {
+                "x": 918.0,
+                "y": 701.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.7,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 8.0,
+                "y": 702.0
+              },
+              "endpoint": {
+                "x": 921.0,
+                "y": 702.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.566,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 6.0,
+                "y": 703.0
+              },
+              "endpoint": {
+                "x": 924.0,
+                "y": 703.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.43199999999999994,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 4.0,
+                "y": 704.0
+              },
+              "endpoint": {
+                "x": 927.0,
+                "y": 704.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.29799999999999993,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 1.9999999999999996,
+                "y": 705.0
+              },
+              "endpoint": {
+                "x": 930.0,
+                "y": 705.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.16399999999999998,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          },
+          {
+            "elementtype": "drawline",
+            "line": {
+              "startpoint": {
+                "x": 0.0,
+                "y": 706.0
+              },
+              "endpoint": {
+                "x": 933.0,
+                "y": 706.0
+              }
+            },
+            "strokecolor": {
+              "red": 0.4,
+              "green": 0.4,
+              "blue": 0.4,
+              "alpha": 0.03,
+              "colorcolorprofilename": "kCGColorSpaceSRGB"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.7,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+      }
+    }
+  ],
+  "cleanupcommands": [
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      }
+    }
+  ]
+}

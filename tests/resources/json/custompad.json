@@ -1,0 +1,268 @@
+{
+  "runasynchronously": true,
+  "commands": [
+    {
+      "command": "create",
+      "objecttype": "bitmapcontext",
+      "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387",
+      "size": {
+        "width": 1033,
+        "height": 806
+      },
+      "preset": "AlphaPreMulFirstRGB8bpcInt"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageexporter",
+      "file": "~/placeholder.jpg",
+      "utifiletype": "public.png",
+      "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
+      "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      },
+      "drawinstructions": {
+        "elementtype": "fillrectangle",
+        "fillcolor": {
+          "red": 0.4,
+          "green": 0.2,
+          "blue": 0.1,
+          "alpha": 1.0,
+          "colorcolorprofilename": "kCGColorSpaceSRGB"
+        },
+        "rect": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 1033,
+            "height": 806
+          }
+        }
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+        },
+        "imageindex": 0,
+        "destinationrectangle": {
+          "origin": {
+            "x": 25,
+            "y": 50
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        }
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      }
+    },
+    {
+      "command": "setproperties",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "imageindex": 0,
+      "secondaryobject": {
+        "objecttype": "imageimporter",
+        "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+      },
+      "secondaryimageindex": 0
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.9,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+      }
+    },
+    {
+      "command": "create",
+      "objecttype": "imageimporter",
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
+      "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      },
+      "drawinstructions": {
+        "elementtype": "fillrectangle",
+        "fillcolor": {
+          "red": 0.4,
+          "green": 0.2,
+          "blue": 0.1,
+          "alpha": 1.0,
+          "colorcolorprofilename": "kCGColorSpaceSRGB"
+        },
+        "rect": {
+          "origin": {
+            "x": 0.0,
+            "y": 0.0
+          },
+          "size": {
+            "width": 1033,
+            "height": 806
+          }
+        }
+      }
+    },
+    {
+      "command": "drawelement",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      },
+      "drawinstructions": {
+        "elementtype": "drawimage",
+        "sourceobject": {
+          "objecttype": "imageimporter",
+          "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+        },
+        "imageindex": 0,
+        "destinationrectangle": {
+          "origin": {
+            "x": 25,
+            "y": 50
+          },
+          "size": {
+            "width": 908,
+            "height": 681
+          }
+        }
+      }
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "propertykey": "exportfilepath",
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
+    },
+    {
+      "command": "addimage",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "secondaryobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      }
+    },
+    {
+      "command": "setproperties",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "imageindex": 0,
+      "secondaryobject": {
+        "objecttype": "imageimporter",
+        "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+      },
+      "secondaryimageindex": 0
+    },
+    {
+      "command": "setproperty",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      },
+      "propertykey": "exportcompressionquality",
+      "propertyvalue": 0.9,
+      "imageindex": 0
+    },
+    {
+      "command": "export",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageimporter",
+        "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+      }
+    }
+  ],
+  "cleanupcommands": [
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "bitmapcontext",
+        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+      }
+    },
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "imageexporter",
+        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      }
+    }
+  ]
+}

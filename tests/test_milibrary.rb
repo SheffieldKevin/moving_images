@@ -22,7 +22,12 @@ module EqualHashes
         elsif array1[index].kind_of?(Array)
           return false unless self.equal_arrays?(array1[index], array2[index])
         else
-          return false unless array1[index].eql?(array2[index])
+          result = array1[index].eql?(array2[index])
+          unless result
+            puts "array1: #{array1.to_json}"
+            puts "array2: #{arrat2.to_json}"
+          end
+          return false unless result
         end
       end
     rescue RuntimeError => e
@@ -39,13 +44,22 @@ module EqualHashes
       hash1.keys.each do |key|
         if key.eql?('objectname')
           return false if hash2[key].nil?
+        elsif key.eql?('file')
+          return false if hash2[key].nil?
+        elsif key.eql?('propertyvalue')
+          return false if hash2[key].nil?
         else
           if hash1[key].kind_of?(Hash)
             return false unless self.equal_hashes?(hash1[key], hash2[key])
           elsif hash1[key].kind_of?(Array)
             return false unless self.equal_arrays?(hash1[key], hash2[key])
           else
-            return false unless hash1[key].eql?(hash2[key])
+            result = hash1[key].eql?(hash2[key])
+            unless result
+              puts "hash1: #{hash1.to_json}"
+              puts "hash2: #{hash2.to_json}"
+            end
+            return false unless result
           end
         end
       end
@@ -56,15 +70,16 @@ module EqualHashes
   end
 end
 
+$resources_dir = File.join(File.dirname(__FILE__), "resources")
 
 # Test class for creating shape hashes
 class TestMILibrary < MiniTest::Unit::TestCase
   def test_dotransition
-    json_filepath = File.join(File.dirname(__FILE__), "resources/json", "dotransition.json")
+    json_filepath = File.join($resources_dir, "json", "dotransition.json")
     the_json = File.read(json_filepath)
 
     the_options = { generate_json: true,
-                    outputdir: "~/Desktop/dotransition",
+                    outputdir: $resources_dir,
                     sourceimage: "resources/images/DSCN0744.JPG",
                     targetimage: "resources/images/DSCN0746.JPG",
                     exportfiletype: :'public.tiff',
@@ -75,11 +90,159 @@ class TestMILibrary < MiniTest::Unit::TestCase
                     inputWidth: 20,
                     inputBarOffset: 60,
                     verbose: false,
-                    generate_json: true }
+                    generate_json: true,
+                    softwarerender: false }
     generated_json = MILibrary.dotransition(the_options)
+#    File.write(json_filepath, generated_json)
     json_hash = JSON.parse(the_json)
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
                                                   'Different dotranstion json'
+  end
+
+  def test_customcrop
+    json_filepath = File.join($resources_dir, "json", "customcrop.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_customcrop_options(
+                                      left: 30,
+                                      right: 120,
+                                      top: 60,
+                                      bottom: 90,
+                                      outputdir: $resources_dir,
+                                      exportfiletype: 'public.jpeg',
+                                      quality: 0.8,
+                                      copymetadata: false,
+                                      assume_images_have_same_dimensions: true,
+                                      async: false,
+                                      verbose: false)
+    the_options[:generate_json] = true
+    images_directory = File.join($resources_dir, "images")
+    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
+              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.customcrop_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                                  'Different customcrop json'
+  end
+
+  def test_custompad
+    json_filepath = File.join($resources_dir, "json", "custompad.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_custompad_options(
+                                    left: 25,
+                                    right: 100,
+                                    top: 75,
+                                    bottom: 50,
+                                    red: 0.4,
+                                    green: 0.2,
+                                    blue: 0.1,
+                                    outputdir: $resources_dir,
+                                    exportfiletype: :'public.png',
+                                    quality: 0.9,
+                                    copymetadata: true,
+                                    assume_images_have_same_dimensions: false,
+                                    async: true,
+                                    verbose: false)
+
+    the_options[:generate_json] = true
+    images_directory = File.join($resources_dir, "images")
+    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
+              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.custompad_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                                  'Different custompad json'
+  end
+
+  def test_scale
+    json_filepath = File.join($resources_dir, "json", "scale.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_scaleimages_options(
+                                          scalex: 0.5,
+                                          scaley: 0.5,
+                                          outputdir: $resources_dir,
+                                          exportfiletype: :'public.tiff',
+                                          quality: 0.7,
+                                          interpqual: :default,
+                                          copymetadata: false,
+                                          assume_images_have_same_dimensions: false,
+                                          async: true,
+                                          verbose: false)
+
+    the_options[:generate_json] = true
+    images_directory = File.join($resources_dir, "images")
+    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
+              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.scale_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                                  'Different scale json'
+  end
+
+  def test_customaddshadow
+    json_filepath = File.join($resources_dir, "json", "customaddshadow.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_customaddshadow_options(
+                                        left: 10,
+                                        right: 15,
+                                        top: 5,
+                                        bottom: 20,
+                                        red: 0.4,
+                                        green: 0.4,
+                                        blue: 0.4,
+                                        outputdir: $resources_dir,
+                                        exportfiletype: :'public.png',
+                                        quality: 0.7,
+                                        copymetadata: false,
+                                        assume_images_have_same_dimensions: false,
+                                        async: true,
+                                        verbose: false)
+
+    the_options[:generate_json] = true
+    images_directory = File.join($resources_dir, "images")
+    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
+              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.customaddshadow_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                                  'Different scale json'
+  end
+
+  def test_simplesinglecifilter
+    json_filepath = File.join($resources_dir, "json", "simplesinglecifilter.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_simplesinglecifilter_options(
+                                       cifilter: :CIUnsharpMask,
+                                      outputdir: $resources_dir,
+                                 exportfiletype: :'public.jpeg',
+                                 softwarerender: false,
+                                      inputkey1: :inputRadius,
+                                    inputvalue1: 10.0,
+                                      inputkey2: :inputIntensity,
+                                    inputvalue2: 0.7)
+
+    the_options[:generate_json] = true
+    images_directory = File.join($resources_dir, "images")
+    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
+              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.simplesinglecifilter_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                            'Different simplesinglecifilter json'
   end
 end
 

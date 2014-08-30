@@ -4,18 +4,18 @@
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
-      "objectname": "e2aa4c11-c344-48a8-afcb-39548bee1b3e"
+      "objectname": "2d276412-68d3-4884-a476-da46d399d559"
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
-      "objectname": "661fcbb6-85ef-41fe-b3f6-fef426d60bf5"
+      "objectname": "91568dff-d7fb-41e4-b221-09968f5e9487"
     },
     {
       "command": "create",
       "objecttype": "bitmapcontext",
-      "objectname": "9834f85b-6e21-4f97-b061-026874ef599a",
+      "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede",
       "size": {
         "height": 681,
         "width": 908
@@ -28,8 +28,9 @@
       "imagefilterchaindict": {
         "cirenderdestination": {
           "objecttype": "bitmapcontext",
-          "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+          "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
         },
+        "coreimagesoftwarerender": false,
         "cifilterlist": [
           {
             "cifiltername": "CIBarsSwipeTransition",
@@ -44,7 +45,7 @@
                 "cifiltervalueclass": "CIImage",
                 "cifiltervalue": {
                   "objecttype": "imageimporter",
-                  "objectname": "e2aa4c11-c344-48a8-afcb-39548bee1b3e"
+                  "objectname": "2d276412-68d3-4884-a476-da46d399d559"
                 }
               },
               {
@@ -52,7 +53,7 @@
                 "cifiltervalueclass": "CIImage",
                 "cifiltervalue": {
                   "objecttype": "imageimporter",
-                  "objectname": "661fcbb6-85ef-41fe-b3f6-fef426d60bf5"
+                  "objectname": "91568dff-d7fb-41e4-b221-09968f5e9487"
                 }
               },
               {
@@ -71,20 +72,20 @@
           }
         ]
       },
-      "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+      "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
     },
     {
       "command": "create",
       "objecttype": "imageexporter",
       "file": "temp/file/path.tiff",
       "utifiletype": "public.tiff",
-      "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+      "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
     },
     {
       "command": "renderfilterchain",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       },
       "renderinstructions": {
         "cifilterproperties": [
@@ -100,34 +101,34 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/Desktop/dotransition/image000.tiff"
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image000.tiff"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     },
     {
       "command": "renderfilterchain",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       },
       "renderinstructions": {
         "cifilterproperties": [
@@ -143,34 +144,34 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/Desktop/dotransition/image001.tiff"
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image001.tiff"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     },
     {
       "command": "renderfilterchain",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       },
       "renderinstructions": {
         "cifilterproperties": [
@@ -186,34 +187,34 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/Desktop/dotransition/image002.tiff"
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image002.tiff"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     },
     {
       "command": "renderfilterchain",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       },
       "renderinstructions": {
         "cifilterproperties": [
@@ -229,34 +230,34 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/Desktop/dotransition/image003.tiff"
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image003.tiff"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     },
     {
       "command": "renderfilterchain",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       },
       "renderinstructions": {
         "cifilterproperties": [
@@ -272,27 +273,27 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/Desktop/dotransition/image004.tiff"
+      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image004.tiff"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     }
   ],
@@ -301,35 +302,35 @@
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "e2aa4c11-c344-48a8-afcb-39548bee1b3e"
+        "objectname": "2d276412-68d3-4884-a476-da46d399d559"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "661fcbb6-85ef-41fe-b3f6-fef426d60bf5"
+        "objectname": "91568dff-d7fb-41e4-b221-09968f5e9487"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "9834f85b-6e21-4f97-b061-026874ef599a"
+        "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imagefilterchain",
-        "objectname": "19beab75-6d91-4971-bd1c-9ed82d8f682f"
+        "objectname": "edb6840c-6cf4-4c33-b4d0-3bc3488ba58d"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "290b0645-feca-41c4-bab3-bc0d16d1177a"
+        "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       }
     }
   ]

@@ -116,6 +116,12 @@ class DoTransition
         @@options[:outputdir] = od
       end
 
+      @@options[:softwarerender] = false
+      opts.on("--softwarerender", "Default is a GPU render, but if this "\
+              "option set then the render will happen in software.") do
+        @@options[:softwarerender] = true
+      end
+
       @@options[:transitionfilter] = nil
       opts.on("--transitionfilter TRANSITIONFILTER", String,
             "The filter to use to transition from source to ." +

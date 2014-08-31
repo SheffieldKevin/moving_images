@@ -61,7 +61,7 @@ class AddShadowCommand
     @@options = MILibrary::Utility.make_customaddshadow_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
-      opts.banner = "Usage: customaddshadow [options] file1, file2, ..."
+      opts.banner = "Usage: customaddshadow [options] file1 file2 ..."
       opts.separator "Adds a shadow border to images. "
       opts.separator "The new image will be saved as a png or tiff file."
       opts.separator ""

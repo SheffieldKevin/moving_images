@@ -276,6 +276,22 @@ module MovingImages
                 :alpha => a, :colorcolorprofilename => profile }
     end
 
+    # Makes a rgba color from a comma delimited string r,g,b,a.    
+    # Will throw if the string can't be correctly interpreted.
+    # @param comma_delimited_string [String] The color as a string
+    # @return [Hash] The color hash.
+    def self.make_rgbacolor_fromstring(comma_delimited_string)
+      colorArray = comma_delimited_string.split(',')
+      if colorArray.size.eql? 4
+        return self.make_rgbacolor(colorArray[0].to_f,
+                                   colorArray[1].to_f,
+                                   colorArray[2].to_f,
+                                   colorArray[3].to_f)
+      else
+        fail "Color string could not be split into 4 color components"
+      end
+    end
+
     # Set the red component of a rgba color to a formula.    
     # The equations are maths like and functions like sin and cos work
     # as you would expect. Variables are identified by starting with a $ sign.

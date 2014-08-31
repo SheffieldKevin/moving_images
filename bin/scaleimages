@@ -43,7 +43,7 @@ class ScaleImageCommand
     @@options[:scaley] = 1.0
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
-      opts.banner = "Usage: scaleimage [options] file1, file2, ..."
+      opts.banner = "Usage: scaleimage [options] file1 file2 ..."
       opts.separator "Scale images, with option to scale horizontal and "\
                      "vertical independently."
       opts.separator "At least one of --scale/--scalex/--scaley needs to be " +

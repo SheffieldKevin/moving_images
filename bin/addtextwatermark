@@ -50,12 +50,11 @@ class CustomCropCommand
   # Return a hash describing the options.
   # 
   def self.parse!(theArgs)
-    @@options = MILibrary::Utility.make_custompad_options()
+    @@options = MILibrary::Utility.make_addtextwatermark_options()
     opt_parser = OptionParser.new do |opts|
       opts.version = "0.1a"
-      opts.banner = "Usage: custompad [options] file1 file2 ..."
-      opts.separator "Pad the image by specifying how much to pad from each "\
-                     "edge independently."
+      opts.banner = "Usage: addtextwatermark [options] file1 file2 ..."
+      opts.separator "Add a text watermark to the center of each image."
       opts.separator "If the output directory is the same as the directory " +
                      "containing the original image files, then if permissions"
       opts.separator "allow the original images will be overwritten. If the " +
@@ -64,42 +63,37 @@ class CustomCropCommand
       opts.separator ""
       opts.separator "Options:"
 
-      opts.on("--left [LEFT]", Integer,
-              "Pad LEFT pixels from left edge. Integer.") do |l|
-        @@options[:left] = clamp_to_range(l, 0, 1024)
+      opts.on("--watermarktext TEXT", String,
+              "The text to draw as a watermark.") do |text|
+        @@options[:text] = text
       end
 
-      opts.on("--right [RIGHT]", Integer,
-              "Pad RIGHT pixels from right edge. Integer") do |r|
-        @@options[:right] = clamp_to_range(r, 0, 1024)
+      opts.on("--strokewidth [STROKEWIDTH]", Float,
+              "The width of the text stroke. If a negative the text will be "\
+              "drawn with a fill then stroked.") do |sw|
+        @@options[:strokewidth] = clamp_to_range(sw, -50.0, 50.0)
       end
 
-      opts.on("--top [TOP]", Integer,
-              "Pad TOP pixels from top edge. Integer") do |t|
-        @@options[:top] = clamp_to_range(t, 0, 1024)
+      opts.on("--fontsize [FONTSIZE]", Integer,
+              "The fontsize to draw the watermark text with.") do |t|
+        @@options[:fontsize] = clamp_to_range(t, 4, 256)
       end
 
-      opts.on("--bottom [BOTTOM]", Integer,
-            "Pad BOTTOM pixels from bottom edge. Integer") do |b|
-        @@options[:bottom] = clamp_to_range(b, 0, 1024)
+      opts.on("--postscriptfont POSTSCRIPTFONT", String,
+            "The postscript font name used to draw the text with.") do |font|
+        @@options[:font] = font
       end
 
-      opts.on("-r", "--red [RED]", Float,
-            "Red color component for the padding color. " +
-            "Range: 0.0...1.0, default 1.0") do |r|
-         @@options[:red] = clamp_to_range(r, 0.0, 1.0)
+      opts.on("-f", "--fillcolor [FILLCOLOR]", String,
+            "The fill color represented as a comma delimited string. For example: "\
+            "0.0,0.0,0.0,1.0 is opaque black. Order is: r,g,b,a") do |color|
+        @@options[:fillcolor] = MIColor.make_rgbacolor_fromstring(color)
       end
 
-      opts.on("-g", "--green [GREEN]", Float,
-            "Green color component for the padding color. " +
-            "Range: 0.0...1.0, default 1.0") do |g|
-        @@options[:green] = clamp_to_range(g, 0.0, 1.0)
-      end
-
-      opts.on("-b", "--blue [BLUE]", Float,
-            "Blue color component for the padding color. " +
-            "Range: 0.0...1.0, default 1.0") do |b|
-        @@options[:blue] = clamp_to_range(b, 0.0, 1.0)
+      opts.on("-s", "--strokecolor [STROKECOLOR]", String,
+            "The stroke color represented as a comma delimited string. The default "\
+            "is: 1.0,1.0,1.0,1.0 opaque white. Order is: r,g,b,a") do |color|
+        @@options[:strokecolor] = MIColor.make_rgbacolor_fromstring(color)
       end
 
       opts.on("-q", "--quality [QUALITY]", Float,
@@ -151,13 +145,11 @@ class CustomCropCommand
 
       # Now add an example of using the command.
       opts.separator "Examples:"
-      opts.separator "  custompad --left 100 --right 100 -r 0.4 -g 0.3 -b 0.1" +
-                     "--outputdir ~/Desktop/croppedimages --verbose " +
-                     "--quality 0.8 " +
+      opts.separator "  addtextwatermark --watermarktext \"© Kevin\" "\
+                     "--outputdir ~/Desktop/textwatermarkedimages --verbose "\
+                     "--quality 0.8 --strokewidth=-10 -f 0.1,0.1,0.1,0.25 "\
+                     "--strokecolor 0.9,0.9,0.9,0.25"
                      "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
-      opts.separator "  custompad --top 200 --bottom 300 -r 0.9 -g 0.5 -b 0.3" +
-                     "--outputdir ~/Desktop/croppedimages --copymetadata " +
-                     "~/Desktop/junkimages/*.jpg"
       
     end # parse!
     begin
@@ -210,7 +202,7 @@ class CustomCropCommand
         if process_imageslists.last.object_id.eql? image_list.object_id
           @@options[:async] = false
         end
-        MILibrary.custompad_files(@@options, image_list)
+        MILibrary.addtextwatermark_files(@@options, image_list)
         verboseputs "Processed list #{list_num + 1} of #{num_lists}"
         list_num = list_num.succ
       end

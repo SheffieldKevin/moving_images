@@ -274,14 +274,12 @@ module MovingImages
     # @param postscriptfontname [String, Symbol, nil] The post script font name
     # @param userinterfacefont [String,Symbol,nil] User interface name font name
     # @param fontsize [Fixnum, Float, nil] The font size.
-    # @param strokewidth [Fixnum, Float, nil] The stroke width to use.
     # @return [Command] The calculate graphic size of text command
     def self.make_calculategraphicsizeoftext(
                                          text: "How long is a piece of string",
                                          postscriptfontname: nil,
                                          userinterfacefont: nil,
-                                         fontsize: nil,
-                                         strokewidth: nil)
+                                         fontsize: nil)
       theCommand = Command.new(:calculategraphicsizeoftext)
       theCommand.add_option(key: :objecttype, value: :bitmapcontext)
       theCommand.add_option(key: :getdatatype, value: :dictionaryobject)
@@ -299,9 +297,6 @@ module MovingImages
         dict[:fontsize] = fontsize
       end
     
-      unless strokewidth.nil?
-        dict[:stringstrokewidth] = strokewidth
-      end
       theCommand.add_option(key: :inputdata, value: dict)
       theCommand
     end

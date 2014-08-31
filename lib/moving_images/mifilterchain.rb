@@ -64,7 +64,7 @@ module MovingImages
 
     # Make a civector property from a rectangle.    
     # @param key [String, Symbol] The filter property key used to assign vector
-    # @param value [Hash] A hash as created by {MIShapes#make_rectangle}
+    # @param value [Hash] A hash as created by {MIShapes.make_rectangle}
     # @return [Hash] The property hash representing the property
     def self.make_civectorproperty_fromrectangle(key: :inputExtent,
                                                  value: { })
@@ -75,7 +75,7 @@ module MovingImages
 
     # Make a civector property from a point.    
     # @param key [String, Symbol] The filter property key used to assign vector
-    # @param value [Hash] A hash as created by {MIShapes#make_point}
+    # @param value [Hash] A hash as created by {MIShapes.make_point}
     # @return [Hash] The property hash representing the property.
     def self.make_civectorproperty_frompoint(key: :inputCenter,
                                              value: { })
@@ -86,7 +86,7 @@ module MovingImages
 
     # Make a core image color property without a value.    
     # @param key [String, Symbol] The filter property to be assigned the color
-    # @param value [nil, String, Hash] If hash then {MIColor::make_rgbacolor}
+    # @param value [nil, String, Hash] If hash then {MIColor.make_rgbacolor}
     # @return [Hash] The color filter property hash
     def self.make_cicolorproperty(key: "inputColor", value: nil)
       property = { :cifilterkey => key, :cifiltervalueclass => "CIColor" }
@@ -127,13 +127,13 @@ module MovingImages
       return self.make_cicolorproperty_fromstring(key: key, value: stringVal)
     end
 
-    # Make a core image color property, taking a color hash see {MIColor}.    
+    # Make a CoreImage color property, takes color hash {MIColor.make_rgbacolor}.    
     # Because the profile is specified, when the color is converted to a core 
     # image color it will be converted to a color with a profile: 
     # "kCGColorSpaceGenericRGB" before the filter property is assigned to
     # the filter.
     # @param key [String] The filter property to be assigned the color value.
-    # @param value [Hash] RGB color generated using {MIColor}
+    # @param value [Hash] RGB color generated using {MIColor.make_rgbacolor}
     # @return [Hash] A core image filter color property hash
     def self.make_cicolorproperty_fromhash(key: "inputColor",
             value: { :red => 1.0, :green => 1.0, :blue => 1.0, :alpha => 1.0,

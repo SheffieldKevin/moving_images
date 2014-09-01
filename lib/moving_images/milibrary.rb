@@ -122,7 +122,7 @@ module MovingImages
       # Split the input list into a list of lists
       # @param input_list [Array] A list of objects
       # @param num_lists [Fixnum] The number of lists to split input list into.
-      # @return [Array<Array>] An array of an array of items
+      # @return [Array<Hash>] An array of an array of items
       def self.splitlist(input_list, num_lists: 4)
         listof_list_offiles = []
         num_lists.times do |index|

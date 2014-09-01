@@ -148,7 +148,7 @@ class CustomCropCommand
       opts.separator "  addtextwatermark --watermarktext \"© Kevin\" "\
                      "--outputdir ~/Desktop/textwatermarkedimages --verbose "\
                      "--quality 0.8 --strokewidth=-10 -f 0.1,0.1,0.1,0.25 "\
-                     "--strokecolor 0.9,0.9,0.9,0.25"
+                     "--strokecolor 0.9,0.9,0.9,0.25 "\
                      "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
       
     end # parse!
@@ -156,11 +156,6 @@ class CustomCropCommand
       opt_parser.parse!(theArgs)
       if self.missing_mandatory_options?()
         raise "Missing mandatory options."
-      end
-
-      if @@options[:left].zero? && @@options[:right].zero? &&
-         @@options[:top].zero? && @@options[:bottom].zero?
-         raise "No cropping needed."
       end
 
     rescue RuntimeError => e
@@ -172,10 +167,15 @@ class CustomCropCommand
     @@options
   end
 
-  def self.customcrop
+  def self.addtextwatermark()
     if ARGV.length < 1
       puts "No image files to process"
       exit(1)
+    end
+
+    unless File.exists?(File.expand_path(ARGV[0]))
+      puts "Invalid file path: #{ARGV[0]}"
+      exit(2)
     end
 
     begin
@@ -183,7 +183,6 @@ class CustomCropCommand
       have_samedims = @@options[:assume_images_have_same_dimensions]
       expanded_filelist = []
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }
-
       process_imageslists=MILibrary::Utility.make_imagefilelists_forprocessing(
                                               imagefilelist: expanded_filelist,
                          assume_images_have_same_dimensions: have_samedims,
@@ -229,7 +228,7 @@ def localmain()
     pp options
   end
 
-  result = CustomCropCommand.customcrop()
+  result = CustomCropCommand.addtextwatermark()
   if !result.zero?
     verboseputs("Error fail code: " + result.to_s)
   end

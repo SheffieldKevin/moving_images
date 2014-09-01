@@ -286,7 +286,7 @@ module MovingImages
         return self.make_rgbacolor(colorArray[0].to_f,
                                    colorArray[1].to_f,
                                    colorArray[2].to_f,
-                                   colorArray[3].to_f)
+                                   a: colorArray[3].to_f)
       else
         fail "Color string could not be split into 4 color components"
       end

@@ -167,10 +167,15 @@ class ScaleImageCommand
     @@options
   end
 
-  def self.scaleimages
+  def self.scaleimages()
     if ARGV.length < 1
       puts "No image files to process"
       exit(1)
+    end
+
+    unless File.exists?(File.expand_path(ARGV[0]))
+      puts "Invalid file path: #{ARGV[0]}"
+      exit(2)
     end
 
     begin

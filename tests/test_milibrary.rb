@@ -98,7 +98,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
 #    File.write(json_filepath, generated_json)
     json_hash = JSON.parse(the_json)
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
-                                                  'Different dotranstion json'
+                                                  'Different dotransition json'
   end
 
   def test_customcrop

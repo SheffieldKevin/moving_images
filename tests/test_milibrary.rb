@@ -3,6 +3,7 @@ require 'json'
 
 require_relative '../lib/moving_images/spotlight.rb'
 require_relative '../lib/moving_images/smigobjectid.rb'
+require_relative '../lib/moving_images/smig.rb'
 require_relative '../lib/moving_images/smigcommands.rb'
 require_relative '../lib/moving_images/midrawing.rb'
 require_relative '../lib/moving_images/mifilterchain.rb'
@@ -71,6 +72,7 @@ module EqualHashes
 end
 
 $resources_dir = File.join(File.dirname(__FILE__), "resources")
+$images_dir = File.join($resources_dir, "images")
 
 # Test class for creating shape hashes
 class TestMILibrary < MiniTest::Unit::TestCase
@@ -80,8 +82,8 @@ class TestMILibrary < MiniTest::Unit::TestCase
 
     the_options = { generate_json: true,
                     outputdir: $resources_dir,
-                    sourceimage: "resources/images/DSCN0744.JPG",
-                    targetimage: "resources/images/DSCN0746.JPG",
+                    sourceimage: File.join($images_dir, "DSCN0744.JPG"),
+                    targetimage: File.join($images_dir, "DSCN0746.JPG"),
                     exportfiletype: :'public.tiff',
                     transitionfilter: :CIBarsSwipeTransition,
                     basename: 'image',
@@ -116,9 +118,8 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                       async: false,
                                       verbose: false)
     the_options[:generate_json] = true
-    images_directory = File.join($resources_dir, "images")
-    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
-              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.customcrop_files(the_options, file_list)
 #    File.write(json_filepath, generated_json)
@@ -148,9 +149,8 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                     verbose: false)
 
     the_options[:generate_json] = true
-    images_directory = File.join($resources_dir, "images")
-    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
-              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.custompad_files(the_options, file_list)
 #    File.write(json_filepath, generated_json)
@@ -176,9 +176,8 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                           verbose: false)
 
     the_options[:generate_json] = true
-    images_directory = File.join($resources_dir, "images")
-    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
-              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.scale_files(the_options, file_list)
 #    File.write(json_filepath, generated_json)
@@ -208,9 +207,8 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                         verbose: false)
 
     the_options[:generate_json] = true
-    images_directory = File.join($resources_dir, "images")
-    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
-              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.customaddshadow_files(the_options, file_list)
 #    File.write(json_filepath, generated_json)
@@ -227,6 +225,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                        cifilter: :CIUnsharpMask,
                                       outputdir: $resources_dir,
                                  exportfiletype: :'public.jpeg',
+                                        quality: nil, # nil means use default.
                                  softwarerender: false,
                                       inputkey1: :inputRadius,
                                     inputvalue1: 10.0,
@@ -234,15 +233,44 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                     inputvalue2: 0.7)
 
     the_options[:generate_json] = true
-    images_directory = File.join($resources_dir, "images")
-    files = [ "#{File.join(images_directory, "DSCN0744.JPG")}",
-              "#{File.join(images_directory, "DSCN0746.JPG")}" ]
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.simplesinglecifilter_files(the_options, file_list)
 #    File.write(json_filepath, generated_json)
     json_hash = JSON.parse(the_json)
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
                                             'Different simplesinglecifilter json'
+  end
+
+  def test_addtextwatermark
+    json_filepath = File.join($resources_dir, "json", "addtextwatermark.json")
+    the_json = File.read(json_filepath)
+
+    the_options = MILibrary::Utility.make_addtextwatermark_options(
+                                      text: "©Kevin Meaney",
+                                 fillcolor: MIColor.make_rgbacolor(0.3, 0.1, 0.0, a: 0.25),
+                               strokecolor: MIColor.make_rgbacolor(1.0, 0.8, 0.8, a: 0.25),
+                               strokewidth: 4.0, # 0 means don't stroke.
+                                  fontsize: 60, # nil means calculate font size.
+                                      font: 'GillSans-UltraBold',
+                                 outputdir: $resources_dir,
+                            exportfiletype: :'public.jpeg',
+                                   quality: 0.8,
+                              copymetadata: false,
+        assume_images_have_same_dimensions: true,
+                                     async: false,
+                                   verbose: false)
+
+    the_options[:generate_json] = true
+    files = [ "#{File.join($images_dir, "DSCN0744.JPG")}",
+              "#{File.join($images_dir, "DSCN0746.JPG")}" ]
+    file_list = { width: 908, height: 681, files: files }
+    generated_json = MILibrary.addtextwatermark_files(the_options, file_list)
+#    File.write(json_filepath, generated_json)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
+                                            'Different addtextwatermark json'
   end
 end
 

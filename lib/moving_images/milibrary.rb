@@ -446,6 +446,7 @@ module MovingImages
       # @param cifitler [Symbol, String] The cifilter to apply to the images
       # @param outputdir [Path] A path to the directory where files exported to.
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
+      # @param quality [Float] The export compression quality. 0.0 - 1.0.
       # @param softwarerender [true, false] Should the cifilter be software rendered
       # @param inputkey1 [String] The core image filter input key for the filter
       # @param inputvalue1 [Float] The value associated with inputkey1
@@ -456,6 +457,7 @@ module MovingImages
                                        cifilter: :CIBloom,
                                       outputdir: nil,
                                  exportfiletype: nil,
+                                        quality: 0.8,
                                  softwarerender: false,
                                       inputkey1: :inputRadius,
                                     inputvalue1: 10.0,
@@ -502,6 +504,8 @@ module MovingImages
         addImageCommand = CommandModule.make_addimage(exporter,
                                                       image_source)
         commands.add_command(addImageCommand)
+
+        # If requested copy the metadata from original file to scaled file.
         if options[:copymetadata] && !metadata_source.nil?
           copyImagePropertiesCommand = CommandModule.make_copymetadata(
                                               exporter,
@@ -511,7 +515,7 @@ module MovingImages
           commands.add_command(copyImagePropertiesCommand)
         end
 
-        # If requested copy the metadata from original file to scaled file.
+        # Set the export compression quality.
         unless options[:quality].nil?
           setExportCompressionQuality = CommandModule.make_set_objectproperty(
                                         exporter,
@@ -1615,32 +1619,49 @@ module MovingImages
       bitmapObject = theCommands.make_createbitmapcontext(addtocleanup: true,
                                                           size: size)
 
-        drawTextElement = MIDrawBasicStringElement.new
-        drawTextElement.fillcolor = options[:fillcolor]
-        drawTextElement.stringtext = options[:text]
-        
-        # Basically if stroke with is less than abs(0.1) assume no stroke
-        doesDrawStroke = !((options[:strokewidth] * 10.0).to_i.eql?(0))
-        if doesDrawStroke
-          drawTextElement.stringstrokewidth = options[:strokewidth]
-          drawTextElement.strokecolor = options[:strokecolor]
-        end
+      drawTextElement = MIDrawBasicStringElement.new
+      drawTextElement.fillcolor = options[:fillcolor]
+      drawTextElement.stringtext = options[:text]
+      
+      # Basically if stroke with is less than abs(0.1) assume no stroke
+      doesDrawStroke = !((options[:strokewidth] * 10.0).to_i.eql?(0))
+      if doesDrawStroke
+        drawTextElement.stringstrokewidth = options[:strokewidth]
+        drawTextElement.strokecolor = options[:strokecolor]
+      end
 
-        drawTextElement.font = options[:font]
-        drawTextelement.fontsize = options[:fontsize]
+      drawTextElement.postscriptfontname = options[:font]
 
       textSize = nil
+      fontSize = options[:fontsize]
       if options[:fontsize].nil?
         # a nil fontsize indicates we need to calculate the font size to fill.
         # This means I need to calculate space text takes up. We are not dealing
         # with user interface fonts here.
+        # Try with a fontsize of 100 points to start with.
+        fontSize = 100
         calculateTextSizeCommand = CommandModule.make_calculategraphicsizeoftext(
                                                 text: options[:text],
                                   postscriptfontname: options[:font],
-                                            fontsize: 100,
-                                         strokewidth: options[:strokewidth])
-        text_size = JSON.parse(Smig.perform_command(calculateTextSizeCommand))
+                                            fontsize: fontSize)
+        text_size = Smig.perform_command(calculateTextSizeCommand)
+        text_size = JSON.parse(text_size)
+        scale_factor = size[:width] / (text_size['width'] * 2.0)
+        fontSize = scale_factor * fontSize
+        drawTextElement.fontsize = fontSize
+      else
+        drawTextElement.fontsize = options[:fontsize]
       end
+      calculateTextSizeCommand = CommandModule.make_calculategraphicsizeoftext(
+                                              text: options[:text],
+                                postscriptfontname: options[:font],
+                                          fontsize: fontSize)
+      text_size = JSON.parse(Smig.perform_command(calculateTextSizeCommand))
+      text_loc = MIShapes.make_point(0.5 * (size[:width] - text_size['width']),
+                                     0.5 * (size[:height] - text_size['height']))
+      drawTextElement.point_textdrawnfrom = text_loc
+      drawTextCommand = CommandModule.make_drawelement(bitmapObject,
+                                              drawinstructions: drawTextElement)
 
       # Make the create a image exporter command and add it to list of commands.
       exporterObject = theCommands.make_createexporter("~/placeholder.jpg",
@@ -1658,7 +1679,7 @@ module MovingImages
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
                                           drawinstructions: drawImageElement)
         theCommands.add_command(drawImageCommand)
-
+        theCommands.add_command(drawTextCommand)
         fileName = File.basename(filePath, '.*') + nameExtension
         exportPath = File.join(outputDirectory, fileName)
         Private.make_commands_forexport(commands: theCommands,

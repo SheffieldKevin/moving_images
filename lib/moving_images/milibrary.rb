@@ -397,6 +397,7 @@ module MovingImages
       # @param strokewidth [Float] The stroke width to use when stroking text.
       # @param fontsize [nil, Fixnum] If nil then font size will be calculated.
       # @param font [String] The postscript name of the font to draw with.
+      # @param scale [Float] Scale the image by scale factor.
       # @param outputdir [Path] A path to the directory where files exported to
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
       # @param quality [Float] The export compression quality. 0.0 - 1.0.
@@ -415,6 +416,7 @@ module MovingImages
                                strokewidth: 0.0, # 0 means don't stroke.
                                   fontsize: nil, # nil means calculate font size.
                                       font: 'AvenirNext-Heavy',
+                                     scale: 1.0, # Image scale factor.
                                  outputdir: nil,
                             exportfiletype: :'public.jpeg',
                                    quality: 0.8,
@@ -433,7 +435,7 @@ module MovingImages
         { text: text, fillcolor: fillcolor, strokecolor: strokecolor,
           strokewidth: strokewidth, fontsize: fontsize, font: font,
           outputdir: outputdir, exportfiletype: exportfiletype,
-          quality: quality, copymetadata: copymetadata,
+          scale: scale, quality: quality, copymetadata: copymetadata,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions,
           async: async, verbose: verbose
         }
@@ -1611,7 +1613,8 @@ module MovingImages
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
       # Calculate the size of the bitmap.
-      size = MIShapes.make_size(file_list[:width], file_list[:height])
+      size = MIShapes.make_size(file_list[:width] * options[:scale],
+                                file_list[:height] * options[:scale])
       
       # make the create bitmap context and add it to list of commands.
       # setting addtocleanup to true means when commands have been completed
@@ -1658,7 +1661,7 @@ module MovingImages
                                           fontsize: fontSize)
       text_size = JSON.parse(Smig.perform_command(calculateTextSizeCommand))
       text_loc = MIShapes.make_point(0.5 * (size[:width] - text_size['width']),
-                                     0.5 * (size[:height] - text_size['height']))
+                                     0.5 * (size[:height] + text_size['height']))
       drawTextElement.point_textdrawnfrom = text_loc
       drawTextCommand = CommandModule.make_drawelement(bitmapObject,
                                               drawinstructions: drawTextElement)
@@ -1676,6 +1679,7 @@ module MovingImages
         drawImageElement.set_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
+        drawImageElement.interpolationquality = :kCGInterpolationHigh
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
                                           drawinstructions: drawImageElement)
         theCommands.add_command(drawImageCommand)

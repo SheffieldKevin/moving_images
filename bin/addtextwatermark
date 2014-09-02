@@ -96,6 +96,12 @@ class CustomCropCommand
         @@options[:strokecolor] = MIColor.make_rgbacolor_fromstring(color)
       end
 
+      opts.on("--scale [SCALE]", Float,
+            "Scale factor. 1.0 no scaling, 0.5 reduces width/height by 0.5. " +
+            "Scaling applied before drawing watermark text") do |scale|
+        @@options[:scale] = clamp_to_range(scale, 0.05, 10.0)
+      end
+
       opts.on("-q", "--quality [QUALITY]", Float,
             "Export quality. 0.0 = max compression, min quality " +
             "1.0 = best quality min compression") do |qual|

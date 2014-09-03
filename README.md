@@ -4,7 +4,7 @@ This gem provides a ruby interface for using [MovingImages](http://yvs.eu.com/Mo
 
 ## Installation
 
-Instatallation is part of the MovingImages installation. Installation instructions are here:
+[Instatallation is part of the MovingImages installation](http://yvs.eu.com/MovingImages/docs/home).
 
 ## Usage
 

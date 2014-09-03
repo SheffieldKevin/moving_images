@@ -11,11 +11,27 @@ require_relative '../lib/moving_images/milibrary.rb'
 
 include MovingImages
 
+# The equal_hashes method iterates through a ruby hash
+# and its array and compares entries. There are three
+# properties that are ignored for comparison purposes.
+# These properties are: 'objectname', 'file',
+# 'propertyvalue' This is to deal with the fact that
+# object names are generated in each run using
+# 'SecureRandom'. That full paths to files on
+# different computers will be different. The last is
+# that getting dimensions from images will fail
+# for images in an installed ruby gem. It uses
+# Spotlight to get image dimensions which fails on
+# files that Spotlight believes are system files.
+
 module EqualHashes
   def self.equal_arrays?(array1, array2)
     return false unless array1.kind_of?(Array)
     return false unless array2.kind_of?(Array)
-    return false unless array1.size.eql?(array2.size)
+    unless array1.size.eql?(array2.size)
+      puts "Arrays have different lengths"
+      return false
+    end
     begin
       array1.each_index do |index|
         if array1[index].kind_of?(Hash)
@@ -40,6 +56,12 @@ module EqualHashes
   def self.equal_hashes?(hash1, hash2)
     return false unless hash1.kind_of?(Hash)
     return false unless hash2.kind_of?(Hash)
+    unless hash1.size.eql?(hash2.size)
+      puts "Number of hash attributes different"
+      puts "hash1 keys: #{hash1.keys}"
+      puts "hash2 keys: #{hash2.keys}"
+      return false
+    end
     return false unless hash1.size.eql?(hash2.size)
     begin
       hash1.keys.each do |key|
@@ -51,6 +73,12 @@ module EqualHashes
           return false if hash2[key].nil?
         else
           if hash1[key].kind_of?(Hash)
+# Uncomment the following if you want context of difference displayed.
+#            areEqual = self.equal_hashes?(hash1[key], hash2[key])
+#            unless areEqual
+#              puts "hash1: #{hash1.to_json}"
+#              puts "hash2: #{hash2.to_json}"
+#            end
             return false unless self.equal_hashes?(hash1[key], hash2[key])
           elsif hash1[key].kind_of?(Array)
             return false unless self.equal_arrays?(hash1[key], hash2[key])
@@ -71,7 +99,7 @@ module EqualHashes
   end
 end
 
-$resources_dir = File.join(File.dirname(__FILE__), "resources")
+$resources_dir = File.expand_path(File.join(File.dirname(__FILE__), "resources"))
 $images_dir = File.join($resources_dir, "images")
 
 # Test class for creating shape hashes

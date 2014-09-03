@@ -1,24 +1,18 @@
 # MovingImages
 
-This gem provides an interface for using [MovingImages](https://gitlab.com/ktam/using-movingimages/wikis/Home) a OS X Launch Agent for processing image files.
+This gem provides a ruby interface for using [MovingImages](http://yvs.eu.com/MovingImages/docs/Contents) a OS X Launch Agent for processing image files.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-    gem 'moving_images'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install moving_images
+Instatallation is part of the MovingImages installation. Installation instructions are here:
 
 ## Usage
 
-Please see the [documentation for MovingImages](https://gitlab.com/ktam/using-movingimages/wikis/Contents).
+Please see the [documentation for MovingImages](http://yvs.eu.com/MovingImages/docs/Contents).
+
+## License
+
+[MIT license](LICENSE.txt)
 
 ## Contributing
 

@@ -1613,8 +1613,8 @@ module MovingImages
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
       # Calculate the size of the bitmap.
-      size = MIShapes.make_size(file_list[:width] * options[:scale],
-                                file_list[:height] * options[:scale])
+      size = MIShapes.make_size((file_list[:width] * options[:scale]).to_i,
+                                (file_list[:height] * options[:scale]).to_i)
       
       # make the create bitmap context and add it to list of commands.
       # setting addtocleanup to true means when commands have been completed

@@ -46,6 +46,209 @@ class DoTransition
            @@options[:transitionfilter].nil?
   end
 
+  def self.create_ciimage_property(key)
+    # The :cifiltervalue is a hash, that will identify the source of the CIImage
+    # which will be from a base object, or the output image from a filter
+    # earlier in the filter sequence.
+    input = { :cifilterkey => key, :cifiltervalue => { },
+              :cifiltervalueclass => "CIImage" }
+    return input
+  end
+
+  def self.create_civector_property(key, stringVal)
+    input = { :cifilterkey => key, :cifiltervalue => stringVal,
+              :cifiltervalueclass => "CIVector" }
+    return input
+  end
+
+  def self.create_cicolor_property(key, stringVal)
+    input = { :cifilterkey => key, :cifiltervalue => stringVal,
+              :cifiltervalueclass => "CIColor" }
+    return input
+  end
+
+  def self.create_numeric_property(key, minVal, default, maxVal)
+    input = { :cifilterkey => key, :cifiltervalue => default,
+                :max => maxVal, :min => minVal, :default => default }
+    return input
+  end
+
+  # The filter name identifier is defaulted the actual filter name.
+  def self.create_transitionfilter_hash(filterName)
+# For now we output the filter properties that are specific to individual
+# transition filters. Common properties required for all transition
+# filters I'm not listing here.
+#    input1 = self.create_numeric_property("inputTime", 0.0, 0.0, 1.0)
+#    input2 = self.create_ciimage_property("inputImage")
+#    input3 = self.create_ciimage_property("inputTargetImage")
+#    return { :cifiltername => filterName, :mifiltername => filterName,
+#              :cifilterproperties => [ input1, input2, input3 ] }
+    return { :cifiltername => filterName, :cifilterproperties => [] }
+  end
+
+  def self.create_barswipetransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIBarsSwipeTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle", 0, 3.1416, 6.283)
+    filterProps << self.create_numeric_property("inputWidth", 2, 30, 300)
+    filterProps << self.create_numeric_property("inputBarOffset", 1, 10, 100)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_rippletransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIRippleTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputWidth", 1, 10, 300)
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputScale", -50, 0, 50)
+    filterProps << self.create_civector_property("inputCenter", "[150 150]")
+    filterProps << self.create_ciimage_property("inputShadingImage")
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_swipetransition_hash()
+    filterHash = self.create_transitionfilter_hash("CISwipeTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle", 0, 0.0, 3.1416)
+    filterProps << self.create_numeric_property("inputWidth", 0.1, 300, 800)
+    filterProps << self.create_cicolor_property("inputColor", "1 1 1 1")
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputOpacity", 0, 0, 1)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_copymachinetransition_hash()
+    filterHash = self.create_transitionfilter_hash("CICopyMachineTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle", 0,0,3.1416)
+    filterProps << self.create_numeric_property("inputWidth", 0.1, 300, 800)
+    filterProps << self.create_cicolor_property("inputColor", "1 1 1 1")
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputOpacity", 0, 0, 1)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_disintegratewithmasktransition_hash()
+    filterHash = self.create_transitionfilter_hash(
+                                    "CIDisintegrateWithMaskTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_civector_property("inputShadowOffset", "[0 0]")
+    filterProps << self.create_numeric_property("inputShadowDensity",0,0.65,1.0)
+    filterProps << self.create_numeric_property("inputShadowRadius", 0, 8, 50)
+    filterProps << self.create_ciimage_property("inputMaskImage")
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_flashtransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIFlashTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputStriationStrength",
+                                                          0, 0.5, 3.0)
+    filterProps << self.create_cicolor_property("inputColor", "1 1 1 1")
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputFadeThreshold",
+                                                0.0, 0.85, 1.0)
+    filterProps << self.create_civector_property("inputCenter", "[150 150]")
+    filterProps << self.create_numeric_property("inputStriationContrast",
+                                                0.0, 1.375, 5.0)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_dissolvetransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIDissolveTransition")
+    return filterHash
+  end
+
+  def self.create_modtransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIModTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle", -6.283, 2, 6.283)
+    filterProps << self.create_numeric_property("inputCompression",
+                                                100, 300, 800)
+    filterProps << self.create_civector_property("inputCenter", "[150 150]")
+    filterProps << self.create_numeric_property("inputRadius", 1, 150, 200)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_pagecurltransition_hash()
+    filterHash = self.create_transitionfilter_hash("CIPageCurlTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle",-3.1416, 0, 3.1416)
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_ciimage_property("inputShadingImage")
+    filterProps << self.create_numeric_property("inputRadius", 0.01, 100, 400)
+    filterProps << self.create_ciimage_property("inputBacksideImage")
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_pagecurlwithshadowtransition_hash()
+    filterHash = self.create_transitionfilter_hash(
+                                            "CIPageCurlWithShadowTransition")
+    filterProps = filterHash[:cifilterproperties]
+    filterProps << self.create_numeric_property("inputAngle",-3.1416, 0, 3.1416)
+    filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputRadius", 0.01, 100, 400)
+    filterProps << self.create_ciimage_property("inputBacksideImage")
+    filterProps << self.create_civector_property("inputShadowExtent",
+                                                              "[0 0 300 300]")
+    filterProps << self.create_numeric_property("inputShadowAmount", 0, 0.7, 1)
+    filterProps << self.create_numeric_property("inputShadowSize", 0, 0.5, 1)
+    filterHash[:cifilterproperties] = filterProps
+    return filterHash
+  end
+
+  def self.create_fulltransitionfilter_list()
+    filterList = [ self.create_barswipetransition_hash(),
+                    self.create_rippletransition_hash(),
+                    self.create_swipetransition_hash(),
+                    self.create_copymachinetransition_hash(),
+                    self.create_disintegratewithmasktransition_hash(),
+                    self.create_flashtransition_hash(),
+                    self.create_dissolvetransition_hash(),
+                    self.create_modtransition_hash(),
+                    self.create_pagecurltransition_hash(),
+                    self.create_pagecurlwithshadowtransition_hash() ]
+    return filterList
+  end
+
+  def self.create_transitionfilter_namelist()
+    filterList = self.create_fulltransitionfilter_list()
+    filterNames = ""
+    filterList.each { |filter|
+      filterNames += filter[:cifiltername] + " "
+    }
+    return filterNames
+  end
+
+  def self.create_filterproperties_hash(filterName)
+    filterHash = nil
+    filterList = self.create_fulltransitionfilter_list()
+    filterList.each { |filter|
+      if filterName == filter[:cifiltername]
+        filterHash = filter
+      end
+    }
+    return filterHash
+  end
+
+  # Return the properties of the filter as a JSON string.
+  def self.getfilterproperties_jsonpretty(filterName)
+    filterHash = self.create_filterproperties_hash(filterName)
+    filterProps = nil
+    unless filterHash.nil?
+      filterProps = JSON.pretty_generate(filterHash)
+    end
+    return filterProps
+  end
+
   #
   # Return a hash describing the options.
   #

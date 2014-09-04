@@ -4,7 +4,7 @@
     {
       "command": "create",
       "objecttype": "bitmapcontext",
-      "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6",
+      "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6",
       "size": {
         "width": 933,
         "height": 706
@@ -16,19 +16,19 @@
       "objecttype": "imageexporter",
       "file": "~/placeholder.png",
       "utifiletype": "public.png",
-      "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+      "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
-      "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+      "objectname": "1fe1384f-bdc0-484a-a976-ad1d106ea8ac"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "fillrectangle",
@@ -56,13 +56,13 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+          "objectname": "1fe1384f-bdc0-484a-a976-ad1d106ea8ac"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -74,14 +74,15 @@
             "width": 908,
             "height": 681
           }
-        }
+        },
+        "interpolationquality": "kCGInterpolationHigh"
       }
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "arrayofelements",
@@ -1184,7 +1185,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "propertykey": "exportfilepath",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
@@ -1193,18 +1194,18 @@
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.7,
@@ -1214,27 +1215,27 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "fe3e0816-b470-4422-9b73-b0ca053f8b3e"
+        "objectname": "1fe1384f-bdc0-484a-a976-ad1d106ea8ac"
       }
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
-      "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+      "objectname": "7935f1cc-425e-4e29-83d6-c7c0872d7926"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "fillrectangle",
@@ -1262,13 +1263,13 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+          "objectname": "7935f1cc-425e-4e29-83d6-c7c0872d7926"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -1280,14 +1281,15 @@
             "width": 908,
             "height": 681
           }
-        }
+        },
+        "interpolationquality": "kCGInterpolationHigh"
       }
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       },
       "drawinstructions": {
         "elementtype": "arrayofelements",
@@ -2390,7 +2392,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "propertykey": "exportfilepath",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
@@ -2399,18 +2401,18 @@
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.7,
@@ -2420,14 +2422,14 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "092902c4-d7fc-472e-9c5c-a7b4464e93ff"
+        "objectname": "7935f1cc-425e-4e29-83d6-c7c0872d7926"
       }
     }
   ],
@@ -2436,14 +2438,14 @@
       "command": "close",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "6b3c15a4-8c4c-429d-a295-a70ec630f8d6"
+        "objectname": "a807d92b-753b-4619-80d5-c2e4cafe4bb6"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "5c7fdd04-6370-496d-9030-43aad92893d3"
+        "objectname": "241c3fc6-1aab-4c59-b021-5130523cd030"
       }
     }
   ]

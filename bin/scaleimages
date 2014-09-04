@@ -42,7 +42,7 @@ class ScaleImageCommand
     @@options[:scalex] = 1.0
     @@options[:scaley] = 1.0
     opt_parser = OptionParser.new do |opts|
-      opts.version = "0.1a"
+      opts.version = "0.2a"
       opts.banner = "Usage: scaleimage [options] file1 file2 ..."
       opts.separator "Scale images, with option to scale horizontal and "\
                      "vertical independently."
@@ -186,6 +186,7 @@ class ScaleImageCommand
       end
 
       start_time = Time.now
+      verboseputs "Number of files to process: #{ARGV.size}"
       have_samedims = @@options[:assume_images_have_same_dimensions]
       expanded_filelist = []
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }

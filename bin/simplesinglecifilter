@@ -322,6 +322,7 @@ class ApplyCoreImageSimpleSingleFilter
 
     begin
       start_time = Time.now
+      verboseputs "Number of files to process: #{ARGV.size}"
       have_samedims = @@options[:assume_images_have_same_dimensions]
       expanded_filelist = []
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }

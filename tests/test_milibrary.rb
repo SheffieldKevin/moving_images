@@ -168,6 +168,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                     red: 0.4,
                                     green: 0.2,
                                     blue: 0.1,
+                                    scale: 1.0,
                                     outputdir: $resources_dir,
                                     exportfiletype: :'public.png',
                                     quality: 0.9,
@@ -226,6 +227,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
                                         red: 0.4,
                                         green: 0.4,
                                         blue: 0.4,
+                                        scale: 1.0,
                                         outputdir: $resources_dir,
                                         exportfiletype: :'public.png',
                                         quality: 0.7,
@@ -242,7 +244,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
 #    File.write(json_filepath, generated_json)
     json_hash = JSON.parse(the_json)
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
-                                                  'Different scale json'
+                                              'Different custom add shadow json'
   end
 
   def test_simplesinglecifilter

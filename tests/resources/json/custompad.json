@@ -4,7 +4,7 @@
     {
       "command": "create",
       "objecttype": "bitmapcontext",
-      "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387",
+      "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644",
       "size": {
         "width": 1033,
         "height": 806
@@ -16,19 +16,19 @@
       "objecttype": "imageexporter",
       "file": "~/placeholder.jpg",
       "utifiletype": "public.png",
-      "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+      "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
-      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
-      "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+      "file": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
+      "objectname": "408c2a70-1fca-41ab-8278-c915910ad751"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       },
       "drawinstructions": {
         "elementtype": "fillrectangle",
@@ -55,13 +55,13 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+          "objectname": "408c2a70-1fca-41ab-8278-c915910ad751"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -73,39 +73,40 @@
             "width": 908,
             "height": 681
           }
-        }
+        },
+        "interpolationquality": "kCGInterpolationHigh"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
+      "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       }
     },
     {
       "command": "setproperties",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "imageindex": 0,
       "secondaryobject": {
         "objecttype": "imageimporter",
-        "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+        "objectname": "408c2a70-1fca-41ab-8278-c915910ad751"
       },
       "secondaryimageindex": 0
     },
@@ -113,7 +114,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.9,
@@ -123,27 +124,27 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "47487204-7100-4c61-a3f0-1552deb8fce5"
+        "objectname": "408c2a70-1fca-41ab-8278-c915910ad751"
       }
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
-      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
-      "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+      "file": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
+      "objectname": "4b997d4b-ac85-48dd-85ad-030360c0ea49"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       },
       "drawinstructions": {
         "elementtype": "fillrectangle",
@@ -170,13 +171,13 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+          "objectname": "4b997d4b-ac85-48dd-85ad-030360c0ea49"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -188,39 +189,40 @@
             "width": 908,
             "height": 681
           }
-        }
+        },
+        "interpolationquality": "kCGInterpolationHigh"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "propertykey": "exportfilepath",
-      "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
+      "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
     },
     {
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       }
     },
     {
       "command": "setproperties",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "imageindex": 0,
       "secondaryobject": {
         "objecttype": "imageimporter",
-        "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+        "objectname": "4b997d4b-ac85-48dd-85ad-030360c0ea49"
       },
       "secondaryimageindex": 0
     },
@@ -228,7 +230,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.9,
@@ -238,14 +240,14 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "7ab0d81e-822c-4b4a-8ffd-220b9f8845a5"
+        "objectname": "4b997d4b-ac85-48dd-85ad-030360c0ea49"
       }
     }
   ],
@@ -254,14 +256,14 @@
       "command": "close",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "e9305342-e46c-4dad-9f9c-baec4e827387"
+        "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "3c812013-ec8e-4c6a-8416-2b6b567348da"
+        "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       }
     }
   ]

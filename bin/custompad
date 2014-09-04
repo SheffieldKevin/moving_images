@@ -39,7 +39,7 @@ def clamp_to_min(val, min)
   return val
 end
 
-class CustomCropCommand
+class CustomPadCommand
   @@options = { }
   
   def self.missing_mandatory_options?()
@@ -52,7 +52,7 @@ class CustomCropCommand
   def self.parse!(theArgs)
     @@options = MILibrary::Utility.make_custompad_options()
     opt_parser = OptionParser.new do |opts|
-      opts.version = "0.1a"
+      opts.version = "0.2a"
       opts.banner = "Usage: custompad [options] file1 file2 ..."
       opts.separator "Pad the image by specifying how much to pad from each "\
                      "edge independently."
@@ -100,6 +100,12 @@ class CustomCropCommand
             "Blue color component for the padding color. " +
             "Range: 0.0...1.0, default 1.0") do |b|
         @@options[:blue] = clamp_to_range(b, 0.0, 1.0)
+      end
+
+      opts.on("--scale [SCALE]", Float,
+            "Scale factor. 1.0 no scaling, 0.5 reduces width/height by 0.5. " +
+            "Scaling applied before padding happens") do |scale|
+        @@options[:scale] = clamp_to_range(scale, 0.05, 10.0)
       end
 
       opts.on("-q", "--quality [QUALITY]", Float,
@@ -151,12 +157,12 @@ class CustomCropCommand
 
       # Now add an example of using the command.
       opts.separator "Examples:"
-      opts.separator "  custompad --left 100 --right 100 -r 0.4 -g 0.3 -b 0.1" +
-                     "--outputdir ~/Desktop/croppedimages --verbose " +
+      opts.separator "  custompad --left 100 --right 100 -r 0.4 -g 0.3 -b 0.1 " +
+                     "--outputdir ~/Desktop/paddedimages --verbose " +
                      "--quality 0.8 " +
-                     "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg"
+                     "file01.jpg file02.jpg file03.jpg file04.jpg file05.jpg "
       opts.separator "  custompad --top 200 --bottom 300 -r 0.9 -g 0.5 -b 0.3" +
-                     "--outputdir ~/Desktop/croppedimages --copymetadata " +
+                     "--outputdir ~/Desktop/paddedimages --copymetadata " +
                      "~/Desktop/junkimages/*.jpg"
       
     end # parse!
@@ -193,6 +199,7 @@ class CustomCropCommand
 
     begin
       start_time = Time.now
+      verboseputs "Number of files to process: #{ARGV.size}"
       have_samedims = @@options[:assume_images_have_same_dimensions]
       expanded_filelist = []
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }
@@ -236,13 +243,13 @@ class CustomCropCommand
 end
 
 def localmain()
-  options = CustomCropCommand.parse!(ARGV)
+  options = CustomPadCommand.parse!(ARGV)
   $verbose = options[:verbose]
   if $verbose
     pp options
   end
 
-  result = CustomCropCommand.customcrop()
+  result = CustomPadCommand.customcrop()
   if !result.zero?
     verboseputs("Error fail code: " + result.to_s)
   end

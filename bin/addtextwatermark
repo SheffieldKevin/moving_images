@@ -79,7 +79,7 @@ class CustomCropCommand
         @@options[:fontsize] = clamp_to_range(t, 4, 256)
       end
 
-      opts.on("--postscriptfont POSTSCRIPTFONT", String,
+      opts.on("--postscriptfont [POSTSCRIPTFONT]", String,
             "The postscript font name used to draw the text with.") do |font|
         @@options[:font] = font
       end
@@ -186,6 +186,7 @@ class CustomCropCommand
 
     begin
       start_time = Time.now
+      verboseputs "Number of files to process: #{ARGV.size}"
       have_samedims = @@options[:assume_images_have_same_dimensions]
       expanded_filelist = []
       ARGV.each { |path| expanded_filelist.push(File.expand_path(path)) }

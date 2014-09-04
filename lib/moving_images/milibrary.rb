@@ -303,6 +303,7 @@ module MovingImages
       # @param red [Float] The red color component of the pad color 0 - 1.
       # @param green [Float] The green color component of the pad color 0 - 1
       # @param blue [Float] The blue color component of the pad color 0 - 1
+      # @param scale [Float] The scale to apply to the image before padding.
       # @param outputdir [Path] A path to the directory where files exported to
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
       # @param quality [Float] The export compression quality. 0.0 - 1.0.
@@ -322,6 +323,7 @@ module MovingImages
                                     red: 0.0,
                                     green: 0.0,
                                     blue: 0.0,
+                                    scale: 1.0,
                                     outputdir: nil,
                                     exportfiletype: nil,
                                     quality: 0.7,
@@ -330,7 +332,7 @@ module MovingImages
                                     async: false,
                                     verbose: false)
         { left: left, right: right, top: top, bottom: bottom, 
-          red: red, green: green, blue: blue, verbose: verbose,
+          red: red, green: green, blue: blue, scale: scale, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir, quality: quality, 
           exportfiletype: exportfiletype, async: async,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions
@@ -351,6 +353,7 @@ module MovingImages
       # @param red [Float] The red color component of the pad color 0 - 1.
       # @param green [Float] The green color component of the pad color 0 - 1
       # @param blue [Float] The blue color component of the pad color 0 - 1
+      # @param scale [Float] Scale factor to apply to image before add shadow
       # @param outputdir [Path] A path to the directory where files exported to
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
       # @param quality [Float] The export compression quality. 0.0 - 1.0.
@@ -370,6 +373,7 @@ module MovingImages
                                      red: 0.0,
                                    green: 0.0,
                                     blue: 0.0,
+                                   scale: 1.0,
                                outputdir: nil,
                           exportfiletype: nil,
                                  quality: 0.7,
@@ -378,7 +382,7 @@ module MovingImages
                                    async: false,
                                  verbose: false)
         { left: left, right: right, top: top, bottom: bottom, 
-          red: red, green: green, blue: blue, verbose: verbose,
+          red: red, green: green, blue: blue, scale: scale, verbose: verbose,
           copymetadata: copymetadata, outputdir: outputdir, quality: quality, 
           exportfiletype: exportfiletype, async: async,
           assume_images_have_same_dimensions: assume_images_have_same_dimensions
@@ -418,7 +422,7 @@ module MovingImages
                                       font: 'AvenirNext-Heavy',
                                      scale: 1.0, # Image scale factor.
                                  outputdir: nil,
-                            exportfiletype: :'public.jpeg',
+                            exportfiletype: nil,
                                    quality: 0.8,
                               copymetadata: false,
         assume_images_have_same_dimensions: false,
@@ -1051,9 +1055,11 @@ module MovingImages
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
       # Calculate the size of the padded image.
+      scaledImageWidth = (options[:scale] * file_list[:width]).to_i
+      scaledImageHeight = (options[:scale] * file_list[:height]).to_i
       size = MIShapes.make_size(
-                        file_list[:width] + options[:left] + options[:right],
-                        file_list[:height] + options[:top] + options[:bottom])
+                        scaledImageWidth + options[:left] + options[:right],
+                        scaledImageHeight + options[:top] + options[:bottom])
       
       # make the create bitmap context and add it to list of commands.
       # setting addtocleanup to true means when commands have been completed
@@ -1065,7 +1071,7 @@ module MovingImages
                                       export_type: fileType, addtocleanup: true)
 
       destinationRect = MIShapes.make_rectangle(
-              size: MIShapes.make_size(file_list[:width], file_list[:height]),
+              size: MIShapes.make_size(scaledImageWidth, scaledImageHeight),
               origin: MIShapes.make_point(options[:left], options[:bottom]))
 
       fileList.each do |filePath|
@@ -1083,6 +1089,7 @@ module MovingImages
         drawImageElement.set_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
+        drawImageElement.interpolationquality = :kCGInterpolationHigh
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
                                           drawinstructions: drawImageElement)
         theCommands.add_command(drawImageCommand)
@@ -1144,9 +1151,11 @@ module MovingImages
       nameExtension=Utility.get_extension_fromimagefiletype(filetype: fileType)
 
       # Calculate the size of the cropped image.
+      scaledImageWidth = (file_list[:width] * options[:scale]).to_i
+      scaledImageHeight = (file_list[:height] * options[:scale]).to_i
       size = MIShapes.make_size(
-                        file_list[:width] + options[:left] + options[:right],
-                        file_list[:height] + options[:top] + options[:bottom])
+                        scaledImageWidth + options[:left] + options[:right],
+                        scaledImageHeight + options[:top] + options[:bottom])
       
       # make the create bitmap context and add it to list of commands.
       # setting addtocleanup to true means when commands have been completed
@@ -1187,7 +1196,7 @@ module MovingImages
                                                  add1: true)
 
       destinationRect = MIShapes.make_rectangle(
-              size: MIShapes.make_size(file_list[:width], file_list[:height]),
+              size: MIShapes.make_size(scaledImageWidth, scaledImageHeight),
               origin: MIShapes.make_point(options[:left], options[:bottom]))
 
       # We need three different draws to the bitmap context for each image
@@ -1302,6 +1311,7 @@ module MovingImages
         drawImageElement.set_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
+        drawImageElement.interpolationquality = :kCGInterpolationHigh
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
                                           drawinstructions: drawImageElement)
         theCommands.add_command(drawImageCommand)
@@ -1661,7 +1671,7 @@ module MovingImages
                                           fontsize: fontSize)
       text_size = JSON.parse(Smig.perform_command(calculateTextSizeCommand))
       text_loc = MIShapes.make_point(0.5 * (size[:width] - text_size['width']),
-                                     0.5 * (size[:height] + text_size['height']))
+                                     0.5 * (size[:height] + 0.5 * text_size['height']))
       drawTextElement.point_textdrawnfrom = text_loc
       drawTextCommand = CommandModule.make_drawelement(bitmapObject,
                                               drawinstructions: drawTextElement)

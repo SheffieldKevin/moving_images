@@ -4,7 +4,7 @@
     {
       "command": "create",
       "objecttype": "bitmapcontext",
-      "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf",
+      "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe",
       "size": {
         "width": 908,
         "height": 681
@@ -16,25 +16,25 @@
       "objecttype": "imageexporter",
       "file": "~/placeholder.jpg",
       "utifiletype": "public.jpeg",
-      "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+      "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
-      "objectname": "c42ce39c-5715-44c9-9c1b-fc565a38609f"
+      "objectname": "18e931ac-b025-4ea3-818e-0bb00d577e37"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "c42ce39c-5715-44c9-9c1b-fc565a38609f"
+          "objectname": "18e931ac-b025-4ea3-818e-0bb00d577e37"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -54,7 +54,7 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       },
       "drawinstructions": {
         "elementtype": "drawbasicstring",
@@ -78,7 +78,7 @@
         "fontsize": 60.0,
         "point": {
           "x": 173.0283203125,
-          "y": 370.32421875
+          "y": 355.412109375
         }
       }
     },
@@ -86,7 +86,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "propertykey": "exportfilepath",
       "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0744.jpg"
@@ -95,18 +95,18 @@
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.8,
@@ -116,33 +116,33 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "c42ce39c-5715-44c9-9c1b-fc565a38609f"
+        "objectname": "18e931ac-b025-4ea3-818e-0bb00d577e37"
       }
     },
     {
       "command": "create",
       "objecttype": "imageimporter",
       "file": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
-      "objectname": "eec65857-ed4c-488c-aba3-aa16afb3d4a2"
+      "objectname": "75168301-6dc9-4d3c-baf8-f76a582fbf85"
     },
     {
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       },
       "drawinstructions": {
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "eec65857-ed4c-488c-aba3-aa16afb3d4a2"
+          "objectname": "75168301-6dc9-4d3c-baf8-f76a582fbf85"
         },
         "imageindex": 0,
         "destinationrectangle": {
@@ -162,7 +162,7 @@
       "command": "drawelement",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       },
       "drawinstructions": {
         "elementtype": "drawbasicstring",
@@ -186,7 +186,7 @@
         "fontsize": 60.0,
         "point": {
           "x": 173.0283203125,
-          "y": 370.32421875
+          "y": 355.412109375
         }
       }
     },
@@ -194,7 +194,7 @@
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "propertykey": "exportfilepath",
       "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0746.jpg"
@@ -203,18 +203,18 @@
       "command": "addimage",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "secondaryobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       }
     },
     {
       "command": "setproperty",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
       "propertykey": "exportcompressionquality",
       "propertyvalue": 0.8,
@@ -224,14 +224,14 @@
       "command": "export",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageimporter",
-        "objectname": "eec65857-ed4c-488c-aba3-aa16afb3d4a2"
+        "objectname": "75168301-6dc9-4d3c-baf8-f76a582fbf85"
       }
     }
   ],
@@ -240,14 +240,14 @@
       "command": "close",
       "receiverobject": {
         "objecttype": "bitmapcontext",
-        "objectname": "1631b2ec-1b31-4570-8e66-000bb9710ebf"
+        "objectname": "a015b6df-640f-4f18-847a-a0ab0bf71bfe"
       }
     },
     {
       "command": "close",
       "receiverobject": {
         "objecttype": "imageexporter",
-        "objectname": "63d029a9-135d-48c9-82f5-138958ade3ff"
+        "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       }
     }
   ]

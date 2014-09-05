@@ -48,7 +48,10 @@ module MovingImages
         "set frontmost of p1 to true\n" \
         "return f\n" \
         "end tell\n"
-        result, _ = Open3.capture2('osascript', '-e', applescript)
+        result, exitVal = Open3.capture2('osascript', '-e', applescript)
+        unless exitVal.exitstatus.eql? 0
+          result = "Cancel"
+        end
         result.chomp
       end
 
@@ -67,7 +70,10 @@ module MovingImages
           "set frontmost of p1 to true\n" \
           "return f\n" \
           "end tell\n"
-        result, _ = Open3.capture2('osascript', '-e', applescript)
+        result, exitVal = Open3.capture2('osascript', '-e', applescript)
+        unless exitVal.exitstatus.eql? 0
+          result = "Cancel"
+        end
         result.chomp
       end
 
@@ -1708,9 +1714,9 @@ module MovingImages
       # The full command list has been built up. Nothing has been run yet.
       # Smig.perform_commands sends the commands to MovingImages.
       if options[:generate_json]
-      	JSON.pretty_generate(theCommands.commandshash)
+        JSON.pretty_generate(theCommands.commandshash)
       else
-      	Smig.perform_commands(theCommands)
+        Smig.perform_commands(theCommands)
       end
     end
   end # MILibrary

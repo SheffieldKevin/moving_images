@@ -32,7 +32,7 @@ module MovingImages
       @@exitstring = ""
       @@exitvalue = status.exitstatus
       @@exitstring = result unless result.nil?
-      fail "Method #{method} failed." unless @@exitvalue.zero?
+      fail "Method #{method} failed: #{result}" unless @@exitvalue.zero?
     end
 
     public
@@ -65,6 +65,9 @@ module MovingImages
           # newCommandList.set_saveresultstype("lastcommandresult")
           newCommandList.informationreturned = :lastcommandresult
           jsonString = newCommandList.commandshash.to_json
+          # Command strings longer than 240000 are too long to be passed.
+          # If the command string is longer than that save the command string
+          # as a file and then pass the command file to be processed to smig.
           if jsonString.length > 200000
             tempDir = Dir.tmpdir()
             fileName = SecureRandom.uuid + ".json"
@@ -108,6 +111,9 @@ module MovingImages
       result = ""
       exit_val = nil
       unless jsonstring.nil?
+        # Command strings longer than 240000 are too long to be passed.
+        # If the command string is longer than that save the command string
+        # as a file and then pass the command file to be processed to smig.
         if jsonstring.length > 200000
           temp_dir = Dir.tmpdir()
           file_name = SecureRadom.uuid + ".json"
@@ -145,6 +151,9 @@ module MovingImages
 
       return self.perform_debugcommands(commands) if debug
       jsonstring = commands.to_json
+      # Command strings longer than 240000 are too long to be passed.
+      # If the command string is longer than that save the command string
+      # as a file and then pass the command file to be processed to smig.
       if jsonstring.length > 200000
         tempDir = Dir.tmpdir()
         fileName = SecureRandom.uuid + ".json"

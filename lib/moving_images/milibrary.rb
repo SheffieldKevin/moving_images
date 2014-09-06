@@ -39,7 +39,7 @@ module MovingImages
       # There are issues with the dialog that is displayed.
       # @param message [String] The message to display in the choose folder
       #   dialog
-      # @return [String] The path to the folder
+      # @return [String, "Cancel"] The path to the folder or the word Cancel.
       def self.select_a_folder(message: "Select a folder with images:")
         applescript = "tell application \"System Events\"\n" \
         "set p1 to process 1 whose frontmost is true\n" \
@@ -61,7 +61,7 @@ module MovingImages
       # method to use for documentation scripts and while developing scripts.
       # There are issues with the display dialog.
       # @param message [String] The message to display in the choose file dialog
-      # @return [String] The path to the file
+      # @return [String] The path to the file or the word Cancel.
       def self.request_a_file(message: "Select a file:")
         applescript = "tell application \"System Events\"\n" \
           "set p1 to process 1 whose frontmost is true\n" \
@@ -918,9 +918,9 @@ module MovingImages
       # Smig.perform_commands sends the commands to MovingImages or alternately
       # we will return the generated json only.
       if options[:generate_json]
-      	JSON.pretty_generate(theCommands.commandshash)
+        JSON.pretty_generate(theCommands.commandshash)
       else
-      	Smig.perform_commands(theCommands)
+        Smig.perform_commands(theCommands)
       end
     end
 
@@ -1018,9 +1018,9 @@ module MovingImages
       # Smig.perform_commands sends the commands to MovingImages or alternately
       # we will return the generated json only.
       if options[:generate_json]
-      	JSON.pretty_generate(theCommands.commandshash)
+        JSON.pretty_generate(theCommands.commandshash)
       else
-      	Smig.perform_commands(theCommands)
+        Smig.perform_commands(theCommands)
       end
     end
 
@@ -1114,9 +1114,9 @@ module MovingImages
       # The full command list has been built up. Nothing has been run yet.
       # Smig.perform_commands sends the commands to MovingImages.
       if options[:generate_json]
-      	JSON.pretty_generate(theCommands.commandshash)
+        JSON.pretty_generate(theCommands.commandshash)
       else
-      	Smig.perform_commands(theCommands)
+        Smig.perform_commands(theCommands)
       end
     end
 

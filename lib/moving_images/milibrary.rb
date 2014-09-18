@@ -126,9 +126,9 @@ module MovingImages
       end
 
       # Split the input list into a list of lists
-      # @param input_list [Array] A list of objects
+      # @param input_list [Hash] A hash containing, a width, height & file list
       # @param num_lists [Fixnum] The number of lists to split input list into.
-      # @return [Array<Hash>] An array of an array of items
+      # @return [Array<Hash>] An array of hashes with same keys as input_list.
       def self.splitlist(input_list, num_lists: 4)
         listof_list_offiles = []
         num_lists.times do |index|

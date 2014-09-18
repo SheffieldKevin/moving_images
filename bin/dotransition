@@ -103,7 +103,6 @@ class DoTransition
     filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
     filterProps << self.create_numeric_property("inputScale", -50, 0, 50)
     filterProps << self.create_civector_property("inputCenter", "[150 150]")
-    filterProps << self.create_ciimage_property("inputShadingImage")
     filterHash[:cifilterproperties] = filterProps
     return filterHash
   end
@@ -182,7 +181,6 @@ class DoTransition
     filterProps = filterHash[:cifilterproperties]
     filterProps << self.create_numeric_property("inputAngle",-3.1416, 0, 3.1416)
     filterProps << self.create_civector_property("inputExtent", "[0 0 300 300]")
-    filterProps << self.create_ciimage_property("inputShadingImage")
     filterProps << self.create_numeric_property("inputRadius", 0.01, 100, 400)
     filterProps << self.create_ciimage_property("inputBacksideImage")
     filterHash[:cifilterproperties] = filterProps

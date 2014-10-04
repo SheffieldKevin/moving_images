@@ -686,7 +686,7 @@ module MovingImages
         return
       end
 
-      unless filter.is_a?(MITransitionFilter)
+      unless filter.is_a?(MIFilters::MITransitionFilter)
         puts "CoreImage filter is not a transition filter"
         return
       end

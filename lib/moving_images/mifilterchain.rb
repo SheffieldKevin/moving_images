@@ -237,7 +237,7 @@ module MovingImages
       affineHash = { :m11 => m11.to_f, :m12 => m12.to_f, :m21 => m21.to_f,
                       :m22 => m22.to_f, :tX => tX, :tY => tY }
       return { :cifilterkey => key, :cifiltervalue => affineHash,
-              :cifiltervalueclass => "NSAffineTransform" }
+              :cifiltervalueclass => "AffineTransform" }
     end
     
     # Return the class of the property value.    

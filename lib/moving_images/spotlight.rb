@@ -199,7 +199,10 @@ module MovingImages
     def self.find_imagefiles_withdimensions(width: 800, height: 600,
                              filetype: "public.image", onlyin: nil)
       theCommand = [ "mdfind" ]
-      theCommand.push('-onlyin', onlyin) unless onlyin.nil?
+      unless onlyin.nil?
+        onlyin = File.expand_path(onlyin)
+        theCommand.push('-onlyin', onlyin)
+      end
       query = self.make_contenttypepartofquery(filetype) + " && "
       query += "kMDItemPixelWidth == #{width} && "
       query += "kMDItemPixelHeight == #{height}"

@@ -1,9 +1,13 @@
 
 module MovingImages
   # Making Ruby hashes that identify MovingImage's objects and filters.    
-  # The three methods, makeid_withobjectreference, makeid_withobjectypeandname,
-  # & makeid_withfilternameid create a ruby hash that identifies a base object.
-  # The hash objects are used for identifying an object for when we want to
+  # The method makeid_withobjectreference creates an object identifier which
+  # we can use to refer to the object with. Since the object reference is the
+  # most efficient way to refer to an object it is the preferred way and so
+  # it is the first method checked for when creating the object identifier.
+  # The methods, makeid_withobjectypeandname, & makeid_withfilternameid
+  # create a ruby hash that identifies a filter in a filter chain.
+  # The base object hashes are used for identifying an object for when we want to
   # send messages to the object via methods, or when the object is a source for
   # an image that can be used for drawing into a context, adding to an image 
   # exporter object or as an input image for a filter in a filter chain. Since

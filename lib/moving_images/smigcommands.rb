@@ -60,10 +60,12 @@ module MovingImages
       # Initialize a new draw element command object.    
       # @param receiverObject [Hash] Object handling the draw element command
       # @param drawinstructions [Hash, #elementhash] The draw instructions.
+      # @param createimage [nil, true, false] Generate an image after drawing.
       # @return [DrawElementCommand] The draw element command object.
-      def initialize(receiverObject, drawinstructions: nil)
+      def initialize(receiverObject, drawinstructions: nil, createimage: nil)
         super(:drawelement, receiverObject)
         self.drawinstructions = drawinstructions unless drawinstructions.nil?
+        self.createimage = createimage unless createimage.nil?
       end
 
       # Assign the draw instructions to the draw element command object.
@@ -77,6 +79,16 @@ module MovingImages
         self.add_option(key: :drawinstructions, value: drawInstructionsHash)
         drawInstructions
       end
+
+      # Assign whether an image should be generated after drawing happens.    
+      # After drawing finishes this option allows an image to be generated 
+      # taken of the context the drawing happened to.
+      # @param createImage [true, false] Should we create the image.
+      # @return [Bool] the create image value assigned.
+      def createimage=(createImage)
+        self.add_option(key: :drawinstructions, value: createImage)
+        createImage
+      end
     end
 
     # == A render imager filter chain command
@@ -85,9 +97,10 @@ module MovingImages
       # @param filterChainObject [Hash] filter chain object that handles render
       # @param instructions [Hash] Render instructions and filter properties
       # @return [RenderFilterChainCommand] The newly created object
-      def initialize(filterChainObject, instructions: nil)
+      def initialize(filterChainObject, instructions: nil, createimage: nil)
         super(:renderfilterchain, filterChainObject)
         self.renderinstructions = instructions unless instructions.nil?
+        self.createimage = createimage unless createimage.nil?
       end
   
       # Set the render instructions which can include filter properties, 
@@ -104,6 +117,16 @@ module MovingImages
         end
         self.add_option(key: :renderinstructions, value: renderInstructions)
         renderInstructions
+      end
+      
+      # Assign whether an image should be generated after drawing happens.    
+      # After drawing finishes this option allows an image to be generated 
+      # taken of the context the drawing happened to.
+      # @param createImage [true, false] Should we create the image.
+      # @return [Bool] the create image value assigned.
+      def createimage=(createImage)
+        self.add_option(key: :drawinstructions, value: createImage)
+        createImage
       end
     end
 

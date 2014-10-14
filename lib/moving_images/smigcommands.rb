@@ -96,6 +96,7 @@ module MovingImages
       # Initialize a new render filter chain command object
       # @param filterChainObject [Hash] filter chain object that handles render
       # @param instructions [Hash] Render instructions and filter properties
+      # @param createimage [Bool] Should an image be created after rendering.
       # @return [RenderFilterChainCommand] The newly created object
       def initialize(filterChainObject, instructions: nil, createimage: nil)
         super(:renderfilterchain, filterChainObject)
@@ -463,7 +464,7 @@ module MovingImages
     # @param createimage [Bool] Create an image of context after render.
     # @return [RenderFilterChainCommand] The newly created command
     def self.make_renderfilterchain(receiver_object, renderinstructions: nil,
-                                    createimage: createimage)
+                                    createimage: nil)
       theCommand = RenderFilterChainCommand.new(receiver_object, 
                                                instructions: renderinstructions,
                                                createimage: createimage)

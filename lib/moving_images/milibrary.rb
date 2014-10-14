@@ -48,7 +48,10 @@ module MovingImages
         "set frontmost of p1 to true\n" \
         "return f\n" \
         "end tell\n"
-        result, exitVal = Open3.capture2('osascript', '-e', applescript)
+
+        # ignore any error output, only check for a non zero exit value.
+        # I just want to make sure error output doesn't end up in result.
+        result, eo, exitVal = Open3.capture3('osascript', '-e', applescript)
         unless exitVal.exitstatus.eql? 0
           result = "Cancel"
         end
@@ -70,7 +73,10 @@ module MovingImages
           "set frontmost of p1 to true\n" \
           "return f\n" \
           "end tell\n"
-        result, exitVal = Open3.capture2('osascript', '-e', applescript)
+
+        # ignore any error output, only check for a non zero exit value.
+        # I just want to make sure error output doesn't end up in result.
+        result, eo, exitVal = Open3.capture3('osascript', '-e', applescript)
         unless exitVal.exitstatus.eql? 0
           result = "Cancel"
         end

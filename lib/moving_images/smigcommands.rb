@@ -86,7 +86,7 @@ module MovingImages
       # @param createImage [true, false] Should we create the image.
       # @return [Bool] the create image value assigned.
       def createimage=(createImage)
-        self.add_option(key: :drawinstructions, value: createImage)
+        self.add_option(key: :createimage, value: createImage)
         createImage
       end
     end
@@ -125,7 +125,7 @@ module MovingImages
       # @param createImage [true, false] Should we create the image.
       # @return [Bool] the create image value assigned.
       def createimage=(createImage)
-        self.add_option(key: :drawinstructions, value: createImage)
+        self.add_option(key: :createimage, value: createImage)
         createImage
       end
     end
@@ -447,20 +447,26 @@ module MovingImages
     # object.
     # @param receiver_object [Hash] Object handling the draw element command
     # @param drawinstructions [Hash, #elementhash] The draw instructions.
+    # @param createimage [Bool] Create an image of context after render.
     # @return [DrawElementCommand] The draw element command object.
-    def self.make_drawelement(receiver_object, drawinstructions: nil)
+    def self.make_drawelement(receiver_object, drawinstructions: nil,
+                              createimage: nil)
       theCommand = DrawElementCommand.new(receiver_object,
-                                          drawinstructions: drawinstructions)
+                                          drawinstructions: drawinstructions,
+                                          createimage: createimage)
       theCommand
     end
     
     # Make a render filter chain command object
     # @param receiver_object [Hash] filter chain object that handles render
     # @param renderinstructions [Hash] Render instructions and filter properties
+    # @param createimage [Bool] Create an image of context after render.
     # @return [RenderFilterChainCommand] The newly created command
-    def self.make_renderfilterchain(receiver_object, renderinstructions: nil)
+    def self.make_renderfilterchain(receiver_object, renderinstructions: nil,
+                                    createimage: createimage)
       theCommand = RenderFilterChainCommand.new(receiver_object, 
-                                               instructions: renderinstructions)
+                                               instructions: renderinstructions,
+                                               createimage: createimage)
       theCommand
     end
 

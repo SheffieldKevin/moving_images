@@ -71,5 +71,9 @@ module MovingImages
     def self.makeid_withfilterindex(filterIndex)
       return { :cifilterindex => filterIndex.to_i }
     end
+
+    def self.make_bundle_imageidentifier(identifier)
+      return { :imageidentifier => identifier }
+    end
   end
 end

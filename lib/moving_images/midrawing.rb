@@ -550,6 +550,78 @@ module MovingImages
     end
   end
 
+  # MIClip objects represent clipping applied to the context before drawing.
+  class MIClip
+    # Initialize a MIClip object, basically setting @clippinghash.    
+    def initialize()
+      # The clipping hash, holding all the properties of the clip
+      @clippinghash = {}
+    end
+  
+    # Get the clipping hash.    
+    # @return [Hash] The hash representation of the clip
+    def clippinghash
+      return @clippinghash
+    end
+
+    # Set the start point for the clipping path
+    # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
+    # @return [Hash] The start point just assigned.
+    def startpoint=(startPoint)
+      @clippinghash[:startpoint] = startPoint
+    end
+
+    # Assign the path elements to the clipping object.
+    # @param thePath [Array<Hash>, #patharray] Array of path elements.
+    #   See {MIPath}
+    # @return [Array] The array of path elements assign draw element.
+    def arrayofpathelements=(thePath)
+      thePath = thePath.patharray if thePath.respond_to? "patharray"
+      @clippinghash[:arrayofpathelements] = thePath
+    end
+
+    # Assign clipping rule to be used for intersection of old & new clipping path
+    # @param clippingRule [evenoddrule, nonwindingrule] The rule to be applied.
+    # @return [evenoddrule, nonwindingrule] The clipping rule applied.
+    def clippingrule=(clippingRule)
+      @clippingHash[:clippingrule] = clippingRule
+    end
+  end
+
+  class MIMaskWithImage
+    # Initialize a MIMaskWithImage object, basically setting @maskhash.    
+    def initialize()
+      # The mask hash, holding all the properties of the clip
+      @maskhash = {}
+    end
+    
+    # Get the mask hash.    
+    # @return [Hash] The hash representation of mask with image
+    def maskhash
+      return @maskhash
+    end
+
+    # Set the object from which to source the mask image and optionally provide 
+    # an image index.    
+    # @param source_object [Hash] The source object, see {SmigIDHash} methods
+    # @param imageindex [Fixnum, nil] Optional index into a list of images.
+    # @return [Hash] The representation of the draw image command
+    def set_maskimagesource(source_object: nil, imageindex: nil)
+      fail 'source object needs to be specified' if source_object.nil?
+      @maskhash[:sourceobject] = source_object
+      @maskhash[:imageindex] = imageindex unless imageindex.nil?
+      @maskhash
+    end
+
+    # Set the destination rectangle within coordinate system of the context's
+    # current transformation where the mask image will be appled.    
+    # @param destRect [Hash] A rectangle created using {MIShapes.make_rectangle}
+    # @return [Hash] The destination rectangle just assigned.
+    def destinationrectangle=(destRect)
+      @maskhash[:destinationrectangle] = destRect
+    end
+  end
+
   # Abstract draw element class.    
   # Root of the draw element class hierarchy.
   # Implements a small collection of methods common to all draw element classes
@@ -568,7 +640,7 @@ module MovingImages
     # passes objects by reference you might end up modifying an already setup
     # draw element command that you thought was finalized.
     # @param elementType [String] The type of draw element command.
-    # @return [Hash] The draw element hash
+    # @return [Symbol] The element type that's just been assigned.
     def elementtype=(elementType)
       @elementHash[:elementtype] = elementType.to_sym
     end
@@ -589,7 +661,7 @@ module MovingImages
     # The property keys for the input variables hash are variable names, and 
     # the property values are the values to be assigned to the variables.
     # @param theVariables [Hash] keys are variable names.
-    # @return [Hash] The updated hash with variables assigned.
+    # @return [Hash] The variables hash that has just been assigned.
     def variables=(theVariables)
       @elementHash[:variables] = theVariables
     end
@@ -1007,7 +1079,7 @@ module MovingImages
       super(:drawimage)
     end
 
-    # Set the object from which to source the image and optionally provide 
+    # Set the object from which to get the source image and optionally provide 
     # an image index.    
     # @param source_object [Hash] The source object, see {SmigIDHash} methods
     # @param imageindex [Fixnum, nil] Optional index into a list of images.
@@ -1016,6 +1088,7 @@ module MovingImages
       fail 'source object needs to be specified' if source_object.nil?
       @elementHash[:sourceobject] = source_object
       @elementHash[:imageindex] = imageindex unless imageindex.nil?
+      @elementHash
     end
 
     # Set the destination rectangle within  coordinate system of the context's
@@ -1029,7 +1102,7 @@ module MovingImages
     # Set the source rectangle within the frame of the source image within which
     # to crop the source image.    
     # @param sourceRect [Hash] A rectangle see {MIShapes.make_rectangle}
-    # @return [Hash] The representation of the draw image command
+    # @return [Hash] The source rectangle just assigned.
     def sourcerectangle=(sourceRect)
       @elementHash[:sourcerectangle] = sourceRect
     end

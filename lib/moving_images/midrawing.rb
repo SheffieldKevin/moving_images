@@ -475,6 +475,46 @@ module MovingImages
       @pathArray
     end
 
+    # Add an arc to the list of path elements.    
+    # @param centerPoint [Hash] The center of the circle the arc is part of.
+    # @param radius [Float, #to_f] The radius of the circle the arc is part of.
+    # @param startAngle [Float, #to_f] Starting angle to draw arc in radians.
+    # @param endAngle [Float, #to_f] Ending angle of drawn arc in radians.
+    # @param isClockwise [Bool] Draw the arc in a clockwise direction or not.
+    # @return [Array<Hash>] list of path elements
+    def add_arc(centerPoint: { x: 0, y: 0 }, radius: 1, 
+                startAngle: 0, endAngle: Math::PI / 4,
+                isClockwise: false)
+      pathElement = { elementtype: :patharc,
+                      centerpoint: centerPoint,
+                           radius: radius,
+                       startangle: startAngle,
+                         endangle: endAngle,
+                        clockwise: isClockwise }
+      @pathArray.push(pathElement)
+      @pathArray
+    end
+
+    # Add an arc that draws from point to another point to list of path elements    
+    # The line from the current point to the first tangent point is what the arc
+    # of the circle will be tangential to at the current point. The line from 
+    # the first tangent point to the second tangent point forms the tangent on
+    # which the arc joins the line and meets the line at the second tangent point.
+    # @param tangentPoint1 [Hash] The first tangent point.
+    # @param tangentPoint2 [Hash] The second tangent point.
+    # @param radius [Float, #to_f] The radius of the circle the arc is part of.
+    # @return [Array<Hash>] list of path elements
+    def add_arc_topoint_onpath(tangentPoint1: { x: 0, y: 0 },
+                               tangentPoint2: { x: 100, y: 100 },
+                                      radius: 1)
+      pathElement = { elementtype: :pathaddarctopoint,
+                    tangentpoint1: tangentPoint1,
+                    tangentpoint2: tangentPoint2,
+                           radius: radius }
+      @pathArray.push(pathElement)
+      @pathArray
+    end
+
     # Add a line to the list of path elements.    
     # @param endPoint [Hash] Point defining the end of the line
     # @return [Array<Hash>] list of path elements
@@ -584,7 +624,7 @@ module MovingImages
     # @param clippingRule [evenoddrule, nonwindingrule] The rule to be applied.
     # @return [evenoddrule, nonwindingrule] The clipping rule applied.
     def clippingrule=(clippingRule)
-      @clippingHash[:clippingrule] = clippingRule
+      @clippinghash[:clippingrule] = clippingRule
     end
   end
 

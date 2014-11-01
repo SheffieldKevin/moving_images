@@ -721,7 +721,7 @@ module MovingImages
     # if a draw command error occurred whilst processing a draw element which 
     # has a debug name specified.
     # @param debugName [String] The debug name
-    # @return [Hash] The hash of the draw element object
+    # @return [String] The debug name assigned to the draw element object
     def elementdebugname=(debugName)
       @elementHash[:elementdebugname] = debugName
     end
@@ -731,7 +731,7 @@ module MovingImages
     # the draw element hash. If there was a previous context transformation set
     # it is replaced.
     # @param transformation [Array<Hash>] An ordered list of context transforms
-    # @return [Hash] The hash of the draw element object
+    # @return [Hash] The context transformation hash
     def contexttransformations=(transformation)
       @elementHash.delete(:affinetransform)
       @elementHash[:contexttransformation] = transformation
@@ -742,17 +742,47 @@ module MovingImages
     # draw element hash. If there was a previous affine transform set then it is
     # replaced.
     # @param affineTransform [Hash] Representation of an affine transform
-    # @return [Hash] The hash of the draw element object
+    # @return [Hash] The affine transform hash
     def affinetransform=(affineTransform)
       @elementHash.delete(:contexttransformation)
       @elementHash[:affinetransform] = affineTransform
     end
 
     # Set the drawing blend mode.    
+    # Blend modes: kCGBlendModeNormal kCGBlendModeMultiply kCGBlendModeScreen
+    # kCGBlendModeOverlay kCGBlendModeDarken kCGBlendModeLighten
+    # kCGBlendModeColorDodge kCGBlendModeColorBurn kCGBlendModeSoftLight
+    # kCGBlendModeHardLight kCGBlendModeDifference kCGBlendModeExclusion
+    # kCGBlendModeHue kCGBlendModeSaturation kCGBlendModeColor 
+    # kCGBlendModeLuminosity kCGBlendModeClear kCGBlendModeCopy 
+    # kCGBlendModeSourceIn kCGBlendModeSourceOut kCGBlendModeSourceAtop 
+    # kCGBlendModeDestinationOver kCGBlendModeDestinationIn 
+    # kCGBlendModeDestinationOut kCGBlendModeDestinationAtop kCGBlendModeXOR
+    # kCGBlendModePlusDarker kCGBlendModePlusLighter
     # @param blendMode [String] see {MIMeta.listcgblendmodes} for list of values
-    # @return [Hash] The hash of the draw element object
+    # @return [String,Symbol] The assigned blend mode.
     def blendmode=(blendMode)
       @elementHash[:blendmode] = blendMode
+    end
+    
+    # Assign a clipping path to the draw element object.
+    # @param theClip [Hash, #clippinghash] The clipping path to be assigned.
+    # @return [Hash] the clip hash.
+    def clip=(theClip)
+      if theClip.respond_to? "clippinghash"
+        theClip = theClip.clippinghash
+      end
+      @elementHash[:clippingpath] = theClip
+    end
+    
+    # Assign a mask image to the draw element object.
+    # @param theMask [Hash, #maskhash] The mask hash or object to be assigned.
+    # @return [Hash] the mask hash.
+    def mask=(theMask)
+      if theMask.respond_to? "maskhash"
+        theMask = theMask.maskhash
+      end
+      @elementHash[:applyimagemask] = theMask
     end
   end
 

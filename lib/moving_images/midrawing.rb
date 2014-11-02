@@ -1024,6 +1024,78 @@ module MovingImages
     end
   end
 
+  # Objects of the radial gradient fill element class contain the information
+  # needed to draw a radial gradient fill in a context.    
+  # Required properties are the center of the two circles, the radius of the
+  # two circles. An array of locations between the two circles, and the 
+  # colors to go with them.
+  class MIRadialGradientFillElement < MIAbstractDrawElement
+    def initialize()
+      super(:radialgradientfill)
+    end
+
+    # Assign the center of the first circle used in the radial gradient.
+    # @param theCenter [Hash] Center of the first circle: {MIShapes.make_point}
+    # @return [Hash] The point that has just been assigned.
+    def center1=(theCenter)
+      @elementHash[:centerpoint] = theCenter
+    end
+
+    # Assign the radius of the first circle used in the radial gradient.
+    # @param theRadius [Float] The radius of the first circle.
+    # @return Float The radius value just assigned.
+    def radius1=(theRadius)
+      @elementHash[:radius] = theRadius
+    end
+
+    # Assign the center of the second circle used in the radial gradient.    
+    # @param theCenter [Hash] Center of the second circle: {MIShapes.make_point}
+    # @return [Hash] The point that has just been assigned.
+    def center2=(theCenter)
+      @elementHash[:centerpoint2] = theCenter
+    end
+
+    # Assign the radius of the second circle used in the radial gradient.    
+    # @param theRadius [Float] The radius of the first circle.
+    # @return [Float] The radius value just assigned.
+    def radius2=(theRadius)
+      @elementHash[:radius2] = theRadius
+    end
+
+    # Add a draw gradient option to the draw radial gradient option.    
+    # If no options then it is assumed that the radial gradient is not
+    # drawn beyond the circles.
+    # @param theOption [:kCGGradientDrawsBeforeStartLocation,
+    #   :kCGGradientDrawsAfterEndLocation]
+    # @return Array[:Symbol] The list of applied options.
+    def add_drawgradient_option(theOption)
+      if @elementHash[:gradientoptions].nil?
+        @elementHash[:gradientoptions] = [theOption]
+      else
+        @elementHash[:gradientoptions].push(theOption)
+      end
+      @elementHash[:gradientoptions]
+    end
+
+    # Set locations along a line and the colors at those locations.    
+    # The two arrays need to be the same length. The locations is an array
+    # of positions along the gradient line at which the colors are defined. The
+    # gradient fill interpolates the color between each defined point along the
+    # line. The array of locations represents the position along the gradient
+    # line. A value of 0.0 is the starting point of the line, a value of 1.0
+    # is the end point of the line and any value in between interpolates a
+    # position along the line
+    # @param locations [Array<Float>] positions along the defined line.
+    # @param colors [Array<Hash>] An list of colors, one for each location.
+    # @return [Hash] The representation of the draw element object.
+    def set_arrayoflocations_andarrayofcolors(locations, colors)
+      if locations.length != colors.length
+        fail "Linear gradient fill needs a color for each location."
+      end
+      @elementHash[:arrayoflocations] = locations
+      @elementHash[:arrayofcolors] = colors
+    end
+  end
 
   # Objects of the draw basic string element class contain the information
   # needed to draw text in a context.    

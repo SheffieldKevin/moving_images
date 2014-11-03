@@ -482,8 +482,8 @@ module MovingImages
     # @param endAngle [Float, #to_f] Ending angle of drawn arc in radians.
     # @param isClockwise [Bool] Draw the arc in a clockwise direction or not.
     # @return [Array<Hash>] list of path elements
-    def add_arc(centerPoint: { x: 0, y: 0 }, radius: 1, 
-                startAngle: 0, endAngle: Math::PI / 4,
+    def add_arc(centerPoint: { x: 0.0, y: 0.0 }, radius: 1.0, 
+                startAngle: 0.0, endAngle: Math::PI * 0.25,
                 isClockwise: false)
       pathElement = { elementtype: :patharc,
                       centerpoint: centerPoint,
@@ -504,9 +504,9 @@ module MovingImages
     # @param tangentPoint2 [Hash] The second tangent point.
     # @param radius [Float, #to_f] The radius of the circle the arc is part of.
     # @return [Array<Hash>] list of path elements
-    def add_arc_topoint_onpath(tangentPoint1: { x: 0, y: 0 },
-                               tangentPoint2: { x: 100, y: 100 },
-                                      radius: 1)
+    def add_arc_topoint_onpath(tangentPoint1: { x: 0.0, y: 0.0 },
+                               tangentPoint2: { x: 100.0, y: 100.0 },
+                                      radius: 1.0)
       pathElement = { elementtype: :pathaddarctopoint,
                     tangentpoint1: tangentPoint1,
                     tangentpoint2: tangentPoint2,
@@ -620,8 +620,9 @@ module MovingImages
       @clippinghash[:arrayofpathelements] = thePath
     end
 
-    # Assign clipping rule to be used for intersection of old & new clipping path
-    # @param clippingRule [evenoddrule, nonwindingrule] The rule to be applied.
+    # Assign clipping rule to be used for intersection of old & new clipping path    
+    # The default clipping rule is nonwindingrule.
+    # @param clippingRule [:evenoddrule, :nonwindingrule] The rule to be applied.
     # @return [evenoddrule, nonwindingrule] The clipping rule applied.
     def clippingrule=(clippingRule)
       @clippinghash[:clippingrule] = clippingRule

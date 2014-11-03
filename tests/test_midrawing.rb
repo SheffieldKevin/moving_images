@@ -286,3 +286,48 @@ class TestMIDrawImageElement < MiniTest::Unit::TestCase
   # * Specifying interpolation quality values
   # * Specifying a shadow
 end
+
+class TestMIPathWithArcs < MiniTest::Unit::TestCase
+  def test_make_mipath_witharcs
+    path = MIPath.new
+
+    size = MIShapes.make_size(200, 350.25)
+    circleCenter = MIShapes.make_point(200.23, 199.25)
+    path.add_arc(centerPoint: circleCenter,
+                      radius: 51.07, 
+                  startAngle: 0.0,
+                    endAngle: Math::PI * 0.25,
+                 isClockwise: false)
+#    puts path.patharray.to_json
+    old_json = '[{"elementtype":"patharc","centerpoint"'\
+    ':{"x":200.23,"y":199.25},"radius":51.07,"startangle"'\
+    ':0.0,"endangle":0.7853981633974483,"clockwise":false}]'
+    assert path.patharray.to_json.eql?(old_json), 'MIPath arc json different'
+    
+    path2 = MIPath.new
+    path2.add_arc_topoint_onpath(tangentPoint1: { x: 40.5, y: 350.5 },
+                                 tangentPoint2: { x: 140.5, y: 350.5 },
+                                        radius: 100.0)
+    old_json = '[{"elementtype":"pathaddarctopoint","tangentpoint1":{"x"'\
+    ':40.5,"y":350.5},"tangentpoint2":{"x":140.5,"y":350.5},"radius":100.0}]'
+    assert path2.patharray.to_json.eql?(old_json), 'MIPath arcpoint json diff'
+  end
+end
+
+class TestMIClip < MiniTest::Unit::TestCase
+  def test_make_drawingclipper
+    theClip = MIClip.new
+    theClip.startpoint = { x: 0.0, y: 0.0 }
+    roundedRect = MIPath.new
+    rectSize = MIShapes.make_size(399, 299)
+    rectOrigin = MIShapes.make_point(100.5, 75.5)
+    theRect = MIShapes.make_rectangle(size: rectSize, origin: rectOrigin)
+    roundedRect.add_roundedrectangle_withradiuses(theRect,
+                                          radiuses: [4.0, 8.0, 16.0, 32.0])
+    theClip.arrayofpathelements = roundedRect
+    old_json = '{"startpoint":{"x":0.0,"y":0.0},"arrayofpathelements":[{'\
+    '"elementtype":"pathroundedrectangle","rect":{"origin":{"x":100.5,"y"'\
+    ':75.5},"size":{"width":399,"height":299}},"radiuses":[4.0,8.0,16.0,32.0]}]}'
+    assert theClip.clippinghash.to_json.eql?(old_json), 'MIClip is modified.'
+  end
+end

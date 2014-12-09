@@ -143,6 +143,19 @@ module MovingImages
       theCommand
     end
 
+
+    # Make a create a movie importer command object
+    # @param imageFilePath [String] A path to the movie file
+    # @param name [String] The name of the object to be created
+    # @return [Command] The command that create the importer
+    def self.make_createmovieimporter(movieFilePath, name: nil)
+      theCommand = Command.new(:create)
+      theCommand.add_option(key: :objecttype, value: :movieimporter)
+      theCommand.add_option(key: :file, value: imageFilePath)
+      theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      theCommand
+    end
+
     # Make a create bitmap context command    
     # The preset can be any of:    
     # AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
@@ -838,7 +851,7 @@ module MovingImages
       # Optionally add the object to be created to the list of objects to
       # be cleaned up. If all the commands to be performed are in one
       # SmigCommands list and performed as one then you want to make sure
-      # that objects you created & no longer need get closed. Adding
+      # that objects you created & no longer needed get closed. Adding
       # close object commands that take the object id to the list of clean up
       # commands ensures these objects will be closed.
       # @param filePath [String] The path to the file to import
@@ -851,6 +864,31 @@ module MovingImages
         importerObject = SmigIDHash.make_objectid(objectname: theName,
                                                   objecttype: :imageimporter)
         createImporter = CommandModule.make_createimporter(filePath,
+                                                              name: theName)
+        self.add_command(createImporter)
+        if addtocleanup
+          self.add_tocleanupcommands_closeobject(importerObject)
+        end
+        importerObject
+      end
+
+      # Make a create movie importer command and add it to list of commands    
+      # Optionally add the object to be created to the list of objects to
+      # be cleaned up. If all the commands to be performed are in one
+      # SmigCommands list and performed as one then you want to make sure
+      # that objects you created & no longer needed get closed. Adding
+      # close object commands that take the object id to the list of clean up
+      # commands ensures these objects will be closed.
+      # @param filePath [String] The path to the file to import
+      # @param name [String] The name of the exporter to be created. optional
+      # @param addtocleanup [true, false] Should created context be closed
+      # @return [Hash] Object id, a reference to refer to a created object
+      def make_createmovieimporter(filePath, addtocleanup: true, name: nil)
+        theName = SecureRandom.uuid if name.nil?
+        theName = name unless name.nil?
+        importerObject = SmigIDHash.make_objectid(objectname: theName,
+                                                  objecttype: :imageimporter)
+        createImporter = CommandModule.make_createmovieimporter(filePath,
                                                               name: theName)
         self.add_command(createImporter)
         if addtocleanup

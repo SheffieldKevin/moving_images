@@ -34,9 +34,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "4c661836-28ef-4eff-9826-8e4c5f849222"
+          "objectname": "f730becf-c2d1-41d3-81d5-e1211c695bc2"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "contexttransformation": [
           {
             "transformationtype": "scale",
@@ -119,9 +121,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "8c0e2c33-de1f-413d-9692-847fbc399d21"
+          "objectname": "6a89a193-b78d-4e2e-a99b-e56a0de465c0"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "contexttransformation": [
           {
             "transformationtype": "scale",

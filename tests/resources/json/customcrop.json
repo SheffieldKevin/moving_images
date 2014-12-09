@@ -21,8 +21,8 @@
     {
       "command": "create",
       "objecttype": "imageimporter",
-      "file": "./resources/images/DSCN0744.JPG",
-      "objectname": "e93deb90-fae5-4881-9d34-fd2e19548855"
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0744.JPG",
+      "objectname": "a24d5eb2-fa6a-4ba5-b9f4-dce9af656735"
     },
     {
       "command": "drawelement",
@@ -34,9 +34,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "e93deb90-fae5-4881-9d34-fd2e19548855"
+          "objectname": "a24d5eb2-fa6a-4ba5-b9f4-dce9af656735"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "sourcerectangle": {
           "origin": {
             "x": 30,
@@ -106,8 +108,8 @@
     {
       "command": "create",
       "objecttype": "imageimporter",
-      "file": "./resources/images/DSCN0746.JPG",
-      "objectname": "91dec5bf-a1da-49e2-8224-8e265a551b3f"
+      "file": "/Users/ktam/github/moving_images/tests/resources/images/DSCN0746.JPG",
+      "objectname": "0b3a1d4b-2e9c-4aad-96c2-f23355d4d229"
     },
     {
       "command": "drawelement",
@@ -119,9 +121,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "91dec5bf-a1da-49e2-8224-8e265a551b3f"
+          "objectname": "0b3a1d4b-2e9c-4aad-96c2-f23355d4d229"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "sourcerectangle": {
           "origin": {
             "x": 30,

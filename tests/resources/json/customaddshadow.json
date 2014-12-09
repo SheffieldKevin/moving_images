@@ -62,9 +62,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "1fe1384f-bdc0-484a-a976-ad1d106ea8ac"
+          "objectname": "64d27c65-183c-4a34-b554-cd3306ffaa03"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "destinationrectangle": {
           "origin": {
             "x": 10,
@@ -1269,9 +1271,11 @@
         "elementtype": "drawimage",
         "sourceobject": {
           "objecttype": "imageimporter",
-          "objectname": "7935f1cc-425e-4e29-83d6-c7c0872d7926"
+          "objectname": "ef54997d-6dcb-45f6-89ad-e58cb2b2f100"
         },
-        "imageindex": 0,
+        "imageoptions": {
+          "imageindex": 0
+        },
         "destinationrectangle": {
           "origin": {
             "x": 10,

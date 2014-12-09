@@ -141,7 +141,7 @@ module MovingImages
     end
 
     # Perform MovingImages commands.    
-    # If an error occurs then then an exception is raised
+    # If an error occurs then an exception is raised
     # @param commands [Hash] A ruby hash containing the list of commands to run
     # @param debug [bool] Run the commands through self.perform_debugcommands.
     # @return [String] The result from running the commands

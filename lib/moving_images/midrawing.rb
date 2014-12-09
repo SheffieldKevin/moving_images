@@ -703,9 +703,9 @@ module MovingImages
     # the property values are the values to be assigned to the variables.
     # @param theVariables [Hash] keys are variable names.
     # @return [Hash] The variables hash that has just been assigned.
-    def variables=(theVariables)
-      @elementHash[:variables] = theVariables
-    end
+#    def variables=(theVariables)
+#      @elementHash[:variables] = theVariables
+#    end
 
     # Set the shadow to be applied to the drawing.    
     # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
@@ -845,7 +845,7 @@ module MovingImages
 
     # Set the linecap which defines how the ends of a line are drawn.    
     # For values see {linecap_list}.
-    # @param lineCap [String] One of: {linecap_list}
+    # @param lineCap [:kCGLineCapButt :kCGLineCapRound :kCGLineCapSquare]
     # @return [Hash] The hash of the draw element object
     def linecap=(lineCap)
       @elementHash[:linecap] = lineCap
@@ -853,7 +853,7 @@ module MovingImages
 
     # Set the line join which defines how lines are joined in a path.    
     # For values see {linejoin_list}
-    # @param lineJoin [String] One of: {linejoin_list}
+    # @param lineJoin [:kCGLineJoinMiter :kCGLineJoinRound :kCGLineJoinBevel]
     # @return [Hash] The hash of the draw element object
     def linejoin=(lineJoin)
       @elementHash[:linejoin] = lineJoin
@@ -1222,15 +1222,42 @@ module MovingImages
       super(:drawimage)
     end
 
-    # Set the object from which to get the source image and optionally provide 
-    # an image index.    
+    # Set the object from which to get the image to be a bitmap object.    
+    # @param source_object [Hash] The source object, see {SmigIDHash} methods
+    # @return [Hash] The representation of the draw image command
+    def set_bitmap_imagesource(source_object: nil)
+      fail 'source object needs to be specified' if source_object.nil?
+      @elementHash[:sourceobject] = source_object
+      # @elementHash[:imageoptions] = { }
+      @elementHash
+    end
+
+    # Set the object from which to get source image to an image importer object 
+    # and optionally provide an image index.    
     # @param source_object [Hash] The source object, see {SmigIDHash} methods
     # @param imageindex [Fixnum, nil] Optional index into a list of images.
     # @return [Hash] The representation of the draw image command
-    def set_imagesource(source_object: nil, imageindex: nil)
+    def set_imagefile_imagesource(source_object: nil, imageindex: nil)
       fail 'source object needs to be specified' if source_object.nil?
       @elementHash[:sourceobject] = source_object
-      @elementHash[:imageindex] = imageindex unless imageindex.nil?
+      unless imageindex.nil?
+        @elementHash[:imageoptions] = { imageindex: imageindex }
+      end
+      @elementHash
+    end
+
+    # Set the object from which to get the source image to a movie importer  
+    # and also specify the frame time from which to get the frame.    
+    # The frametime dictionary can be CMTime dictionary representation or a
+    # dictionary with a single property "time" whose value is time in seconds.
+    # @param source_object [Hash] The source object, see {SmigIDHash} methods
+    # @param frametime [Hash] Required frame time. CMTime dict or dict with "time"
+    # @return [Hash] The representation of the draw image command
+    def set_moviefile_imagesource(source_object: nil, frametime: nil)
+      fail 'source object needs to be specified' if source_object.nil?
+      fail 'Getting a frame from a movie needs a frame time' if frametime.nil?
+      @elementHash[:sourceobject] = source_object
+      @elementHash[:imageoptions] = { frametime: frametime }
       @elementHash
     end
 

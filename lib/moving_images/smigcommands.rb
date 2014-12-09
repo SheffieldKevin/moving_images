@@ -321,6 +321,7 @@ module MovingImages
         dict[:fontsize] = fontsize
       end
     
+      theCommand.add_option(key: :saveresultstype, value: :jsonstring)
       theCommand.add_option(key: :inputdata, value: dict)
       theCommand
     end
@@ -586,6 +587,15 @@ module MovingImages
       # @return [true, false] The stop on failure value assigned.
       def stoponfailure=(stopOnFailure)
         @commandsHash[:stoponfailure] = stopOnFailure
+      end
+
+      # Assign the variables dictionary to the commands hash. The variables
+      # dictionary will be used when interpreting the draw dictionary and
+      # rendering the core image filter chain.
+      # @param theVariables [Hash] A hash of variable names for keys with values
+      # @return [Hash] The variables hash just assigned.
+      def variables=(theVariables)
+        @commandsHash[:variables] = theVariables
       end
 
       # Set the list of commands to be run.

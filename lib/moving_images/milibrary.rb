@@ -899,7 +899,7 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.sourcerectangle = destinationRect
         drawImageElement.destinationrectangle = destinationRect
@@ -1698,7 +1698,7 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                          addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
                                          imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
         drawImageElement.interpolationquality = :kCGInterpolationHigh

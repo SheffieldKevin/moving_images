@@ -1000,8 +1000,8 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
-                                         imageindex: 0)
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
+                                                   imageindex: 0 )
         drawImageElement.sourcerectangle = sourceRect
         drawImageElement.destinationrectangle = destinationRect
 
@@ -1098,8 +1098,8 @@ module MovingImages
                                       drawinstructions: drawBackgroundElement)
         theCommands.add_command(drawBackgroundCommand)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
-                                         imageindex: 0)
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
+                                                      imageindex: 0 )
         drawImageElement.destinationrectangle = destinationRect
         drawImageElement.interpolationquality = :kCGInterpolationHigh
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
@@ -1320,8 +1320,8 @@ module MovingImages
                                                          addtocleanup: false)
         theCommands.add_command(drawBackgroundCommand)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
-                                         imageindex: 0)
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
+                                                    imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
         drawImageElement.interpolationquality = :kCGInterpolationHigh
         drawImageCommand = CommandModule.make_drawelement(bitmapObject,
@@ -1544,8 +1544,8 @@ module MovingImages
         importerObject = theCommands.make_createimporter(filePath,
                                                             addtocleanup: false)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject, 
-                                         imageindex: 0)
+        drawImageElement.set_imagefile_imagesource(source_object: importerObject, 
+                                                   imageindex: 0)
         drawImageElement.contexttransformations = contextTransformations
         drawImageElement.destinationrectangle = destinationRect
         interpQual = Utility.get_cginterpolation(options[:interpqual])

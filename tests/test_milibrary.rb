@@ -267,7 +267,7 @@ class TestMILibrary < MiniTest::Unit::TestCase
               "#{File.join($images_dir, "DSCN0746.JPG")}" ]
     file_list = { width: 908, height: 681, files: files }
     generated_json = MILibrary.simplesinglecifilter_files(the_options, file_list)
-#    File.write(json_filepath, generated_json)
+    # File.write(json_filepath, generated_json)
     json_hash = JSON.parse(the_json)
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
                                             'Different simplesinglecifilter json'

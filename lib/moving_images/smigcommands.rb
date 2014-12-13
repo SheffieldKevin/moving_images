@@ -151,7 +151,7 @@ module MovingImages
     def self.make_createmovieimporter(movieFilePath, name: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :movieimporter)
-      theCommand.add_option(key: :file, value: imageFilePath)
+      theCommand.add_option(key: :file, value: movieFilePath)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
       theCommand
     end
@@ -887,7 +887,7 @@ module MovingImages
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         importerObject = SmigIDHash.make_objectid(objectname: theName,
-                                                  objecttype: :imageimporter)
+                                                  objecttype: :movieimporter)
         createImporter = CommandModule.make_createmovieimporter(filePath,
                                                               name: theName)
         self.add_command(createImporter)

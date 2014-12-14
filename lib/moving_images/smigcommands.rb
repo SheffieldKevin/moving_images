@@ -494,7 +494,7 @@ module MovingImages
     # both the image index and grab metadata options will be ignored if
     # specified.
     # @param receiver_object [Hash] Object that will handle add image command
-    # @param image_source [Hash] Object from which to get the image from.
+    # @param image_source [Hash] Object from which to get the image.
     # @param imageindex [Fixnum] the image index into source object to get image
     # @param grabmetadata [true, false] Default:false. Copy metadata from source
     # @return [ObjectCommand] The addimage command.
@@ -502,13 +502,40 @@ module MovingImages
                            grabmetadata: nil)
       theCommand = ObjectCommand.new(:addimage, receiver_object)
       theCommand.add_option(key: :secondaryobject, value: image_source)
-      unless imageindex.nil?
-        theCommand.add_option(key: :secondaryimageindex, value: imageindex)
-      end
-      
       unless grabmetadata.nil?
         theCommand.add_option(key: :grabmetadata, value: grabmetadata)
       end
+
+      unless imageindex.nil?
+        options = { imageindex: imageindex }
+        theCommand.add_option(key: :imageoptions, value: options)
+      end
+      
+      theCommand
+    end
+
+    # Make a addimage command that gets the image from a movie object    
+    # The image is sourced from a movie object. To get the image the time in
+    # the movie of the desired frame is required. You can also optionally 
+    # specify the tracks from which to generate the image. If no tracks are
+    # are specified then the image generated is the movie frame at that time. 
+    # @param receiver_object [Hash] Object that will handle add image command
+    # @param movie_object [Hash] Movie object from which to get the image.
+    # @param frametime [Hash] A time representation. Either a CMTime rep or a
+    #   time value representing time in seconds from start of the movie.
+    # @param tracks [Array] Optional list of tracks to build image from.
+    # @return [ObjectCommand] The addimage command.
+    def self.make_addimage_frommovie(receiver_object, movie_object,
+                                        frametime: nil,
+                                           tracks: nil)
+      fail "No frame time is specified." if frametime.nil?
+      theCommand = ObjectCommand.new(:addimage, receiver_object)
+      theCommand.add_option(key: :secondaryobject, value: movie_object)
+
+      options = { frametime: frametime }
+      options[:trakcs] = tracks unless tracks.nil?
+      theCommand.add_option(key: :imageoptions, value: options)
+
       theCommand
     end
 

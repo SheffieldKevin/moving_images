@@ -101,11 +101,10 @@ class TestObjectCommands < MiniTest::Unit::TestCase
                                                    imageindex: 1,
                                                    grabmetadata: true)
     new_json = addimage_command.commandhash.to_json
-    old_json = '{"command":"addimage","receiverobject":'\
-    '{"objecttype":"imageexporter","objectname":"exporter.object"},'\
-    '"secondaryobject":{"objecttype":"imageimporter",'\
-    '"objectname":"importer.object"},"secondaryimageindex":1,'\
-    '"grabmetadata":true}'
+    old_json = '{"command":"addimage","receiverobject":{"objecttype":'\
+    '"imageexporter","objectname":"exporter.object"},"secondaryobject":'\
+    '{"objecttype":"imageimporter","objectname":"importer.object"},'\
+    '"grabmetadata":true,"imageoptions":{"imageindex":1}}'
     assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
     
     # test simpler case where image comes from a context, no index, no metadata.

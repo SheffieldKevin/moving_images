@@ -1252,12 +1252,16 @@ module MovingImages
     # dictionary with a single property "time" whose value is time in seconds.
     # @param source_object [Hash] The source object, see {SmigIDHash} methods
     # @param frametime [Hash] Required frame time. CMTime dict or dict with "time"
+    # @param tracks [Array] An array of track identifier hashes.
     # @return [Hash] The representation of the draw image command
-    def set_moviefile_imagesource(source_object: nil, frametime: nil)
+    def set_moviefile_imagesource(source_object: nil, frametime: nil,
+                                  tracks: nil)
       fail 'source object needs to be specified' if source_object.nil?
       fail 'Getting a frame from a movie needs a frame time' if frametime.nil?
       @elementHash[:sourceobject] = source_object
-      @elementHash[:imageoptions] = { frametime: frametime }
+      options = { frametime: frametime }
+      options[tracks] = tracks unless tracks.nil?
+      @elementHash[:imageoptions] = options
       @elementHash
     end
 

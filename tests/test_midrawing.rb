@@ -2,6 +2,7 @@ require 'minitest/autorun'
 require 'json'
 
 require_relative '../lib/moving_images/midrawing'
+require_relative '../lib/moving_images/smigobjectid'
 
 include MovingImages
 
@@ -284,6 +285,53 @@ class TestMIDrawImageElement < MiniTest::Unit::TestCase
     '"size":{"width":1280,"height":1024}},"blendmode":"kCGBlendModeNormal"}'
     assert new_json.eql?(old_json), 'MIDrawImageElement json different'
   end
+  
+  def test_drawmovieframe
+    draw_imageelement = MIDrawImageElement.new
+    smigid = SmigIDHash.make_objectid(objecttype: :movieimporter,
+                                      objectname: :TestDrawImageMovieImporter)
+    frameTime = { time: 5.0 }
+    draw_imageelement.set_moviefile_imagesource(source_object: smigid,
+                                                 frametime: frameTime)
+    origin = MIShapes.make_point(0, 0)
+    size = MIShapes.make_size(400, 300)
+    rectangle = MIShapes.make_rectangle(origin: origin, size: size)
+    draw_imageelement.destinationrectangle = rectangle
+    draw_imageelement.blendmode = :kCGBlendModeNormal
+    new_json = draw_imageelement.elementhash.to_json
+    # puts new_json
+    old_json = '{"elementtype":"drawimage","sourceobject":{"objecttype"'\
+    ':"movieimporter","objectname":"TestDrawImageMovieImporter"},"imageoptions"'\
+    ':{"frametime":{"time":5.0}},"destinationrectangle":{"origin":{"x":0,"y":0},'\
+    '"size":{"width":400,"height":300}},"blendmode":"kCGBlendModeNormal"}'
+    assert new_json.eql?(old_json), 'MIDrawImageElement movie frame json different'
+  end
+
+  def test_drawtrackmovieframe
+    draw_imageelement = MIDrawImageElement.new
+    smigid = SmigIDHash.make_objectid(objecttype: :movieimporter,
+                                      objectname: :TestDrawImageMovieImporter)
+    frameTime = { time: 2.0 }
+    tracks = [ { mediatype: :soun, trackindex: 0} ]
+    draw_imageelement.set_moviefile_imagesource(source_object: smigid,
+                                                 frametime: frameTime,
+                                                 tracks: tracks)
+    origin = MIShapes.make_point(0, 0)
+    size = MIShapes.make_size(400, 300)
+    rectangle = MIShapes.make_rectangle(origin: origin, size: size)
+    draw_imageelement.destinationrectangle = rectangle
+    draw_imageelement.blendmode = :kCGBlendModeNormal
+    new_json = draw_imageelement.elementhash.to_json
+#    puts new_json
+    old_json = '{"elementtype":"drawimage","sourceobject":{"objecttype":'\
+    '"movieimporter","objectname":"TestDrawImageMovieImporter"},"imageoptions":'\
+    '{"frametime":{"time":2.0},"[{:mediatype=>:soun, :trackindex=>0}]"'\
+    ':[{"mediatype":"soun","trackindex":0}]},"destinationrectangle":'\
+    '{"origin":{"x":0,"y":0},"size":{"width":400,"height":300}},"blendmode"'\
+    ':"kCGBlendModeNormal"}'
+    assert new_json.eql?(old_json), 'MIDrawImageElement movie track frame json different'
+  end
+
   # Need further tests
   # * Specifying affine and context transformations
   # * Specifying source rect

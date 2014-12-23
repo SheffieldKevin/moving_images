@@ -1274,7 +1274,7 @@ module MovingImages
       @elementHash
     end
 
-    # Set the destination rectangle within  coordinate system of the context's
+    # Set the destination rectangle within coordinate system of the context's
     # current transformation where the image will be drawn.    
     # @param destRect [Hash] A rectangle created using {MIShapes.make_rectangle}
     # @return [Hash] The representation of the draw image command
@@ -1284,6 +1284,7 @@ module MovingImages
 
     # Set the source rectangle within the frame of the source image within which
     # to crop the source image.    
+    # Assigning this is optional, by default the complete image will be drawn.
     # @param sourceRect [Hash] A rectangle see {MIShapes.make_rectangle}
     # @return [Hash] The source rectangle just assigned.
     def sourcerectangle=(sourceRect)

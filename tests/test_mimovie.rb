@@ -5,7 +5,7 @@ require_relative '../lib/moving_images/mimovie'
 
 include MovingImages
 
-# Test class for creating shape hashes
+# Test class for creating hashes that represent times that can be used by movie objects.
 class TestMovieTime < MiniTest::Unit::TestCase
   def test_movietime_make
     movie_time = MovieTime.make_movietime(timevalue: 900, timescale: 600)
@@ -21,6 +21,7 @@ class TestMovieTime < MiniTest::Unit::TestCase
   end
 end
 
+# Test class for creating hashes that represent track identifiers.
 class TestMovieTrackIdentifiers
   def test_make_trackidentifier_with_mediatype
     track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(

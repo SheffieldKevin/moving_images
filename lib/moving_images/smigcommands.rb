@@ -13,6 +13,7 @@ module MovingImages
     class Command
       
       # The constructor for a MovingImages::Command object
+      # @param theCommand [String] The command key which defines the command.
       def initialize(theCommand)
         # The command hash containing the configuration options and command list
         @commandHash = { :command => theCommand }
@@ -594,6 +595,14 @@ module MovingImages
       return self.make_assignimage_tocollection(receiver_object,
                                           image_creation_options: imageOptions,
                                                       identifier: identifier)
+    end
+
+    # Remove an image from the image collection.    
+    # @param identifier [String] The identifier for the image in the collection.
+    def self.make_removeimage_fromcollection(identifier)
+      theCommand = Command.new(:removeimagefromcollection)
+      theCommand.add_option(key: :imageidentifier, value: identifier)
+      theCommand
     end
 
     # Make an Export images to a image file command.

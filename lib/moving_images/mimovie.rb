@@ -1,0 +1,67 @@
+
+
+module MovingImages
+  # Methods for creating movie time hashes.    
+  module MovieTime
+    # Create a movie time hash which takes a seconds float value.    
+    # @param seconds [Float] Time in seconds from start of movie.
+    # @return [Hash] A hash object containing the movie time.
+    def self.make_movietime_fromseconds(seconds)
+      return { time: seconds }
+    end
+    
+    # Create a movie time hash which takes a time value and scale.    
+    # The movie time is specified by a numerator and a denominator. The
+    # time in the movie is specified by the numerator divided by the
+    # denominator in seconds. The numerator is the time value and denominator
+    # is the time scale. The timescale often has a value of 600.
+    # @param timevalue [Bignum, Fixnum] The time numerator.
+    # @param timescale [Fixnum] The denominator.
+    # @return [Hash] A hash object representing a movie CMTime structure.
+    def self.make_movietime(timevalue: nil, timescale: nil)
+      fail "The movie time value was not specified. " if timevalue.nil?
+      fail "The movie time scale was not specified. " if timescale.nil?
+      return { value: timevalue, timescale: timescale, flags: 1, epoch: 0 }
+    end
+  end
+
+  module MovieTrackIdentifier
+    # Create a track id hash from the mediatype and track index.    
+    # Possible mediatype values are: "soun clcp meta muxx sbtl text tmcd vide"
+    # That is sound, clip, metadata, muxx, subtitle, text, tmcd, and video.
+    # @param mediatype [String] Optional or one of the values listed above.
+    # @param trackindex [Fixnum] An index into the list of tracks of type.
+    # @return [Hash] A Track identifier hash object.
+    def self.make_movietrackid_from_mediatype(mediatype: nil, trackindex: nil)
+      # fail "The track media type was not specified. " if mediatype.nil?
+      fail "The track index was not specified. " if trackindex.nil?
+      trackID = { trackindex: trackindex }
+      trackID[:mediatype] = mediatype unless mediatype.nil?
+      return trackID
+    end
+    
+    # Create a track id hash from the media characteristic and track index.    
+    # Possible characteristic values are: "AVMediaCharacteristicAudible
+    # AVMediaCharacteristicFrameBased AVMediaCharacteristicLegible
+    # AVMediaCharacteristicVisual" plus others. A track can conform to more than
+    # characteristic unlike media type.
+    # @param mediacharacteristic [String] Optional or one of the values listed above.
+    # @param trackindex [Fixnum] An index into the list of tracks of type.
+    # @return [Hash] A Track identifier hash object.
+    def self.make_movietrackid_from_characteristic(characteristic: nil,
+                                                   trackindex: nil)
+      # fail "The track characteristic was not specified. " if characteristic.nil?
+      fail "The track index was not specified. " if trackindex.nil?
+      trackID = { trackindex: trackindex }
+      trackID[:mediacharacteristic] = characteristic unless characteristic.nil?
+      return trackID
+    end
+    
+    # Create a track id hash from a persistent track id value.    
+    # @param trackid [Fixnum] A track id within context of a movie doesn't change
+    # @return [Hash] A track identifier hash object.
+    def self.make_movietrackid_from_persistenttrackid(trackid)
+      return { trackid: trackid }
+    end
+  end
+end

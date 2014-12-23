@@ -8,4 +8,5 @@ require_relative 'test_smigcommands.rb'
 require_relative 'test_midrawing.rb'
 require_relative 'test_mifilter.rb'
 require_relative 'test_milibrary.rb'
+require_relative 'test_mimovie.rb'
 

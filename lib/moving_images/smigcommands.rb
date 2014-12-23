@@ -539,6 +539,63 @@ module MovingImages
       theCommand
     end
 
+    # Assign an image to the image collection.    
+    # The bitmap and window contexts, the movie and image file importer objects
+    # can all add images to the image collection. The importer objects take
+    # image_creation_options for creating the image to be added to the collection
+    # @param receiver_object [Hash] Object that is to add the image to collection
+    # @param image_creation_options [Hash] Options for creating image
+    # @param identifier [String] The string to identify the image in collection
+    # @return [ObjectCommand] The assignimagetocollection command object
+    def self.make_assignimage_tocollection(receiver_object,
+                                      image_creation_options: nil,
+                                      identifier: nil)
+      fail "Image collection identifier not specified. " if identifier.nil?
+      theCommand = ObjectCommand.new(:assignimagetocollection, receiver_object)
+      unless image_creation_options.nil? 
+        theCommand.add_option(key: :imageoptions, value: image_creation_options)
+      end
+      theCommand.add_option(key: :imageidentifier, value: identifier)
+      theCommand
+    end
+
+    # Assign an imported image to the image collection.    
+    # @param receiver_object [Hash] File importer object that handles assign command
+    # @param imageindex [Fixum] Optional. The image index defaults to 0.
+    # @param identifier [String] The string to identify the image in collection
+    # @return [ObjectCommand] The assignimagetocollection command object
+    def self.make_assignimage_fromimporter_tocollection(receiver_object,
+                                                imageindex: nil,
+                                                identifier: nil)
+      imageOptions = nil
+      imageOptions = { imageindex: imageindex } unless imageindex.nil?
+      return self.make_assignimage_tocollection(receiver_object,
+                                          image_creation_options: imageOptions,
+                                                      identifier: identifier)
+    end
+
+    # Assign an movie frame image to the image collection.    
+    # If the tracks param is nil then the image is generated as if the movie
+    # is being rendered for display, which is typically rendering of all video
+    # tracks. Otherwise the image is generated from the compositing of the tracks
+    # in the tracks array.
+    # @param receiver_object [Hash] Movie importer object that handles assign command
+    # @param frametime [Hash] The movie time that specifies when to get frame.
+    # @param tracks [Array] Optional. List of tracks to composite to create image.
+    # @param identifier [String] The string to identify the image in collection
+    # @return [ObjectCommand] The assignimagetocollection command object
+    def self.make_assignimage_frommovie_tocollection(receiver_object,
+                                                                 frametime: nil,
+                                                                    tracks: nil,
+                                                                identifier: nil)
+      fail "Frame time to get movie frame from not specified. " if frametime.nil?
+      imageOptions = { frametime: frametime }
+      imageOptions[:tracks] = tracks unless tracks.nil?
+      return self.make_assignimage_tocollection(receiver_object,
+                                          image_creation_options: imageOptions,
+                                                      identifier: identifier)
+    end
+
     # Make an Export images to a image file command.
     # @param receiver_object [Hash] Object that receives the export message
     # @param runasynchronously [bool, nil] Default is false. Export the images

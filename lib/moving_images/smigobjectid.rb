@@ -72,7 +72,9 @@ module MovingImages
       return { :cifilterindex => filterIndex.to_i }
     end
 
-    def self.make_bundle_imageidentifier(identifier)
+    # Make an image identifier of an image in the collection as input for a filter.
+    # @param identifier [String] The identifier for the image in the collection.
+    def self.make_imageidentifier(identifier)
       return { :imageidentifier => identifier }
     end
   end

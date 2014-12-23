@@ -1265,6 +1265,15 @@ module MovingImages
       @elementHash
     end
 
+    # Set the image source to be an image in the image collection with identifier....
+    # @param identifier [String] The identifier for the image in the collection.
+    # @return [Hash] The representation of the draw image command.
+    def set_imagecollection_imagesource(identifier: nil)
+      fail 'The image collection identifier needs to be set.' if identifier.nil?
+      @elementHash[:imageidentifier] = identifier
+      @elementHash
+    end
+
     # Set the destination rectangle within  coordinate system of the context's
     # current transformation where the image will be drawn.    
     # @param destRect [Hash] A rectangle created using {MIShapes.make_rectangle}

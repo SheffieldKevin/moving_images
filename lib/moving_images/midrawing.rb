@@ -1119,6 +1119,10 @@ module MovingImages
       @elementHash[:stringtext] = textToDraw
     end
 
+    def textsubstitutionkey=(substitutionkey)
+      @elementHash[:textsubstitution] = substitutionkey
+    end
+    
     # Set the bottom left position of where the text is to be drawn.     
     # Required even if for example the array of path elements contains a single
     # rectangle 

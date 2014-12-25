@@ -697,7 +697,9 @@ module MovingImages
 
       # Assign the variables dictionary to the commands hash. The variables
       # dictionary will be used when interpreting the draw dictionary and
-      # rendering the core image filter chain.
+      # rendering the core image filter chain. The variables dictionary values 
+      # are numerical values (int or float) and string values for use 
+      # when drawing text.
       # @param theVariables [Hash] A hash of variable names for keys with values
       # @return [Hash] The variables hash just assigned.
       def variables=(theVariables)

@@ -65,7 +65,37 @@ module MovingImages
       def initialize(receiverObject)
         super(:processframes, receiverObject)
       end
-      
+
+      # Set the instructions for getting and processing movie frames.    
+      # Each instruction contains a frame time, which is the time in the movie
+      # from which to obtain the frame, and a command list which is used to
+      # process the image frame. Plus a couple of other optional properties.
+      # @param instructions [Array<Hash>] Instructions for processing frames
+      # @return [Array<Hash>] The instructions added to the process frames command.
+      def instructions=(instructions)
+        self.add_option(key: :processinstructions, value: instructions)
+        instructions
+      end
+
+      # Add a processing instruction to the list of instructions.    
+      # The instruction contains a frame time, which is the time in the movie
+      # from which to obtain the frame, and a command list which is used to
+      # process the image frame. Plus a couple of other optional properties.
+      # @param insruction [Hash, #instructionshash] The instruction for
+      #   processing a movie frame.
+      # @return [Hash] The processing instruction hash.
+      def add_processinstruction(instruction)
+        if instruction.respond_to?("instructionshash")
+          instruction = instruction.instructionshash
+        end
+        if self.commandhash[:processinstructions].nil?
+          self.commandhash[:processinstructions] = [ instruction ]
+        else
+          self.commandhash[:processinstructions].push(instruction)
+        end
+        instruction
+      end
+
       # Assign the pre-process commands for process frames command. Optional    
       # @param preProcessCommands [SmigCommands, Hash] The commands to be assigned
       # @return [SmigCommands, Hash] The preProcessCommands assigned.

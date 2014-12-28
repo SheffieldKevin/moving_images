@@ -66,7 +66,44 @@ module MovingImages
     end
   end
   
+  # ProcessMovieFrameInstructions Objects are instructions for processing a frame    
   class ProcessMovieFrameInstructions
+    # Initialize the ProcessMovieFrameInstructions object.
+    def initialize()
+      @instructions = { }
+    end
     
+    # Return the hash representation of the process movie frame instructions
+    # @return [Hash] The instructions hash.
+    def instructionshash
+      @instructions
+    end
+    
+    # Set the frame time. Required.    
+    # @param frameTime [Hash] The frameTime represented as a hash. See {MovieTime}
+    # @return [Hash] The frame time just assigned. 
+    def frametime=(frameTime)
+      @instructions[:frametime] = frameTime
+      frameTime
+    end
+    
+    # Set the list of commands to process the movie frame. Required.    
+    # @param commands [Array<Hash>] The array of commands to process movie frame.
+    # @return [Array<Hash>] The list commands just assigned.  
+    def commands=(commands)
+      @instructions[:commands] = commands
+      commands
+    end
+    
+    # Set the identifier to be used for the movie frame to be processed. Optional.    
+    # To be able to access the movie frame image, the commands use its identifier.
+    # The same identifier can be used for all movie frames, or if more fine
+    # grained control is needed then you can specify the image identifier here.
+    # @param identifier [String] The image identifier string value.
+    # @return [String] The image identifier string just assigned.
+    def imageidentifier=(identifier)
+      @instructions[:commands] = identifier
+      identifier
+    end
   end
 end

@@ -56,7 +56,106 @@ module MovingImages
       end
     end
 
+    # A process movie frames command object    
+    # Handled by objects of the movie importer class.    
+    class ProcessFramesCommand < ObjectCommand
+      # Initialize a new process movie frames command.    
+      # @param receiverObject [Hash] The object handling the command.
+      # @return [ProcessFramesCommand] The process frames command.
+      def initialize(receiverObject)
+        super(:processframes, receiverObject)
+      end
+      
+      # Assign the pre-process commands for process frames command. Optional    
+      # @param preProcessCommands [SmigCommands, Hash] The commands to be assigned
+      # @return [SmigCommands, Hash] The preProcessCommands assigned.
+      def preprocesscommands=(preProcessCommands)
+        if preProcessCommands.responds_to?("commandshash")
+          preProcessCommands = preProcessCommands.commandshash
+        end
+        self.add_option(key: :preprocess, value: preProcessCommands)
+        preProcessCommands
+      end
+
+      # Assign the post-process commands for process frames command. Optional    
+      # @param postProcessCommands [SmigCommands, Hash] The commands to be assigned
+      # @return [SmigCommands, Hash] The postProcessCommands assigned.
+      def postprocesscommands=(postProcessCommands)
+        if postProcessCommands.responds_to?("commandshash")
+          postProcessCommands = postProcessCommands.commandshash
+        end
+        self.add_option(key: :postprocess, value: postProcessCommands)
+        postProcessCommands
+      end
+
+      # Assign the cleanup commands for process frames command. Optional    
+      # Will replace any previously assigned cleanup commands.
+      # The cleanup commands are meant to be only used for closing objects
+      # and removing images from the image collection. The cleanup commands will
+      # always be run whether a previous error has occured, and the failure of
+      # any cleanup command will not stop following cleanup commands to be run.
+      # @param cleanupCommands [SmigCommands, Hash] The commands to be assigned
+      # @return [SmigCommands, Hash] The cleanupCommands assigned.
+      def cleanupcommands=(cleanupCommands)
+        if cleanupCommands.responds_to?("commandshash")
+          cleanupCommands = cleanupCommands.commandshash
+        end
+        self.add_option(key: :cleanupcommands, value: cleanupCommands)
+        cleanupCommands
+      end
+      
+      # Add a cleanup command to the list of cleanup commands. Optional.    
+      # @param cleanupCommand [Command, Hash] The cleanup command to be added.
+      # @return [Command, Hash] The cleanup command added to the list.
+      def addto_cleanupcommands(cleanupCommand)
+        if cleanupCommand.respond_to?("commandhash")
+          cleanupCommand = cleanupCommand.commandhash
+        end
+        if self.commandhash[:cleanupcommands].nil?
+          self.commandhash[:cleanupcommands] = [ cleanupCommand ]
+        else
+          self.commandhash[:cleanupcommands].push(cleanupCommand)
+        end
+        cleanupCommand
+      end
+      
+      # Set whether to create a local context. Optional.    
+      # If a local context is created then all commands (pre,post,cleanup and
+      # process frame instructions) are run within the local context. This
+      # isolates the frame processing from other actions. If not specified
+      # then the default is false. The local context will be discarded after
+      # cleanup commands along with objects and images it refers to.
+      # @param createLocalContext [bool] A bool value, default is false
+      # @return [bool] The create local context value assigned.
+      def create_localcontext=(createLocalContext)
+        self.add_option(key: :localcontext, value: createLocalContext)
+        createLocalContext
+      end
+      
+      # Assign the list of video tracks from which to composite frames. Optional.    
+      # When each frame is generated, it is composited from the list of video
+      # tracks. Default is all tracks. If this property isn't set then the
+      # frames will be composited using all video tracks.
+      # @param videoTracks [Array<Hash>] An array of track identifiers.
+      # @return [Array<Hash>] The list of assigned video tracks.
+      def videotracks=(videoTracks)
+        self.add_option(key: :tracks, value: videoTracks)
+        videoTracks
+      end
+      
+      # Set the image identifier which will be used to identify the frame. Optional    
+      # The processing of each frame can use this value, or it can use the
+      # imageidentifier specific to the processing of an individual frame. One
+      # of the two needs to be defined. If both are set the local imageidentifier
+      # takes precedence.
+      def imageidentifier=(identifier)
+        self.add_option(key: :imageidentifier, value: identifier)
+        identifier
+      end
+    end
+    
     # A draw element command object    
+    # Handled by a bitmap object, window object, pdf object.    
     class DrawElementCommand < ObjectCommand
       # Initialize a new draw element command object.    
       # @param receiverObject [Hash] Object handling the draw element command

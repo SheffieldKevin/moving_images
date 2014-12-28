@@ -25,6 +25,7 @@ module MovingImages
     end
   end
 
+  # Functions for creating track identifying hashes.
   module MovieTrackIdentifier
     # Create a track id hash from the mediatype and track index.    
     # Possible mediatype values are: "soun clcp meta muxx sbtl text tmcd vide"
@@ -63,5 +64,9 @@ module MovingImages
     def self.make_movietrackid_from_persistenttrackid(trackid)
       return { trackid: trackid }
     end
+  end
+  
+  class ProcessMovieFrameInstructions
+    
   end
 end

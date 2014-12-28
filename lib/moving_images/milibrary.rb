@@ -723,7 +723,8 @@ module MovingImages
             drawImageElement.interpolationquality = :kCGInterpolationHigh
             rect = MIShapes.make_rectangle(size: dimensions)
             drawImageElement.destinationrectangle = rect
-            drawImageElement.set_imagesource(source_object: importer_object)
+            drawImageElement.set_imagefile_imagesource(
+                                             source_object: importer_object)
             drawImageCommand = CommandModule.make_drawelement(mask_object,
                                           drawinstructions: drawImageElement)
             theCommands.add_command(drawImageCommand)
@@ -766,7 +767,7 @@ module MovingImages
       if options[:transitionfilter].to_sym.eql?(:CIPageCurlTransition) ||
          options[:transitionfilter].to_sym.eql?(:CIPageCurlWithShadowTransition)
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: sourceImage)
+        drawImageElement.set_imagefile_imagesource(source_object: sourceImage)
         sourceRectangle = MIShapes.make_rectangle(size: dimensions)
         drawImageElement.destinationrectangle = sourceRectangle
         redrawImage = CommandModule.make_drawelement(bitmap,
@@ -1440,7 +1441,8 @@ module MovingImages
                                                             addtocleanup: false)
         # Set up the draw image element
         drawImageElement = MIDrawImageElement.new
-        drawImageElement.set_imagesource(source_object: importerObject,
+        drawImageElement.set_imagefile_imagesource(
+                                      source_object: importerObject,
                                          imageindex: 0)
         drawImageElement.destinationrectangle = destinationRect
         # Create the draw image command

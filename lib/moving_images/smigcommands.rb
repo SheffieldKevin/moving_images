@@ -221,7 +221,7 @@ module MovingImages
       end
     end
 
-    # == A render imager filter chain command
+    # A render imager filter chain command
     class RenderFilterChainCommand < ObjectCommand
       # Initialize a new render filter chain command object
       # @param filterChainObject [Hash] filter chain object that handles render

@@ -2,6 +2,9 @@ require 'Open3'
 require 'JSON'
 require 'tmpdir'
 
+include MovingImages::MICGDrawing
+include MovingImages::MICoreImage
+
 module MovingImages
   # A library of functions that do actual stuff
   module MILibrary

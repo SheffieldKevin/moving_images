@@ -4,6 +4,7 @@ require 'json'
 require_relative '../lib/moving_images/mimovie'
 
 include MovingImages
+include MIMovie
 
 # Test class for creating hashes that represent times that can be used by movie objects.
 class TestMovieTime < MiniTest::Unit::TestCase

@@ -1,5 +1,6 @@
 
 module MovingImages
+  module MICGDrawing
   # A collection of methods for creating and modifying simple shapes.    
   module MIShapes
     # Make a point hash.    
@@ -1316,5 +1317,6 @@ module MovingImages
                 'kCGInterpolationLow', 'kCGInterpolationMedium',
                 'kCGInterpolationHigh']
     end
+  end
   end
 end

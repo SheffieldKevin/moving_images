@@ -16,7 +16,6 @@ require 'pp'
 
 include MovingImages
 
-
 $verbose = false
 $smig = "smig"
 

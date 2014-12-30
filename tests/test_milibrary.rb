@@ -8,6 +8,7 @@ require_relative '../lib/moving_images/smigcommands.rb'
 require_relative '../lib/moving_images/midrawing.rb'
 require_relative '../lib/moving_images/mifilterchain.rb'
 require_relative '../lib/moving_images/milibrary.rb'
+require_relative '../lib/moving_images/mimovie.rb'
 
 include MovingImages
 

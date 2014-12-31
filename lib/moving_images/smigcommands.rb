@@ -97,22 +97,22 @@ module MovingImages
       end
 
       # Assign the pre-process commands for process frames command. Optional    
-      # @param preProcessCommands [SmigCommands, Hash] The commands to be assigned
-      # @return [SmigCommands, Hash] The preProcessCommands assigned.
+      # @param preProcessCommands [#commandshash, Array] The commands to be assigned
+      # @return [Array] The preProcessCommands assigned.
       def preprocesscommands=(preProcessCommands)
-        if preProcessCommands.responds_to?("commandshash")
-          preProcessCommands = preProcessCommands.commandshash
+        if preProcessCommands.respond_to?("commandshash")
+          preProcessCommands = preProcessCommands.commandshash[:commands]
         end
         self.add_option(key: :preprocess, value: preProcessCommands)
         preProcessCommands
       end
 
       # Assign the post-process commands for process frames command. Optional    
-      # @param postProcessCommands [SmigCommands, Hash] The commands to be assigned
+      # @param postProcessCommands [#commandshash, Array] The commands to be assigned
       # @return [SmigCommands, Hash] The postProcessCommands assigned.
       def postprocesscommands=(postProcessCommands)
         if postProcessCommands.responds_to?("commandshash")
-          postProcessCommands = postProcessCommands.commandshash
+          postProcessCommands = postProcessCommands.commandshash[:commands]
         end
         self.add_option(key: :postprocess, value: postProcessCommands)
         postProcessCommands
@@ -134,10 +134,10 @@ module MovingImages
         cleanupCommands
       end
       
-      # Add a cleanup command to the list of cleanup commands. Optional.    
+      # Add a cleanup command to the list of cleanup commands.    
       # @param cleanupCommand [Command, Hash] The cleanup command to be added.
       # @return [Command, Hash] The cleanup command added to the list.
-      def addto_cleanupcommands(cleanupCommand)
+      def add_tocleanupcommands(cleanupCommand)
         if cleanupCommand.respond_to?("commandhash")
           cleanupCommand = cleanupCommand.commandhash
         end
@@ -149,6 +149,24 @@ module MovingImages
         cleanupCommand
       end
       
+      # Add a close object command to the list of cleanup commands.    
+      # @param objectToClose [Hash] The object identifying hash.
+      # @return [Hash] The object identifier to be closed.
+      def add_tocleanupcommands_closeobject(objectToClose)
+        closeCommand = CommandModule.make_close(objectToClose)
+        self.add_tocleanupcommands(closeCommand)
+        objectToClose
+      end
+
+      # Add a remove image from collection to list of cleanup commands.    
+      # @param imageIdentifier [String] The identifier for the image in collection
+      # @return [String] The string used to identify the image.
+      def add_tocleanupcommands_removeimage(imageIdentifier)
+        rICommand = CommandModule.make_removeimage_fromcollection(imageIdentifier)
+        self.add_tocleanupcommands(rICommand)
+        imageIdentifier
+      end
+
       # Set whether to create a local context. Optional.    
       # If a local context is created then all commands (pre,post,cleanup and
       # process frame instructions) are run within the local context. This

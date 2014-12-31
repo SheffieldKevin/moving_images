@@ -89,11 +89,28 @@ module MovingImages
       end
       
       # Set the list of commands to process the movie frame. Required.    
+      # This will overwrite any commands that might have already been added
+      # to the commands list. Alternative to using add_command.
       # @param commands [Array<Hash>] The array of commands to process movie frame.
       # @return [Array<Hash>] The list commands just assigned.  
       def commands=(commands)
         @instructions[:commands] = commands
         commands
+      end
+      
+      # Add a command to the list of process frame instrution commands. Required.    
+      # @param command [Hash, #commandhash] The command to be added to command list
+      # @return [Hash] The command added to the command list.
+      def add_command(command)
+        if command.respond_to?("commandhash")
+          command = command.commandhash
+        end
+        if @instructions[:commands].nil?
+          @instructions[:commands] = [ command ]
+        else
+          @instructions[:commands].push(command)
+        end
+        command
       end
       
       # Set the identifier to be used for the movie frame to be processed. Optional.    
@@ -103,7 +120,7 @@ module MovingImages
       # @param identifier [String] The image identifier string value.
       # @return [String] The image identifier string just assigned.
       def imageidentifier=(identifier)
-        @instructions[:commands] = identifier
+        @instructions[:imageidentifier] = identifier
         identifier
       end
     end

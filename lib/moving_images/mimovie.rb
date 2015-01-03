@@ -24,6 +24,12 @@ module MovingImages
         fail "The movie time scale was not specified. " if timescale.nil?
         return { value: timevalue, timescale: timescale, flags: 1, epoch: 0 }
       end
+      
+      # The movie time is the time of the next movie sample.    
+      # @return [:movienextsample] The value for the frame time property.
+      def self.make_movietime_nextsample()
+        return :movienextsample
+      end
     end
   
     # Functions for creating track identifying hashes.

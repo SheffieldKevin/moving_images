@@ -1,10 +1,97 @@
 require 'minitest/autorun'
 require 'json'
 
-require_relative '../lib/moving_images/mimovie'
+require_relative '../lib/moving_images/spotlight.rb'
+require_relative '../lib/moving_images/smigobjectid.rb'
+require_relative '../lib/moving_images/smig.rb'
+require_relative '../lib/moving_images/smigcommands.rb'
+require_relative '../lib/moving_images/midrawing.rb'
+require_relative '../lib/moving_images/mifilterchain.rb'
+require_relative '../lib/moving_images/milibrary.rb'
+require_relative '../lib/moving_images/mimovie.rb'
 
 include MovingImages
 include MIMovie
+include MICGDrawing
+include CommandModule
+
+module EqualHashes
+  def self.equal_arrays?(array1, array2)
+    return false unless array1.kind_of?(Array)
+    return false unless array2.kind_of?(Array)
+    unless array1.size.eql?(array2.size)
+      puts "Arrays have different lengths"
+      return false
+    end
+    begin
+      array1.each_index do |index|
+        if array1[index].kind_of?(Hash)
+          return false unless self.equal_hashes?(array1[index], array2[index])
+        elsif array1[index].kind_of?(Array)
+          return false unless self.equal_arrays?(array1[index], array2[index])
+        else
+          result = array1[index].eql?(array2[index])
+          unless result
+            puts "array1: #{array1.to_json}"
+            puts "array2: #{arrat2.to_json}"
+          end
+          return false unless result
+        end
+      end
+    rescue RuntimeError => e
+      return false
+    end
+    return true
+  end
+
+  def self.equal_hashes?(hash1, hash2)
+    return false unless hash1.kind_of?(Hash)
+    return false unless hash2.kind_of?(Hash)
+    unless hash1.size.eql?(hash2.size)
+      puts "Number of hash attributes different"
+      puts "hash1 keys: #{hash1.keys}"
+      puts "hash2 keys: #{hash2.keys}"
+      return false
+    end
+    return false unless hash1.size.eql?(hash2.size)
+    begin
+      hash1.keys.each do |key|
+        # First check keys where the key must exist in both but value can differ
+        if key.eql?('objectname')
+          return false if hash2[key].nil?
+        elsif key.eql?('file')
+          return false if hash2[key].nil?
+        elsif key.eql?('propertyvalue')
+          return false if hash2[key].nil?
+        elsif key.eql?('imageidentifier')
+          return false if hash2[key].nil?
+        else
+          if hash1[key].kind_of?(Hash)
+# Uncomment the following if you want context of difference displayed.
+#            areEqual = self.equal_hashes?(hash1[key], hash2[key])
+#            unless areEqual
+#              puts "hash1: #{hash1.to_json}"
+#              puts "hash2: #{hash2.to_json}"
+#            end
+            return false unless self.equal_hashes?(hash1[key], hash2[key])
+          elsif hash1[key].kind_of?(Array)
+            return false unless self.equal_arrays?(hash1[key], hash2[key])
+          else
+            result = hash1[key].eql?(hash2[key])
+            unless result
+              puts "hash1: #{hash1.to_json}"
+              puts "hash2: #{hash2.to_json}"
+            end
+            return false unless result
+          end
+        end
+      end
+    rescue RuntimeError => e
+      return false
+    end
+    return true
+  end
+end
 
 # Test class for creating hashes that represent times that can be used by movie objects.
 class TestMovieTime < MiniTest::Unit::TestCase
@@ -19,6 +106,11 @@ class TestMovieTime < MiniTest::Unit::TestCase
   def test_movietime_make_fromseconds
     movie_time = MovieTime.make_movietime_fromseconds(0.9324)
     assert movie_time[:time].eql?(0.9324), 'Movie time not equal to 0.9324'
+  end
+  
+  def test_movietime_make_nextframe
+    next_frame = MovieTime.make_movietime_nextsample
+    assert next_frame.eql?(:movienextsample)
   end
 end
 
@@ -42,5 +134,170 @@ class TestMovieTrackIdentifiers
   def test_make_trackidentifier_from_persistenttrackid
     track_id = MovieTrackIdentifier.make_movietrackid_from_persistenttrackid(2)
     assert track_id[:trackid].eql?(2), 'Persistent track id is not 2'
+  end
+end
+
+$resources_dir = File.expand_path(File.join(File.dirname(__FILE__), "resources"))
+
+class TestMovieProcessFramesCommand < MiniTest::Unit::TestCase
+  def test_process_movieframe_commandgeneration
+    sourceMovie = "/Users/ktam/images/604_sd_clip.mov"
+    width = 576
+    height = 360
+    movieLength = 300.0 # seconds.
+    borderWidth = 32
+    bitmapWidth = (3.0 * width.to_f * 0.5 + (3+1) * borderWidth).to_i
+    bitmapHeight = (4.0 * height.to_f * 0.5 + (4+1) * borderWidth).to_i
+    bitmapSize = MIShapes.make_size(bitmapWidth, bitmapHeight)
+    baseFileName = "coversheet"
+  
+    # 1. Create the list of commands object, ready to have commands added to it.
+    theCommands = SmigCommands.new
+    theCommands.saveresultstype = :lastcommandresult
+  
+    # 2. Create movie importer and assign to list of commands.
+    # Basically after the first block of commands is run, the movie importer
+    # is closed automatically in the cleanup commands.
+    movieImporterName = SecureRandom.uuid
+    movieObject = theCommands.make_createmovieimporter(sourceMovie,
+                                                 name: movieImporterName)
+    
+    # 3. Create the process movie frames command and configure.
+    imageIdentifier = SecureRandom.uuid
+  
+    processFramesCommand = ProcessFramesCommand.new(movieObject)
+    processFramesCommand.create_localcontext = false
+    processFramesCommand.imageidentifier = imageIdentifier
+  
+    track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                                mediatype: :vide, trackindex: 0)
+    
+    processFramesCommand.videotracks = [ track_id ]
+  
+    # 4. Make a pre-process command list.
+    preProcessCommands = []
+    
+    # 5. Make a create a bitmap context command.
+    bitmapName = SecureRandom.uuid
+    createBitmapCommand = CommandModule.make_createbitmapcontext(
+                                            name: bitmapName, size: bitmapSize)
+  
+    bitmapObject = SmigIDHash.make_objectid(objecttype: :bitmapcontext,
+                                            objectname: bitmapName)
+  
+    # 6. Add the create bitmap context object command to the pre-process list.
+    preProcessCommands.push(createBitmapCommand.commandhash)
+  
+    # 7. Make a create exporter object command and add it to the pre-process list
+    exporterName = SecureRandom.uuid
+    createExporterCommand = CommandModule.make_createexporter(
+              "~/placeholder.jpg", export_type: 'public.jpeg', name: exporterName)
+    preProcessCommands.push(createExporterCommand.commandhash)
+    exporterObject = SmigIDHash.make_objectid(objecttype: :imageexporter,
+                                              objectname: exporterName)
+  
+    # 8. Assign the pre-process commands to the process movie frames command.
+    processFramesCommand.preprocesscommands = preProcessCommands
+    
+    # 9. Add a close bitmap object command to cleanup commands.
+    processFramesCommand.add_tocleanupcommands_closeobject(bitmapObject)
+    
+    # 10. Add a close exporter object command to cleanup commands.
+    processFramesCommand.add_tocleanupcommands_closeobject(exporterObject)
+  
+    # 11. Add a remove image from collection command to cleanup commands.
+    processFramesCommand.add_tocleanupcommands_removeimage(imageIdentifier)
+  
+    # 12. Prepare and start looping for creating process frame instrutions.
+    numFrames = 12
+    framesPerPage = 12 # 3 x 4
+    frameDuration = movieLength / (numFrames - 1)
+    pageNumber = 0
+    x = 0
+    y = 0
+    halfWidth = width / 2
+    halfHeight = height / 2
+    drawnFrameSize = MIShapes.make_size(halfWidth, halfHeight)
+    textBoxSize = MIShapes.make_size(halfWidth, borderWidth * 3 / 4)
+    filesToCompare = []
+    numFrames.times do |i|
+      # 13. Create a ProcessMovieFrameInstruction object
+      frameInstructions = ProcessMovieFrameInstructions.new
+      
+      # 14. Calculate the frame time and assign it.
+      time = i.to_f * frameDuration
+      frameTime = MovieTime.make_movietime_fromseconds(time)
+      frameInstructions.frametime = frameTime
+      
+      # 15. Determine the frame number on the page & destination rectangle.
+      frameNumber = i % framesPerPage
+      x = frameNumber % 3
+      y = 3 - (frameNumber / 3)
+      xloc = x * halfWidth + (x + 1) * borderWidth
+      yloc = y * halfHeight + (y + 1) * borderWidth
+      origin = MIShapes.make_point(xloc, yloc)
+      drawnFrameRect = MIShapes.make_rectangle(size: drawnFrameSize,
+                                             origin: origin)
+      
+      # 16. Create the draw image element to draw the frame onto the bitmap.
+      drawImageElement = MIDrawImageElement.new()
+      drawImageElement.destinationrectangle = drawnFrameRect
+      drawImageElement.set_imagecollection_imagesource(identifier: imageIdentifier)
+      
+      # 17. Create the draw image command and add it to the frame instructions.
+      drawImageCommand = CommandModule.make_drawelement(bitmapObject,
+                        drawinstructions: drawImageElement, createimage: false)
+      frameInstructions.add_command(drawImageCommand)
+      
+      # 18. Prepare drawing the text with the time.
+      timeString = "Frame time: %.3f secs" % time
+      drawStringElement = MIDrawBasicStringElement.new()
+      drawStringElement.stringtext = timeString
+      drawStringElement.userinterfacefont = "kCTFontUIFontLabel"
+      drawStringElement.textalignment = "kCTTextAlignmentCenter"
+      drawStringElement.fillcolor = MIColor.make_rgbacolor(0.0, 0.0, 0.0)
+      boxOrigin = MIShapes.make_point(xloc, yloc - borderWidth)
+      boundingBox = MIShapes.make_rectangle(size: textBoxSize, origin: boxOrigin)
+      drawStringElement.boundingbox = boundingBox
+      drawTextCommand = CommandModule.make_drawelement(bitmapObject,
+                      drawinstructions: drawStringElement, createimage: false)
+      frameInstructions.add_command(drawTextCommand)
+  
+      # 19. If this was the last frame to be drawn then export the page.
+      if (frameNumber == framesPerPage - 1) || i == numFrames - 1
+        addImageCommand = CommandModule.make_addimage(exporterObject, bitmapObject)
+        frameInstructions.add_command(addImageCommand)
+        pageNum = (i / 12).to_s.rjust(3, '0')
+        fileName = baseFileName + pageNum + ".jpg"
+        filesToCompare.push(fileName)
+        filePath = File.join("/Users/ktam", fileName)
+        setExportPathCommand = CommandModule.make_set_objectproperty(
+                                                               exporterObject,
+                                                  propertykey: :exportfilepath,
+                                                propertyvalue: filePath)
+        frameInstructions.add_command(setExportPathCommand)
+        exportCommand = CommandModule.make_export(exporterObject)
+        frameInstructions.add_command(exportCommand)
+        # 20. Now redraw the bitmap context with a white rectangle.
+        redrawBitmapElement = MIDrawElement.new(:fillrectangle)
+        redrawBitmapElement.fillcolor = MIColor.make_rgbacolor(1.0, 1.0, 1.0)
+        redrawBitmapElement.rectangle = MIShapes.make_rectangle(size: bitmapSize)
+        redrawCommand = CommandModule.make_drawelement(bitmapObject,
+                                     drawinstructions: redrawBitmapElement)
+        frameInstructions.add_command(redrawCommand)
+      end
+      # 21. Set the frame processing intructions to the process frames command.
+      processFramesCommand.add_processinstruction(frameInstructions)
+    end
+    
+    # 22. Add the process frames command to the list of commands.
+    theCommands.add_command(processFramesCommand)
+    result = JSON.pretty_generate(theCommands.commandshash)
+    json_filepath = File.join($resources_dir, "json", "processframescommand.json")
+    # File.write(json_filepath, result)
+    the_json = File.read(json_filepath)
+    json_hash = JSON.parse(the_json)
+    assert EqualHashes::equal_hashes?(JSON.parse(result), json_hash),
+                                              'Different process movie frame json'
   end
 end

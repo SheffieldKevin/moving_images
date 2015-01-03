@@ -1,0 +1,958 @@
+{
+  "saveresultstype": "lastcommandresult",
+  "commands": [
+    {
+      "command": "create",
+      "objecttype": "movieimporter",
+      "file": "/Users/ktam/images/604_sd_clip.mov",
+      "objectname": "43755fee-f7fd-4b36-844c-454f104cb6ca"
+    },
+    {
+      "command": "processframes",
+      "receiverobject": {
+        "objecttype": "movieimporter",
+        "objectname": "43755fee-f7fd-4b36-844c-454f104cb6ca"
+      },
+      "localcontext": false,
+      "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac",
+      "tracks": [
+        {
+          "trackindex": 0,
+          "mediatype": "vide"
+        }
+      ],
+      "preprocess": [
+        {
+          "command": "create",
+          "objecttype": "bitmapcontext",
+          "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778",
+          "size": {
+            "width": 992,
+            "height": 880
+          },
+          "preset": "AlphaPreMulFirstRGB8bpcInt"
+        },
+        {
+          "command": "create",
+          "objecttype": "imageexporter",
+          "file": "~/placeholder.jpg",
+          "utifiletype": "public.jpeg",
+          "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
+        }
+      ],
+      "cleanupcommands": [
+        {
+          "command": "close",
+          "receiverobject": {
+            "objecttype": "bitmapcontext",
+            "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+          }
+        },
+        {
+          "command": "close",
+          "receiverobject": {
+            "objecttype": "imageexporter",
+            "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
+          }
+        },
+        {
+          "command": "removeimagefromcollection",
+          "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+        }
+      ],
+      "processinstructions": [
+        {
+          "frametime": {
+            "time": 0.0
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 32,
+                    "y": 668
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 0.000 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 32,
+                  "y": 636
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 32,
+                        "y": 636
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 27.272727272727273
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 352,
+                    "y": 668
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 27.273 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 352,
+                  "y": 636
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 352,
+                        "y": 636
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 54.54545454545455
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 672,
+                    "y": 668
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 54.545 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 672,
+                  "y": 636
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 672,
+                        "y": 636
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 81.81818181818181
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 32,
+                    "y": 456
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 81.818 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 32,
+                  "y": 424
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 32,
+                        "y": 424
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 109.0909090909091
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 352,
+                    "y": 456
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 109.091 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 352,
+                  "y": 424
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 352,
+                        "y": 424
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 136.36363636363637
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 672,
+                    "y": 456
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 136.364 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 672,
+                  "y": 424
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 672,
+                        "y": 424
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 163.63636363636363
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 32,
+                    "y": 244
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 163.636 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 32,
+                  "y": 212
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 32,
+                        "y": 212
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 190.9090909090909
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 352,
+                    "y": 244
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 190.909 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 352,
+                  "y": 212
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 352,
+                        "y": 212
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 218.1818181818182
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 672,
+                    "y": 244
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 218.182 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 672,
+                  "y": 212
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 672,
+                        "y": 212
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 245.45454545454547
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 32,
+                    "y": 32
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 245.455 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 32,
+                  "y": 0
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 32,
+                        "y": 0
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 272.72727272727275
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 352,
+                    "y": 32
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 272.727 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 352,
+                  "y": 0
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 352,
+                        "y": 0
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            }
+          ]
+        },
+        {
+          "frametime": {
+            "time": 300.0
+          },
+          "commands": [
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawimage",
+                "destinationrectangle": {
+                  "origin": {
+                    "x": 672,
+                    "y": 32
+                  },
+                  "size": {
+                    "width": 288,
+                    "height": 180
+                  }
+                },
+                "imageidentifier": "f43ed281-23b2-45fd-9f38-f51825be25ac"
+              },
+              "createimage": false
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "drawbasicstring",
+                "stringtext": "Frame time: 300.000 secs",
+                "userinterfacefont": "kCTFontUIFontLabel",
+                "textalignment": "kCTTextAlignmentCenter",
+                "fillcolor": {
+                  "red": 0.0,
+                  "green": 0.0,
+                  "blue": 0.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "point": {
+                  "x": 672,
+                  "y": 0
+                },
+                "arrayofpathelements": [
+                  {
+                    "elementtype": "pathrectangle",
+                    "rect": {
+                      "origin": {
+                        "x": 672,
+                        "y": 0
+                      },
+                      "size": {
+                        "width": 288,
+                        "height": 24
+                      }
+                    }
+                  }
+                ]
+              },
+              "createimage": false
+            },
+            {
+              "command": "addimage",
+              "receiverobject": {
+                "objecttype": "imageexporter",
+                "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
+              },
+              "secondaryobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              }
+            },
+            {
+              "command": "setproperty",
+              "receiverobject": {
+                "objecttype": "imageexporter",
+                "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
+              },
+              "propertykey": "exportfilepath",
+              "propertyvalue": "/Users/ktam/coversheet000.jpg"
+            },
+            {
+              "command": "export",
+              "receiverobject": {
+                "objecttype": "imageexporter",
+                "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
+              }
+            },
+            {
+              "command": "drawelement",
+              "receiverobject": {
+                "objecttype": "bitmapcontext",
+                "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
+              },
+              "drawinstructions": {
+                "elementtype": "fillrectangle",
+                "fillcolor": {
+                  "red": 1.0,
+                  "green": 1.0,
+                  "blue": 1.0,
+                  "alpha": 1.0,
+                  "colorcolorprofilename": "kCGColorSpaceSRGB"
+                },
+                "rect": {
+                  "origin": {
+                    "x": 0.0,
+                    "y": 0.0
+                  },
+                  "size": {
+                    "width": 992,
+                    "height": 880
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cleanupcommands": [
+    {
+      "command": "close",
+      "receiverobject": {
+        "objecttype": "movieimporter",
+        "objectname": "43755fee-f7fd-4b36-844c-454f104cb6ca"
+      }
+    }
+  ]
+}

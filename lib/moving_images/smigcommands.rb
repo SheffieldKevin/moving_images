@@ -279,15 +279,20 @@ module MovingImages
       end
     end
 
-    # Make a create importer command object
+    # Make a create importer command object.    
     # @param imageFilePath [String] A path to an image file
     # @param name [String] The name of the object to be created
+    # @param pathsubstitutionkey [String, Symbol] Get file path from variables.
     # @return [Command] The command that create the importer
-    def self.make_createimporter(imageFilePath, name: nil)
+    def self.make_createimporter(imageFilePath, name: nil,
+                                 pathsubstitutionkey: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :imageimporter)
       theCommand.add_option(key: :file, value: imageFilePath)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
       theCommand
     end
 
@@ -295,12 +300,17 @@ module MovingImages
     # Make a create a movie importer command object
     # @param imageFilePath [String] A path to the movie file
     # @param name [String] The name of the object to be created
+    # @param pathsubstitutionkey [String, Symbol] Get file path from variables.
     # @return [Command] The command that create the importer
-    def self.make_createmovieimporter(movieFilePath, name: nil)
+    def self.make_createmovieimporter(movieFilePath, name: nil,
+                                      pathsubstitutionkey: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :movieimporter)
       theCommand.add_option(key: :file, value: movieFilePath)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
       theCommand
     end
 
@@ -375,14 +385,18 @@ module MovingImages
     # @param exportFilePath [String] Path to the file where image exported to
     # @param export_type [String] The uti export file type.
     # @param name [String] The name of the image exporter object to create.
+    # @param pathsubstitutionkey [String, Symbol] Get file path from variables dict
     # @return [Command] The command to create an image exporter object
     def self.make_createexporter(exportFilePath, export_type: "public.jpeg",
-                                 name: nil)
+                                 name: nil, pathsubstitutionkey: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :imageexporter)
       theCommand.add_option(key: :file, value: exportFilePath)
       theCommand.add_option(key: :utifiletype, value: export_type)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
       theCommand
     end
 
@@ -556,6 +570,32 @@ module MovingImages
       end
       unless imageindex.nil?
         theCommand.add_option(key: :imageindex, value: imageindex)
+      end
+      theCommand
+    end
+
+    # Set the export path object property.    
+    # Applies only to the exporter object. One of propertyvalue or
+    # pathsubsitutionkey needs to be set. If both are set then the substituted 
+    # path overrides. The substituted path is obtained from the contexts
+    # variables dictionary using the pathsubstitutionkey.
+    # @param receiver_object [Hash] The object to set the property of
+    # @param propertyvalue [String,Symbol] The path to be set.
+    # @param pathsubstitutionkey [String,Symbol] The key into the variables dict.
+    # @return [ObjectCommand] The set export path property command.
+    def self.make_set_object_exportpathproperty(receiver_object,
+                                                propertyvalue: nil,
+                                                pathsubstitutionkey: nil)
+      theCommand = ObjectCommand.new(:setproperty, receiver_object)
+      theCommand.add_option(key: :propertykey, value: :exportfilepath)
+
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
+      if propertyvalue.nil?
+        theCommand.add_option(key: :propertyvalue, value: "")
+      else
+        theCommand.add_option(key: :propertyvalue, value: propertyvalue)
       end
       theCommand
     end
@@ -846,7 +886,8 @@ module MovingImages
       # dictionary will be used when interpreting the draw dictionary and
       # rendering the core image filter chain. The variables dictionary values 
       # are numerical values (int or float) and string values for use 
-      # when drawing text.
+      # when drawing text or when they are a path to a file to be imported
+      # or exported.
       # @param theVariables [Hash] A hash of variable names for keys with values
       # @return [Hash] The variables hash just assigned.
       def variables=(theVariables)
@@ -1047,16 +1088,19 @@ module MovingImages
       # @param export_filepath [String] Path to file where to export to.
       # @param export_type [String, Symbol] The export file type.
       # @param name [String] The name of the exporter to be created. optional.
+      # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
       # @param addtocleanup [true, false] Should created context be closed.
       # @return [Hash] Object id, a reference to refer to a created object.
       def make_createexporter(export_filepath, export_type: :"public.jpeg" ,
-                                                addtocleanup: true, name: nil)
+                              addtocleanup: true, name: nil,
+                              pathsubstitutionkey: nil)
         the_name = SecureRandom.uuid if name.nil?
         the_name = name unless name.nil?
         exporter_object = SmigIDHash.make_objectid(objectname: the_name,
                                                    objecttype: :imageexporter)
         create_exporter = CommandModule.make_createexporter(export_filepath,
-                                  export_type: export_type, name: the_name)
+                                  export_type: export_type, name: the_name,
+                                  pathsubstitutionkey: pathsubstitutionkey)
         self.add_command(create_exporter)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(exporter_object)
@@ -1099,14 +1143,17 @@ module MovingImages
       # @param filePath [String] The path to the file to import
       # @param name [String] The name of the exporter to be created. optional
       # @param addtocleanup [true, false] Should created context be closed
+      # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
       # @return [Hash] Object id, a reference to refer to a created object
-      def make_createimporter(filePath, addtocleanup: true, name: nil)
+      def make_createimporter(filePath, addtocleanup: true, name: nil,
+                              pathsubstitutionkey: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         importerObject = SmigIDHash.make_objectid(objectname: theName,
                                                   objecttype: :imageimporter)
         createImporter = CommandModule.make_createimporter(filePath,
-                                                              name: theName)
+                                                  name: theName,
+                                   pathsubstitutionkey: pathsubstitutionkey)
         self.add_command(createImporter)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(importerObject)
@@ -1124,14 +1171,17 @@ module MovingImages
       # @param filePath [String] The path to the file to import
       # @param name [String] The name of the exporter to be created. optional
       # @param addtocleanup [true, false] Should created context be closed
+      # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
       # @return [Hash] Object id, a reference to refer to a created object
-      def make_createmovieimporter(filePath, addtocleanup: true, name: nil)
+      def make_createmovieimporter(filePath, addtocleanup: true, name: nil,
+                                   pathsubstitutionkey: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         importerObject = SmigIDHash.make_objectid(objectname: theName,
                                                   objecttype: :movieimporter)
         createImporter = CommandModule.make_createmovieimporter(filePath,
-                                                              name: theName)
+                                                    name: theName,
+                                     pathsubstitutionkey: nil)
         self.add_command(createImporter)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(importerObject)

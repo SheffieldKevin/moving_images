@@ -796,7 +796,11 @@ module MovingImages
     # gradients.
     class MIDrawElement < MIAbstractDrawElement
       # Initialize a new MIDrawElement object with the element type.    
-      # @param element_type [String] The type of draw element command
+      # @param element_type [String, Symbol] The type of draw element command
+      #    :arrayofelements, :fillrectangle, :strokerectangle, :filloval,
+      #    :strokeoval, :drawline, :drawlines, :fillroundedrectangle,
+      #    :strokeroundedrectangle, :fillpath, :strokepath, :fillandstrokepath,
+      #    :drawbasicstring, :lineargradientfill, :drawimage
       # @return [MIDrawElement] the newly created object
       def initialize(element_type)
         super

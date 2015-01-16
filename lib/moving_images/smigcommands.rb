@@ -315,13 +315,6 @@ module MovingImages
     end
 
     # Make a create bitmap context command    
-    # The preset can be any of:    
-    # AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
-    # AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
-    # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
-    # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
-    # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
-    # CMYK16bpcInt CMYK32bpcFloat    
     # The color profile must match the color space, rgb profiles for a rgb
     # color space, and a grayscale profile for a grayscale color space.
     # The default rgb profile name is: kCGColorSpaceSRGB and a common
@@ -330,6 +323,11 @@ module MovingImages
     # @param height [Fixnum, Float] Height of the bitmap context to be created.
     # @param size [Hash] A size hash. Size of bitmap. See {MIShapes.make_size}
     # @param preset [String, Symbol] Preset used to create the bitmap context.
+    #   AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
+    #   AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt AlphaPreMulFirstRGB8bpcInt 
+    #   AlphaPreMulLastRGB8bpcInt AlphaPreMulLastRGB16bpcInt
+    #   AlphaSkipLastRGB16bpcInt AlphaSkipLastRGB32bpcFloat
+    #   AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt CMYK16bpcInt CMYK32bpcFloat
     # @param profile [nil, String, Symbol] Name of a color profile to use.
     # @param name [String] The name of the object to be created.
     # @return [Command] The command to create the bitmap object
@@ -829,14 +827,17 @@ module MovingImages
     # add_option before the get pixel data command is sent.
     # @param receiver_object [Hash] Object that handles the getpixeldata command
     # @param rectangle [Hash] Representing the area to get pixel data from
-    # @param resultstype [:jsonfile, :propertyfile, :dictionaryobject]
+    # @param resultstype [:jsonfile, :propertyfile, :dictionaryobject, nil]
     # @param savelocation [String, nil] path, required if resultstypes is a file
     # @return [ObjectCommand] The get pixel data command
     def self.make_getpixeldata(receiver_object, rectangle: nil,
-                               resultstype: :jsonfile, savelocation: nil)
+                               resultstype: nil, savelocation: nil)
       fail "Rectangle not specified" if rectangle.nil?
       theCommand = ObjectCommand.new(:getpixeldata, receiver_object)
-      theCommand.add_option(key: :saveresultstype, value: resultstype)
+      
+      unless resultstype.nil?
+        theCommand.add_option(key: :saveresultstype, value: resultstype)
+      end
 
       unless savelocation.nil?
         theCommand.add_option(key: :saveresultsto, value: savelocation)
@@ -994,17 +995,17 @@ module MovingImages
       # objects you created & no longer need get closed. Adding
       # close object commands that take the object id to the list of clean up
       # commands ensures these objects will be closed.    
-      # AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
-      # AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
-      # AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
-      # AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
-      # AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
-      # CMYK16bpcInt CMYK32bpcFloat    
       # The default color profile for a rgb space is kCGColorSpaceSRGB.
       # Alternatives are: kCGColorSpaceGenericRGBLinear, kCGColorSpaceGenericRGB
       # @param size [Hash] The size of the context to create. Default: 800x600
       # @param addtocleanup [true, false] Should created context be closed
-      # @param preset [String, Symbol] Used to define type of bitmap to create
+      # @param preset [String, Symbol] Used to define type of bitmap to create.
+      #   AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
+      #   AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
+      #   AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
+      #   AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
+      #   AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
+      #   CMYK16bpcInt CMYK32bpcFloat
       # @param profile [String] A named color profile to use. 
       # @param name [String, nil] Object name identifier.
       # @return [Hash] The bitmap context object id, to refer to the context

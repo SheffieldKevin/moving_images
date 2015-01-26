@@ -91,6 +91,10 @@ module MovingImages
   # Get the list of bitmapcontent presets.    
   # Get the list of draw element blend modes.
   module MIMeta
+    #
+    # The different object types
+    #
+
     # The bitmap context type. Used for creating objects or getting class info.
     BitmapContextType = :bitmapcontext
   
@@ -108,6 +112,19 @@ module MovingImages
   
     # The window context type
     WindowContextType = :nsgraphiccontext
+
+    # The movie importer type
+    MovieImporterType = :movieimporter
+    
+    # The movie editor type
+    MovieEditorType = :movieeditor
+    
+    # The movie video frames writer
+    MovieVideoFramesWriter = :videoframeswriter
+    
+    #
+    # The different commands
+    #
 
     # The get property command. Handled by objects and classes.
     GetPropertyCommand = :getproperty
@@ -157,29 +174,70 @@ module MovingImages
     # The render filter chain command. Handled by a imagefilterchain object.
     RenderFilterChainCommand = :renderfilterchain
 
+    # The assign an image to the image collection command.
+    # Handled by bitmapcontext, window context, image importer, movie importer
+    AssignImageToCollectionCommand = :assignimagetocollection
+    
+    # Remove an image from the image collection command. Handled by the framework.
+    RemoveImageFromCollectionCommand = :removeimagefromcollection
+    
+    # The process video frames command. Handled by the movie importer object.
+    ProcessFramesCommand = :processframes
+    
+    # Create track command. Handled by the movie editor object.
+    CreateTrackCommand = :createtrack
+    
+    # Add an input for supplying bitmaps to the movie video frames writer object
+    AddInputToMovieFrameWriter = :addinputtowriter
+    
+    # Add An image to the video frames writer input.
+    AddImageSampleToWriter = :addimagesampletowriter
+
+    # After all the frames have been added to the video frames writer. Write them.
+    FinishWritingVideoFrames = :finishwritingframes
+    
+
     # Lists of commands handled by objects of a particular type
     CommandsForObjectsOfClasses = {
       BitmapContextType => [ GetPropertyCommand, GetPropertiesCommand,
-      CloseObjectCommand, DrawElementCommand, SnapShotCommand,
-                                                      GetPixelDataCommand ],
+                             CloseObjectCommand, DrawElementCommand,
+                             SnapShotCommand, GetPixelDataCommand,
+                             AssignImageToCollectionCommand ],
       ImageImporterType => [ GetPropertyCommand, GetPropertiesCommand,
-                                      SetPropertyCommand, CloseObjectCommand ],
+                             SetPropertyCommand, CloseObjectCommand,
+                             AssignImageToCollectionCommand ],
       ImageExporterType => [ GetPropertyCommand, GetPropertiesCommand,
-      SetPropertyCommand, SetPropertiesCommand, CloseObjectCommand,
-                                            AddImageCommand, ExportCommand ],
+                             SetPropertyCommand, SetPropertiesCommand,
+                             CloseObjectCommand, AddImageCommand,
+                             ExportCommand ],
       ImageFilterChainType => [ GetPropertyCommand, GetPropertiesCommand,
-            SetPropertyCommand, CloseObjectCommand, RenderFilterChainCommand ],
+                                SetPropertyCommand, CloseObjectCommand,
+                                RenderFilterChainCommand ],
       WindowContextType => [ GetPropertyCommand, GetPropertiesCommand,
-                      CloseObjectCommand, DrawElementCommand, SnapShotCommand ],
+                             CloseObjectCommand, DrawElementCommand,
+                             SnapShotCommand, AssignImageToCollectionCommand ],
       PDFContextType => [ GetPropertyCommand, GetPropertiesCommand,
-                                       CloseObjectCommand, DrawElementCommand ]
+                          CloseObjectCommand, DrawElementCommand,
+                          FinalizePageCommand ],
+      MovieImporterType => [ GetPropertyCommand, GetPropertiesCommand,
+                             CloseObjectCommand, ProcessFramesCommand, 
+                             AssignImageToCollectionCommand ],
+      MovieEditorType => [ GetPropertyCommand, GetPropertiesCommand,
+                           SetPropertyCommand, CloseObjectCommand,
+                           CreateTrackCommand ],
+      MovieVideoFramesWriter => [ GetPropertyCommand, GetPropertiesCommand,
+                                  CloseObjectCommand, ProcessFramesCommand, 
+                                  AddInputToMovieFrameWriter,
+                                  FinishWritingVideoFrames, 
+                                  AddImageSampleToWriter ]
     }
 
     # Get a list of the different types of objects MovingImages can create.    
     # @return [Array<Symbol>] The list of object types as ruby symbols
     def self.listobjecttypes
       return [ BitmapContextType, ImageImporterType, ImageExporterType, 
-                ImageFilterChainType, PDFContextType, WindowContextType ]
+                ImageFilterChainType, PDFContextType, WindowContextType,
+                MovieImporterType, MovieEditorType, MovieVideoFramesWriter ]
     end
 
     # Get a list of all the commands handled by MovingImages.    
@@ -190,7 +248,10 @@ module MovingImages
                CloseAllObjectsCommand, AddImageCommand, ExportCommand,
                DrawElementCommand, SnapShotCommand, FinalizePageCommand, 
                GetPixelDataCommand, CalculateGraphicSizeOfTextCommand, 
-               RenderFilterChainCommand ]
+               RenderFilterChainCommand, AssignImageToCollectionCommand,
+               RemoveImageFromCollectionCommand, ProcessFramesCommand,
+               CreateTrackCommand, AddInputToMovieFrameWriter,
+               AddImageSampleToWriter, FinishWritingVideoFrames ]
     end
 
     # The list of draw elements.    
@@ -282,7 +343,14 @@ module MovingImages
     # @return [String] A space delimited string with the list of presets.
     def self.listpresets
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
-                                        property: :presets)
+                                          property: :presets)
+    end
+
+    # Get the list of video frame writer presets. These define a codec and
+    # some appropriate codec compression settings.
+    def self.listvideoframewriterpresets
+      return Smig.get_classtypeproperty(objecttype: MovieVideoFramesWriter,
+                                          property: :presets)
     end
 
     # Get the list of blend modes for drawing into a context.    

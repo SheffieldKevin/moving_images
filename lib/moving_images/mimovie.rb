@@ -120,7 +120,7 @@ module MovingImages
       end
       
       # Set the identifier to be used for the movie frame to be processed. Optional.    
-      # To be able to access the movie frame image, the commands use its identifier.
+      # To be able to access the movie frame image, the commands uses the identifier.
       # The same identifier can be used for all movie frames, or if more fine
       # grained control is needed then you can specify the image identifier here.
       # @param identifier [String] The image identifier string value.

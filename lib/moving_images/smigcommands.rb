@@ -296,11 +296,13 @@ module MovingImages
       theCommand
     end
 
-
-    # Make a create a movie importer command object
-    # @param imageFilePath [String] A path to the movie file
+    # Make a create movie importer command object    
+    # The movieFilePath parameter always needs to be assigned even if you just
+    # give it an empty string and then have defined pathsubstitutionkey and
+    # when the movie importer is created the path is specified in variables dict.    
+    # @param movieFilePath [String] A path to the movie file
     # @param name [String] The name of the object to be created
-    # @param pathsubstitutionkey [String, Symbol] Get file path from variables.
+    # @param pathsubstitutionkey [String, Symbol] Get file path from variables
     # @return [Command] The command that create the importer
     def self.make_createmovieimporter(movieFilePath, name: nil,
                                       pathsubstitutionkey: nil)
@@ -313,6 +315,31 @@ module MovingImages
       end
       theCommand
     end
+
+    # Make a create video frames writer command object    
+    # @param imageFilePath [String] A path to the movie file
+    # @param uti_filetype [String, Symbol] File type of exported movie file.
+    #   Possible values are: "com.apple.quicktime-movie", "public.mpeg-4",
+    #   "com.apple.m4v-video". Respective extensions are mov, mp4, m4v
+    # @param name [String] The name of the object to be created
+    # @param pathsubstitutionkey [String, Symbol] Get file path from variables
+    #   with this key.
+    # @return [Command] The command that create the importer
+    def self.make_createvideoframeswriter(movieFilePath,
+                                         uti_filetype: :"com.apple.quicktime-movie",
+                                         name: nil, pathsubstitutionkey: nil)
+      theCommand = Command.new(:create)
+      theCommand.add_option(key: :objecttype, value: :videoframeswriter)
+      theCommand.add_option(key: :file, value: movieFilePath)
+      theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      theCommand.add_option(key: :utifiletype, value: export_type)
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
+      theCommand
+    end
+
+    
 
     # Make a create bitmap context command    
     # The color profile must match the color space, rgb profiles for a rgb
@@ -671,6 +698,33 @@ module MovingImages
       theCommand
     end
 
+    def self.make_processframescommand(receiver_object)
+      theCommand = ProcessFramesCommand.new(receiver_object)
+      theCommand
+    end
+
+    # @param receiver_object [Hash] filter chain object that handles render
+    # @param presets [String, Symbol] Required. Video input presets: Values are:
+    #   h264preset_sd jpegpreset h264preset_hd prores4444preset prores422preset
+    # @param framesize [Hash] Required. Size dict defining the video dimensions.
+    # @param frameduration [Hash] Required. See {MIMovie::MovieTime} The expected
+    #   frame duration time.
+    # @param cleanaperture [Hash] A clean aperture rectangle using the aperture 
+    #   keys.
+    def self.make_addinputto_videowritercommand(receiver_object,
+                                            preset: :h264preset_hd,
+                                         framesize: nil,
+                                     frameduration: nil,
+                                     cleanaperture: nil)
+      theCommand = ObjectCommand.new(:addinputto)
+      theCommand.add_option(key: :preset, value: preset)
+      theCommand.add_option(key: :size, value: framesize)
+      theCommand.add_option(key: :frameduration, value: frameduration)
+      theCommand.add_option(key: :AVVideoCleanApertureKey)
+      theCommand.
+    end
+
+
     # Make a addimage command    
     # The image can be sourced from an image importer object, if so you can
     # optionally supply an image index and assign the grabmetadata attribute
@@ -719,7 +773,7 @@ module MovingImages
       theCommand.add_option(key: :secondaryobject, value: movie_object)
 
       options = { frametime: frametime }
-      options[:trakcs] = tracks unless tracks.nil?
+      options[:tracks] = tracks unless tracks.nil?
       theCommand.add_option(key: :imageoptions, value: options)
 
       theCommand
@@ -1183,6 +1237,33 @@ module MovingImages
         createImporter = CommandModule.make_createmovieimporter(filePath,
                                                     name: theName,
                                      pathsubstitutionkey: nil)
+        self.add_command(createImporter)
+        if addtocleanup
+          self.add_tocleanupcommands_closeobject(importerObject)
+        end
+        importerObject
+      end
+      
+      # Make a create video frames writer command object and add it to command list    
+      # @param imageFilePath [String] A path to the movie file
+      # @param uti_filetype [String, Symbol] File type of exported movie file.
+      #   Possible values are: "com.apple.quicktime-movie", "public.mpeg-4",
+      #   "com.apple.m4v-video". Respective extensions are mov, mp4, m4v
+      # @param name [String] The name of the object to be created
+      # @param pathsubstitutionkey [String, Symbol] Get file path from variables
+      #   with this key.
+      # @return [Command] The command that create the importer
+      def self.make_createvideoframeswriter(movieFilePath, addtocleanup: true,
+                                           uti_filetype: :"com.apple.quicktime-movie",
+                                           name: nil, pathsubstitutionkey: nil)
+        theName = SecureRandom.uuid if name.nil?
+        theName = name unless name.nil?
+        videoWriterObject = SmigIDHash.make_objectid(objectname: theName,
+                                                     objecttype: :videoframeswriter)
+        createImporter = CommandModule.make_createvideoframeswriter(movieFilePath,
+                                            uti_filetype: uti_filetype,
+                                                    name: theName,
+                                     pathsubstitutionkey: pathsubstitutionkey)
         self.add_command(createImporter)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(importerObject)

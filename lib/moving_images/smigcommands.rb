@@ -660,7 +660,7 @@ module MovingImages
         theCommand.add_option(key: :imageindex, value: imageindex)
       end
       unless importersource.nil?
-        theCommand.add_option(key: :secondaryobject, value: importersource)
+        theCommand.add_option(key: :sourceobject, value: importersource)
       end
       unless importerimageindex.nil?
         theCommand.add_option(key: :secondaryimageindex,
@@ -712,7 +712,7 @@ module MovingImages
 
     # Add a video input to the video frames writer object command    
     # Handled by a video frames writer object.
-    # @param receiver_object [Hash] filter chain object that handles render
+    # @param receiver_object [Hash] Filter chain object that handles render
     # @param preset [String, Symbol] Required. Video input preset. Possible values:
     #   h264preset_sd jpegpreset h264preset_hd prores4444preset prores422preset
     # @param framesize [Hash] Required. Size dict defining the video dimensions.
@@ -727,7 +727,7 @@ module MovingImages
     #   when the movie is to be watched. Possible values are:
     #   AVVideoScalingModeFit, AVVideoScalingModeResize,
     #   AVVideoScalingModeResizeAspect, AVVideoScalingModeResizeAspectFill
-    # @return [ObjectCommand] The constructed addinput to video writer command.
+    # @return [ObjectCommand] The addinput to video writer command.
     def self.make_addinputto_videowritercommand(receiver_object,
                                             preset: :h264preset_hd,
                                          framesize: nil,
@@ -748,6 +748,18 @@ module MovingImages
       theCommand
     end
 
+    # Add an image as a video frame to the input of the video input writer.    
+    # Handled by a video frames writer object. One of imagecollectionidentifier
+    # and sourceobject need to be defined.
+    # @param receiver_object [Hash] Video frame writer object that adds the image
+    # @param imageoptions [Hash] Optional. Options for obtaining object.
+    #   An image importer might have an image index, a movie importer requires
+    #   a frame time from which to obtain the image.
+    # @param imagecollectionidentifier [Hash] Optional. Used as the key to get
+    #   the image from the image collection.
+    # @param sourceobject [Hash] Optional. Used to identify the object from
+    #   which to obtain the image.
+    # @return [ObjectCommand] The add image to video writer command.
     def self.make_addimageto_videoinputwriter(receiver_object,
                                                  imageoptions: nil,
                                     imagecollectionidentifier: nil,
@@ -770,6 +782,7 @@ module MovingImages
         theCommand.add_option(key: :sourceobject,
                             value: sourceobject)
       end
+      theCommand
     end
     
     # Make the finish writing frames command    
@@ -798,7 +811,7 @@ module MovingImages
     def self.make_addimage(receiver_object, image_source, imageindex: nil,
                            grabmetadata: nil)
       theCommand = ObjectCommand.new(:addimage, receiver_object)
-      theCommand.add_option(key: :secondaryobject, value: image_source)
+      theCommand.add_option(key: :sourceobject, value: image_source)
       unless grabmetadata.nil?
         theCommand.add_option(key: :grabmetadata, value: grabmetadata)
       end
@@ -827,7 +840,7 @@ module MovingImages
                                            tracks: nil)
       fail "No frame time is specified." if frametime.nil?
       theCommand = ObjectCommand.new(:addimage, receiver_object)
-      theCommand.add_option(key: :secondaryobject, value: movie_object)
+      theCommand.add_option(key: :sourceobject, value: movie_object)
 
       options = { frametime: frametime }
       options[:tracks] = tracks unless tracks.nil?

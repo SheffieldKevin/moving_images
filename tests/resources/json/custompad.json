@@ -94,7 +94,7 @@
         "objecttype": "imageexporter",
         "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       }
@@ -106,7 +106,7 @@
         "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "imageindex": 0,
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "imageimporter",
         "objectname": "408c2a70-1fca-41ab-8278-c915910ad751"
       },
@@ -212,7 +212,7 @@
         "objecttype": "imageexporter",
         "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "d970ea56-75d4-4928-ae1a-fd5c16cda644"
       }
@@ -224,7 +224,7 @@
         "objectname": "6f8f04e1-5bb4-4ca6-be75-5ed6b3c25d08"
       },
       "imageindex": 0,
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "imageimporter",
         "objectname": "4b997d4b-ac85-48dd-85ad-030360c0ea49"
       },

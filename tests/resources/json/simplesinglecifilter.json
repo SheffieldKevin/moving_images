@@ -150,7 +150,7 @@
         "objecttype": "imageexporter",
         "objectname": "42b6643f-13bb-48b8-b39c-bc27dacbb183"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "2e2d9aea-2d2f-4a5d-96bb-0f0984aaa8c9"
       }
@@ -256,7 +256,7 @@
         "objecttype": "imageexporter",
         "objectname": "42b6643f-13bb-48b8-b39c-bc27dacbb183"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "2e2d9aea-2d2f-4a5d-96bb-0f0984aaa8c9"
       }

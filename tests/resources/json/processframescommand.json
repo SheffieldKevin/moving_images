@@ -893,7 +893,7 @@
                 "objecttype": "imageexporter",
                 "objectname": "4d317366-91d1-41b1-bd3c-23b97a9e6cdf"
               },
-              "secondaryobject": {
+              "sourceobject": {
                 "objecttype": "bitmapcontext",
                 "objectname": "5a33510a-1f07-4095-af95-f1c4061e5778"
               }

@@ -102,7 +102,7 @@ class TestObjectCommands < MiniTest::Unit::TestCase
                                                    grabmetadata: true)
     new_json = addimage_command.commandhash.to_json
     old_json = '{"command":"addimage","receiverobject":{"objecttype":'\
-    '"imageexporter","objectname":"exporter.object"},"secondaryobject":'\
+    '"imageexporter","objectname":"exporter.object"},"sourceobject":'\
     '{"objecttype":"imageimporter","objectname":"importer.object"},'\
     '"grabmetadata":true,"imageoptions":{"imageindex":1}}'
     assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
@@ -113,7 +113,7 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     new_json = addimage_command.commandhash.to_json
     old_json = '{"command":"addimage","receiverobject":'\
     '{"objecttype":"imageexporter","objectname":"exporter.object"},'\
-    '"secondaryobject":{"objectreference":0}}'
+    '"sourceobject":{"objectreference":0}}'
     assert new_json.eql?(old_json), 'CommandModule.make_addimage different JSON'
   end
   

@@ -112,7 +112,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
@@ -155,7 +155,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
@@ -198,7 +198,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
@@ -241,7 +241,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }
@@ -284,7 +284,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "secondaryobject": {
+      "sourceobject": {
         "objecttype": "bitmapcontext",
         "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
       }

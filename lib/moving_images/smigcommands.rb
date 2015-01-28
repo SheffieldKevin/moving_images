@@ -669,10 +669,10 @@ module MovingImages
       theCommand
     end
 
-    # Make a new draw element command object.    
+    # Make a draw element object command.    
     # If you want to set the draw instructions after making the draw 
     # element command then call drawinstructions= on the draw element
-    # object.
+    # object. Handled by bitmapcontext, pdf context and windowcontext objects.
     # @param receiver_object [Hash] Object handling the draw element command
     # @param drawinstructions [Hash, #elementhash] The draw instructions.
     # @param createimage [Bool] Create an image of context after render.
@@ -685,8 +685,9 @@ module MovingImages
       theCommand
     end
     
-    # Make a render filter chain command object
-    # @param receiver_object [Hash] filter chain object that handles render
+    # Make a render filter chain object command    
+    # Handled by a image filter chain object.
+    # @param receiver_object [Hash] Filter chain object that handles render
     # @param renderinstructions [Hash] Render instructions and filter properties
     # @param createimage [Bool] Create an image of context after render.
     # @return [RenderFilterChainCommand] The newly created command
@@ -698,41 +699,97 @@ module MovingImages
       theCommand
     end
 
-    def self.make_processframescommand(receiver_object)
+    # Make a process frames object command    
+    # Handled by a movie importer object.
+    # This command allows you to configure the processing of frames of an
+    # imported movie. See {ProcessFramesCommand} for documentation.
+    # @param receiver_object [Hash] Movie importer object that handles this command
+    # @return [ProcessFramesCommand]
+    def self.make_processframes(receiver_object)
       theCommand = ProcessFramesCommand.new(receiver_object)
       theCommand
     end
 
+    # Add a video input to the video frames writer object command    
+    # Handled by a video frames writer object.
     # @param receiver_object [Hash] filter chain object that handles render
-    # @param presets [String, Symbol] Required. Video input presets: Values are:
+    # @param preset [String, Symbol] Required. Video input preset. Possible values:
     #   h264preset_sd jpegpreset h264preset_hd prores4444preset prores422preset
     # @param framesize [Hash] Required. Size dict defining the video dimensions.
     # @param frameduration [Hash] Required. See {MIMovie::MovieTime} The expected
     #   frame duration time.
-    # @param cleanaperture [Hash] A clean aperture rectangle using the aperture 
-    #   keys.
+    # @param cleanaperture [Hash] Optional. A clean aperture rectangle using the 
+    #   aperture keys: AVVideoCleanApertureWidthKey, AVVideoCleanApertureHeightKey
+    #   AVVideoCleanApertureHorizontalOffsetKey, AVVideoCleanApertureVerticalOffsetKey
+    #   The value for these keys is numbers that specify the area within the video
+    #   which must be shown when the video is displayed.
+    # @param scalingmode [String, Symbol] Optional. The scaling mode to be used
+    #   when the movie is to be watched. Possible values are:
+    #   AVVideoScalingModeFit, AVVideoScalingModeResize,
+    #   AVVideoScalingModeResizeAspect, AVVideoScalingModeResizeAspectFill
+    # @return [ObjectCommand] The constructed addinput to video writer command.
     def self.make_addinputto_videowritercommand(receiver_object,
                                             preset: :h264preset_hd,
                                          framesize: nil,
                                      frameduration: nil,
-                                     cleanaperture: nil)
-      theCommand = ObjectCommand.new(:addinputto)
+                                     cleanaperture: nil,
+                                       scalingmode: nil)
+      theCommand = ObjectCommand.new(:addinputto, receiver_object)
       theCommand.add_option(key: :preset, value: preset)
       theCommand.add_option(key: :size, value: framesize)
       theCommand.add_option(key: :frameduration, value: frameduration)
-      theCommand.add_option(key: :AVVideoCleanApertureKey)
-      theCommand.
+      unless cleancapture.nil?
+        theCommand.add_option(key: :AVVideoCleanApertureKey, value: cleancapture)
+      end
+      
+      unless scaleingmode.nil?
+        theCommand.add_option(key: :AVVideoScalingModeKey, value: scalingmode)
+      end
+      theCommand
     end
 
+    def self.make_addimageto_videoinputwriter(receiver_object,
+                                                 imageoptions: nil,
+                                    imagecollectionidentifier: nil,
+                                                 sourceobject: nil)
+      if imagecollectionidentifier.nil? && sourceobject.nil?
+        fail "Missing one of image identifier or source object"
+      end
+
+      theCommand = ObjectCommand.new(:addimagesampletowriter)
+      unless imageoptions.nil?
+        theCommand.add_option(key: :imageoptions, value: imageoptions)
+      end
+      
+      unless imagecollectionidentifier.nil?
+        theCommand.add_option(key: :imageidentifer,
+                            value: imagecollectionidentifer)
+      end
+      
+      unless sourceobject.nil?
+        theCommand.add_option(key: :sourceobject,
+                            value: sourceobject)
+      end
+    end
+    
+    # Make the finish writing frames command    
+    # After you have finished adding images to the video writer input you are
+    # ready to export the movie. This command will ready the writer for writing
+    # the movie file and then write it.
+    # @return [ObjectCommand] The constructed finish writing frames command.
+    def self.make_finishwritingframescommand(receiver_object)
+      theCommand = ObjectCommand.new(:finishwritingframes, receiver_object)
+      theCommand
+    end
 
     # Make a addimage command    
     # The image can be sourced from an image importer object, if so you can
     # optionally supply an image index and assign the grabmetadata attribute
     # with a value of true if you want to copy the original images metadata
     # to be included with the added image when the image file is saved. If
-    # the image is sourced from any of the contexts (bitmap, pdf, window) then
+    # the image is sourced from any of the contexts (bitmap, window) then
     # both the image index and grab metadata options will be ignored if
-    # specified.
+    # specified. Handled by the image exporter object.
     # @param receiver_object [Hash] Object that will handle add image command
     # @param image_source [Hash] Object from which to get the image.
     # @param imageindex [Fixnum] the image index into source object to get image
@@ -778,6 +835,8 @@ module MovingImages
 
       theCommand
     end
+    
+    
 
     # Assign an image to the image collection.    
     # The bitmap and window contexts, the movie and image file importer objects
@@ -1253,9 +1312,9 @@ module MovingImages
       # @param pathsubstitutionkey [String, Symbol] Get file path from variables
       #   with this key.
       # @return [Command] The command that create the importer
-      def self.make_createvideoframeswriter(movieFilePath, addtocleanup: true,
-                                           uti_filetype: :"com.apple.quicktime-movie",
-                                           name: nil, pathsubstitutionkey: nil)
+      def make_createvideoframeswriter(movieFilePath, addtocleanup: true,
+                                       uti_filetype: :"com.apple.quicktime-movie",
+                                       name: nil, pathsubstitutionkey: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         videoWriterObject = SmigIDHash.make_objectid(objectname: theName,

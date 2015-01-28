@@ -332,7 +332,7 @@ module MovingImages
       theCommand.add_option(key: :objecttype, value: :videoframeswriter)
       theCommand.add_option(key: :file, value: movieFilePath)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
-      theCommand.add_option(key: :utifiletype, value: export_type)
+      theCommand.add_option(key: :utifiletype, value: uti_filetype)
       unless pathsubstitutionkey.nil?
         theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
       end

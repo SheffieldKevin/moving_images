@@ -326,13 +326,13 @@ module MovingImages
     #   with this key.
     # @return [Command] The command that create the importer
     def self.make_createvideoframeswriter(movieFilePath,
-                                         uti_filetype: :"com.apple.quicktime-movie",
+                                         utifiletype: :"com.apple.quicktime-movie",
                                          name: nil, pathsubstitutionkey: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :videoframeswriter)
       theCommand.add_option(key: :file, value: movieFilePath)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
-      theCommand.add_option(key: :utifiletype, value: uti_filetype)
+      theCommand.add_option(key: :utifiletype, value: utifiletype)
       unless pathsubstitutionkey.nil?
         theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
       end
@@ -734,15 +734,15 @@ module MovingImages
                                      frameduration: nil,
                                      cleanaperture: nil,
                                        scalingmode: nil)
-      theCommand = ObjectCommand.new(:addinputto, receiver_object)
+      theCommand = ObjectCommand.new(:addinputtowriter, receiver_object)
       theCommand.add_option(key: :preset, value: preset)
       theCommand.add_option(key: :size, value: framesize)
       theCommand.add_option(key: :frameduration, value: frameduration)
-      unless cleancapture.nil?
-        theCommand.add_option(key: :AVVideoCleanApertureKey, value: cleancapture)
+      unless cleanaperture.nil?
+        theCommand.add_option(key: :AVVideoCleanApertureKey, value: cleanaperture)
       end
       
-      unless scaleingmode.nil?
+      unless scalingmode.nil?
         theCommand.add_option(key: :AVVideoScalingModeKey, value: scalingmode)
       end
       theCommand
@@ -933,6 +933,7 @@ module MovingImages
     # @param receiver_object [Hash] Object to handle the close command
     # @return [ObjectCommand] The close command
     def self.make_close(receiver_object)
+      fail "receiver_object not of type hash" unless receiver_object.is_a? Hash
       theCommand = ObjectCommand.new(:close, receiver_object)
       theCommand
     end
@@ -997,12 +998,9 @@ module MovingImages
         @commandsHash = {}
       end
 
-      # If a command fails, then if stop on failure is true following commands 
-      # wont run. true is the default value, so if set to true I could just 
-      # scrub the option altogether. with @elementHash.delete(:stoponfailure)
-      # As soon as one command fails, no more commands in the command list will
-      # be run & after any cleanup commands are run, MovingImages will finish &
-      # the information returned will be the result of the failed command.
+      # If a command fails, then if stoponfailure is true the commands that
+      # follow in the command list will not run. true is the default value.
+      # The cleanup commands will always run.
       # @param stopOnFailure [true, false] If true then stop running commands.
       # @return [true, false] The stop on failure value assigned.
       def stoponfailure=(stopOnFailure)
@@ -1326,21 +1324,21 @@ module MovingImages
       #   with this key.
       # @return [Command] The command that create the importer
       def make_createvideoframeswriter(movieFilePath, addtocleanup: true,
-                                       uti_filetype: :"com.apple.quicktime-movie",
+                                       utifiletype: :"com.apple.quicktime-movie",
                                        name: nil, pathsubstitutionkey: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         videoWriterObject = SmigIDHash.make_objectid(objectname: theName,
                                                      objecttype: :videoframeswriter)
-        createImporter = CommandModule.make_createvideoframeswriter(movieFilePath,
-                                            uti_filetype: uti_filetype,
+        createWriter = CommandModule.make_createvideoframeswriter(movieFilePath,
+                                             utifiletype: utifiletype,
                                                     name: theName,
                                      pathsubstitutionkey: pathsubstitutionkey)
-        self.add_command(createImporter)
+        self.add_command(createWriter)
         if addtocleanup
-          self.add_tocleanupcommands_closeobject(importerObject)
+          self.add_tocleanupcommands_closeobject(videoWriterObject)
         end
-        importerObject
+        videoWriterObject
       end
     end
   end

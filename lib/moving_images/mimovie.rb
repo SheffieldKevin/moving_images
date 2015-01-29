@@ -104,7 +104,8 @@ module MovingImages
         commands
       end
       
-      # Add a command to the list of process frame instrution commands. Required.    
+      # Add a command to the list of process frame instrution commands.    
+      # Required at least once.
       # @param command [Hash, #commandhash] The command to be added to command list
       # @return [Hash] The command added to the command list.
       def add_command(command)
@@ -130,5 +131,23 @@ module MovingImages
         identifier
       end
     end
+    
+    module CleanAperture
+      # Make a cleanaperture Hash. A clean aperture is made up of dimensions
+      # and offset.    
+      # @param horizontal_offset [Fixnum] The offset from left edge of frame.
+      # @param vertical_offset [Fixnum] The offset from the bottom edge of frame.
+      # @param width [Fixnum] The width of the clean aperture.
+      # @param height [Fixnum] The height of the clean aperture.
+      def self.make_cleanaperture(horizontal_offset, vertical_offset,
+                                  width, height)
+        return {
+                 AVVideoCleanApertureWidthKey: width,
+                 AVVideoCleanApertureHeightKey: height,
+                 AVVideoCleanApertureHorizontalOffsetKey: horizontal_offset,
+                 AVVideoCleanApertureVerticalOffsetKey: vertical_offset
+               }
+      end
+    end 
   end
 end

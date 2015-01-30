@@ -29,16 +29,10 @@ module MovingImages
     # @param objectname [String] Paired with objecttype for referencing object
     # @param objectindex [Fixnum, nil] Paired with objecttype for
     #   referencing the object
-    # @param imageindex [Fixnum, nil] Used when this object reference is used
-    #   as the value for a filter property.
     # @return [Hash] An object identifier
     def self.make_objectid(objectreference: nil, objecttype: nil,
-                           objectname: nil, objectindex: nil,
-                           imageindex: nil)
+                           objectname: nil, objectindex: nil)
       objectid = {}
-      unless imageindex.nil?
-        objectid[:imageindex] = imageindex
-      end
       
       unless objectreference.nil?
         objectid[:objectreference] = objectreference

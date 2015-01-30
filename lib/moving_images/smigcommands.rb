@@ -367,11 +367,11 @@ module MovingImages
       the_command.add_option(key: :objecttype, value: :bitmapcontext)
       the_command.add_option(key: :objectname, value: name) unless name.nil?
       if size.nil?
-        the_command.add_option(key: :width, value: width)
-        the_command.add_option(key: :height, value: height)
-      else
-        the_command.add_option(key: :size, value: size)
+        size = { width: width, height: height }
       end
+
+      the_command.add_option(key: :size, value: size)
+      
       unless profile.nil?
         the_command.add_option(key: :colorprofile, value: profile)
       end
@@ -395,13 +395,11 @@ module MovingImages
       theCommand.add_option(key: :objecttype, value: :nsgraphicscontext)
       theCommand.add_option(key: :objectname, value: name) unless name.nil?
       if rect.nil?
-        theCommand.add_option(key: :width, value: width)
-        theCommand.add_option(key: :height, value: height)
-        theCommand.add_option(key: :x, value: xloc)
-        theCommand.add_option(key: :y, value: yloc)
-      else
-        theCommand.add_option(key: :rect, value: rect)
+        size = { width: width, height: height }
+        origin = { x: xloc, y: yloc }
+        rect = { size: size, origin: origin }
       end
+      theCommand.add_option(key: :rect, value: rect)
       theCommand.add_option(key: :borderlesswindow, value: borderlesswindow)
       theCommand
     end

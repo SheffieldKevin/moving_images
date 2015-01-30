@@ -73,6 +73,31 @@ module MovingImages
       end
     end
     
+    # Objects of the FrameOptions class specify the frametime within the move
+    # from when to get the image frame and the video tracks from which to generate
+    # the image. 
+    class FrameOptions
+      # Initialize the FrameOptions object.
+      def initialize()
+        @options = { }
+      end
+      
+      # Return the FrameOptions hash representation
+      def optionshash
+        @options
+      end
+      
+      # Set a frame time dictionary. Required. See {MovieTime}
+      def frametime=(frametime)
+        @options[:frametime] = frametime
+      end
+      
+      # Set a list of tracks. Optional. See {MovieTrackIdentifier}
+      def tracks=(tracks)
+        @options[:tracks] = tracks
+      end
+    end
+    
     # ProcessMovieFrameInstructions Objects are instructions for processing a frame    
     class ProcessMovieFrameInstructions
       # Initialize the ProcessMovieFrameInstructions object.

@@ -750,7 +750,10 @@ module MovingImages
 
     # Add an image as a video frame to the input of the video input writer.    
     # Handled by a video frames writer object. One of imagecollectionidentifier
-    # and sourceobject need to be defined.
+    # and sourceobject need to be defined. If neither lastaccessedframedurationkey
+    # or frameduration are specified then the frame duration used is that provided
+    # when the video input was added to the writer. If both are specified then
+    # frameduration will be ignored.
     # @param receiver_object [Hash] Video frame writer object that adds the image
     # @param imageoptions [Hash] Optional. Options for obtaining object.
     #   An image importer might have an image index, a movie importer requires
@@ -759,23 +762,45 @@ module MovingImages
     #   the image from the image collection.
     # @param sourceobject [Hash] Optional. Used to identify the object from
     #   which to obtain the image.
+    # @param lastaccessedframedurationkey [String, Symbol] Optional. Only to
+    #   be used within the process frames command of the movie importer.
+    #   This is the key to pull from the variables dictionary the frame duration
+    #   of the last image frame obtained from the image importer which will then
+    #   be assigned as the frame duration of the image frame to be added.
+    # @param frameduration [Hash] Optional. See {MIMovie::MovieTime}. The frame
+    #   duration to be assigned to the image frame added.
     # @return [ObjectCommand] The add image to video writer command.
     def self.make_addimageto_videoinputwriter(receiver_object,
                                                  imageoptions: nil,
                                     imagecollectionidentifier: nil,
-                                                 sourceobject: nil)
+                                                 sourceobject: nil,
+                                 lastaccessedframedurationkey: nil,
+                                                frameduration: nil)
       if imagecollectionidentifier.nil? && sourceobject.nil?
         fail "Missing one of image identifier or source object"
       end
 
-      theCommand = ObjectCommand.new(:addimagesampletowriter)
+      theCommand = ObjectCommand.new(:addimagesampletowriter, receiver_object)
       unless imageoptions.nil?
+        if imageoptions.respond_to?('optionshash')
+          imageoptions = imageoptions.optionshash
+        end
         theCommand.add_option(key: :imageoptions, value: imageoptions)
       end
       
       unless imagecollectionidentifier.nil?
         theCommand.add_option(key: :imageidentifer,
                             value: imagecollectionidentifer)
+      end
+      
+      unless lastaccessedframedurationkey.nil?
+        theCommand.add_option(key: :lastaccessedframedurationkey,
+                            value: lastaccessedframedurationkey)
+      end
+      
+      unless frameduration.nil?
+        theCommand.add_option(key: :lastaccessedframedurationkey,
+                            value: frameduration)
       end
       
       unless sourceobject.nil?
@@ -785,13 +810,22 @@ module MovingImages
       theCommand
     end
     
-    # Make the finish writing frames command    
+    # Make a finish writing frames command    
     # After you have finished adding images to the video writer input you are
     # ready to export the movie. This command will ready the writer for writing
     # the movie file and then write it.
     # @return [ObjectCommand] The constructed finish writing frames command.
     def self.make_finishwritingframescommand(receiver_object)
       theCommand = ObjectCommand.new(:finishwritingframes, receiver_object)
+      theCommand
+    end
+
+    # Make a cancel writing frames command    
+    # If you need to stop the movie file being written and the file to be
+    # deleted then sending the cancel writing command will do that. 
+    # @return [ObjectCommand] The constructed cancel writing frames command.
+    def self.make_cancelwritingframescommand(receiver_object)
+      theCommand = ObjectCommand.new(:cancelwritingframes, receiver_object)
       theCommand
     end
 
@@ -1122,7 +1156,8 @@ module MovingImages
       # The default color profile for a rgb space is kCGColorSpaceSRGB.
       # Alternatives are: kCGColorSpaceGenericRGBLinear, kCGColorSpaceGenericRGB
       # @param size [Hash] The size of the context to create. Default: 800x600
-      # @param addtocleanup [true, false] Should created context be closed
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param preset [String, Symbol] Used to define type of bitmap to create.
       #   AlphaOnly8bpcInt Gray8bpcInt Gray16bpcInt Gray32bpcFloat
       #   AlphaSkipFirstRGB8bpcInt AlphaSkipLastRGB8bpcInt
@@ -1154,7 +1189,8 @@ module MovingImages
 
       # Make a create window context command
       # @param rect [Hash] A representation of a rect {MIShapes.make_rectangle}
-      # @param addtocleanup [true, false] Should created window be closed?
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param borderlesswindow [true, false] Should the window be borderless?
       # @param name [String] The name of the object to be created.
       # @return [Command] The command to create a window context
@@ -1182,7 +1218,8 @@ module MovingImages
       # close object commands that take the object id to the list of clean up
       # commands ensures these objects will be closed.
       # @param size [Hash] The size of the context to create.
-      # @param addtocleanup [true, false] Should created context be closed
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param filepath [String] The location where pdf file should be created.
       # @param name [String, nil] Object name identifier.
       # @return [Hash] The pdf context object id, to refer to the context
@@ -1214,7 +1251,8 @@ module MovingImages
       # @param export_type [String, Symbol] The export file type.
       # @param name [String] The name of the exporter to be created. optional.
       # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
-      # @param addtocleanup [true, false] Should created context be closed.
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @return [Hash] Object id, a reference to refer to a created object.
       def make_createexporter(export_filepath, export_type: :"public.jpeg" ,
                               addtocleanup: true, name: nil,
@@ -1267,7 +1305,8 @@ module MovingImages
       # commands ensures these objects will be closed.
       # @param filePath [String] The path to the file to import
       # @param name [String] The name of the exporter to be created. optional
-      # @param addtocleanup [true, false] Should created context be closed
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
       # @return [Hash] Object id, a reference to refer to a created object
       def make_createimporter(filePath, addtocleanup: true, name: nil,
@@ -1295,7 +1334,8 @@ module MovingImages
       # commands ensures these objects will be closed.
       # @param filePath [String] The path to the file to import
       # @param name [String] The name of the exporter to be created. optional
-      # @param addtocleanup [true, false] Should created context be closed
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param pathsubstitutionkey [String, Symbol] Get path from variables dict
       # @return [Hash] Object id, a reference to refer to a created object
       def make_createmovieimporter(filePath, addtocleanup: true, name: nil,
@@ -1316,6 +1356,8 @@ module MovingImages
       
       # Make a create video frames writer command object and add it to command list    
       # @param imageFilePath [String] A path to the movie file
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
       # @param uti_filetype [String, Symbol] File type of exported movie file.
       #   Possible values are: "com.apple.quicktime-movie", "public.mpeg-4",
       #   "com.apple.m4v-video". Respective extensions are mov, mp4, m4v

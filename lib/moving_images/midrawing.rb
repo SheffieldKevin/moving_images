@@ -1296,7 +1296,7 @@ module MovingImages
         fail 'Getting a frame from a movie needs a frame time' if frametime.nil?
         @elementHash[:sourceobject] = source_object
         options = { frametime: frametime }
-        options[tracks] = tracks unless tracks.nil?
+        options[:tracks] = tracks unless tracks.nil?
         @elementHash[:imageoptions] = options
         @elementHash
       end

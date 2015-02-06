@@ -261,7 +261,8 @@ module MovingImages
                    :filloval, :strokeoval, :drawline, :drawlines,
                    :fillroundedrectangle, :strokeroundedrectangle,
                    :fillpath, :strokepath, :fillandstrokepath,
-                   :drawbasicstring, :lineargradientfill, :drawimage]
+                   :drawbasicstring, :lineargradientfill, :drawimage,
+                   :fillinnershadowpath]
 
     # Get the list of draw elements.    
     # @return [Array<Symbols>] List of draw element types.

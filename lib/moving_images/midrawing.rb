@@ -663,7 +663,7 @@ module MovingImages
         @maskhash[:destinationrectangle] = destRect
       end
     end
-  
+
     # Abstract draw element class.    
     # Root of the draw element class hierarchy.
     # Implements a small collection of methods common to all draw element classes
@@ -699,17 +699,10 @@ module MovingImages
         return @elementHash.to_json
       end
   
-      # Set the variables property of the drawing instruction to theVariables.    
-      # The property keys for the input variables hash are variable names, and 
-      # the property values are the values to be assigned to the variables.
-      # @param theVariables [Hash] keys are variable names.
-      # @return [Hash] The variables hash that has just been assigned.
-  #    def variables=(theVariables)
-  #      @elementHash[:variables] = theVariables
-  #    end
-  
       # Set the shadow to be applied to the drawing.    
       # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
+      #   see {MISHadow}
+      # @return [Hash] The assigned shadow hash.
       def shadow=(theShadow)
         if theShadow.respond_to? "shadowhash"
           theShadow = theShadow.shadowhash
@@ -785,6 +778,48 @@ module MovingImages
           theMask = theMask.maskhash
         end
         @elementHash[:applyimagemask] = theMask
+      end
+    end
+
+    # Draws a filled path with a inner shadow.    
+    class MIDrawFillPathWithInnerShadowElement < MIAbstractDrawElement
+      # Initialize the MIDrawFillPathWithInnerShadowElement
+      def initialize()
+        super(:fillinnershadowpath)
+      end
+
+      # Set the fill color used in draw fill element commands. Required    
+      # @param fillColor [Hash] A hash representation of a color see {MIColor}
+      # @return [Hash] The hash of the draw element object
+      def fillcolor=(fillColor)
+        @elementHash[:fillcolor] = fillColor
+      end
+  
+      # Set the array of path elements used when the draw element is stroke path
+      # or fill path, or fill and stroke path.    
+      # @param thePath [Array<Hash>] The array of path elements defining the path.
+      # @return [Array] The array of path elements assign draw element.
+      def arrayofpathelements=(thePath)
+        thePath = thePath.patharray if thePath.respond_to? "patharray"
+        @elementHash[:arrayofpathelements] = thePath
+      end
+  
+      # Set the point for the start of the array of path elements.    
+      # @param startPoint [Hash] The path starting point. {MIShapes.make_point}
+      # @return [Hash] The start point added to the draw element.
+      def startpoint=(startPoint)
+        @elementHash[:startpoint] = startPoint
+      end
+
+      # Set the inner shadow. Required.    
+      # @param theShadow [Hash, #shadowhash] The inner shadow to apply to fill path
+      #   see {MISHadow}
+      # @return [Hash] The inner shadow assigned.
+      def innershadow=(innerShadow)
+        if innerShadow.respond_to? "shadowhash"
+          innerShadow = innerShadow.shadowhash
+        end
+        @elementHash[:innershadow] = innerShadow
       end
     end
   
@@ -987,6 +1022,7 @@ module MovingImages
       end
   
       # Assign a line hash to the draw element hash.    
+      # The line specifies the start and end points for the linear gradient.
       # @param theLine [Hash] A start and end point, See {MIShapes.make_line}
       # return [Hash] the line hash assigned to the draw element hash.
       def line=(theLine)
@@ -1119,7 +1155,7 @@ module MovingImages
     
       # Set the text to be drawn. Required.
       # @param textToDraw [String] The text to be drawn.
-      # @return [Hash] The representation of the draw string command
+      # @return [String] The representation of the draw string command
       def stringtext=(textToDraw)
         @elementHash[:stringtext] = textToDraw
       end
@@ -1216,7 +1252,7 @@ module MovingImages
         thePath.patharray
       end
       
-      # Set the text alignment when drawing the text.    
+      # Set the text alignment when drawing the text. Optional.    
       # possible values are: kCTTextAlignmentLeft, kCTTextAlignmentRight,
       # kCTTextAlignmentCenter, kCTTextAlignmentJustified, kCTTextAlignmentNatural
       # @param textAlignment [String] Alignment. Default "kCTTextAlignmentNatural"
@@ -1232,7 +1268,7 @@ module MovingImages
         @elementHash[:strokecolor] = strokeColor
       end
   
-      # Set stroke width.    
+      # Set stroke width. Optional.    
       # If this property is not set then text will be drawn with the fill color
       # If this property is set with a positive value then text will be stroked
       # using the stroke color and not filled. If this property is set with a
@@ -1243,6 +1279,17 @@ module MovingImages
       # @return [Hash] The representation of the draw string command
       def stringstrokewidth=(stringStrokeWidth)
         @elementHash[:stringstrokewidth] = stringStrokeWidth.to_f
+      end
+
+      # Set the inner shadow. Optional.    
+      # @param theShadow [Hash, #shadowhash] The inner shadow to apply to text
+      #   see {MIShadow}
+      # @return [Hash] The inner shadow assigned.
+      def innershadow=(innerShadow)
+        if innerShadow.respond_to? "shadowhash"
+          innerShadow = innerShadow.shadowhash
+        end
+        @elementHash[:innershadow] = innerShadow
       end
     end
   

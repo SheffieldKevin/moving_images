@@ -1162,7 +1162,7 @@ module MovingImages
       #   AlphaPreMulFirstRGB8bpcInt AlphaPreMulLastRGB8bpcInt
       #   AlphaPreMulLastRGB16bpcInt AlphaSkipLastRGB16bpcInt
       #   AlphaSkipLastRGB32bpcFloat AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt
-      #   CMYK16bpcInt CMYK32bpcFloat
+      #   CMYK16bpcInt CMYK32bpcFloat PlatformDefaultBitmapContext
       # @param profile [String] A named color profile to use. 
       # @param name [String, nil] Object name identifier.
       # @return [Hash] The bitmap context object id, to refer to the context

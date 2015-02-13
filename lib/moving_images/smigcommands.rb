@@ -379,7 +379,9 @@ module MovingImages
       the_command
     end
 
-    # Make a create window context command
+    # Make a create window context command.    
+    # You can either specify all of width, height, xloc, yloc and not specify
+    # rect, or you can specify rect and none of width, height, xloc, yloc.
     # @param width [Fixnum, Float] The content width of the window to be created
     # @param height [Fixnum, Float] Content height of the window to be created.
     # @param xloc [Fixnum, Float] x position of bottom left corner of window

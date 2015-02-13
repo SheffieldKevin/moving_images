@@ -357,6 +357,7 @@ module MovingImages
       
       # Make a filter object with the CoreImage filter name and identifier.
       # @param filtername [String, Symbol] CoreImage name to create object from 
+      # @param identifier [String, Symbol] Used to identify filter in filter chain
       # @return [nil, object with name filtername] A filter object.
       def self.make_filter_withname(filtername: :CIBoxBlur, identifier: nil)
         begin

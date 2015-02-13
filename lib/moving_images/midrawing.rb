@@ -760,6 +760,13 @@ module MovingImages
         @elementHash[:blendmode] = blendMode
       end
       
+      # Set the drawing context alpha value.
+      # @param alpha [Float] The alpha value to apply, range is 0.0 to 1.0
+      # @return [Float] The assigned alpha value.
+      def contextalpha=(alpha)
+        @elementHash[:contextalpha] = alpha
+      end
+      
       # Assign a clipping path to the draw element object.
       # @param theClip [Hash, #clippinghash] The clipping path to be assigned.
       # @return [Hash] the clip hash.

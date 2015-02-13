@@ -170,9 +170,8 @@ module MovingImages
 
       # Make lists of processing hashes.    
       # This method takes a list of image file paths, it first splits the list
-      # into lists of hashes:
-      #   !{ width: images_width, height: images_height,
-      #      files: list_of_imagefilepaths }
+      # into lists of hashes: !{ width: images_width, height: images_height,
+      #                          files: list_of_imagefilepaths }
       # where the list of image file paths in the hash is the list of files 
       # which have the width and height in the hash. It takes a bit of time to
       # sort the image files into the different lists, so if you know that
@@ -646,7 +645,7 @@ module MovingImages
         crop_filter.add_property(inputimage_property)
         filter_chain.add_filter(crop_filter)
       end
-    end
+    end # !{End of Private}
 
     # Apply a transition filter, starting with source, ends with target.    
     # The options hash contains all the information necessary for performing
@@ -818,6 +817,10 @@ module MovingImages
       end
     end
 
+    # Apply a simplesinglecifilter taking options and applying to the file list.
+    # @param options [Hash] See: {Utility.make_simplesinglecifilter_options}
+    # @param file_list [Hash] Contains properties width, height, files.
+    # @return [String] The result of running the command or the JSON.
     def self.simplesinglecifilter_files(options, file_list)
       if options[:outputdir].nil?
         puts  "Simple single cifilter: output directory not specified"

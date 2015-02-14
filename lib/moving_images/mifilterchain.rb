@@ -13,25 +13,31 @@ module MovingImages
       # @param key [String] The filter property key used to assign the image.
       # @param value [Hash] The object to get the image from. See {SmigIDHash}
       # @param keep_static [Bool, nil] Keep the image even if source changes.
+      #   Defaults to false.
       # @return [Hash] The filter property image hash.
-      def self.make_ciimageproperty(key: :inputImage,
-                                    value: nil,
+      def self.make_ciimageproperty(key: :inputImage, value: nil, options: nil,
                                     keep_static: nil)
         imageHash = { :cifilterkey => key, :cifiltervalueclass => :CIImage }
-        imageHash[:cifiltervalue] = value unless value.nil?
+        unless value.nil?
+          MIFilterProperty.addimagesource_tociimageproperty(imageHash, value,
+            imageoptions: options)
+        end
         imageHash[:cisourceimagekeepstatic] = keep_static unless keep_static.nil?
         imageHash
       end
-  
+
       # Add the object to the property hash which provides the image.    
       # @param ciProperty [Hash] The filter property to be assigned the image.
       # @param imageSource [Hash] The object to get image from. See {SmigIDHash}
+      # @param imageoptions: [Hash] 
       # @return [Hash] The filter property image hash.
-      def self.addimagesource_tociimageproperty(ciProperty, imageSource)
+      def self.addimagesource_tociimageproperty(ciProperty, imageSource,
+          imageoptions: nil)
+        imageSource[:imageoptions] = imageoptions unless imageoptions.nil?
         ciProperty[:cifiltervalue] = imageSource
         return ciProperty
       end
-  
+
       # Make a core image vector property, taking a string representation.    
       # @param key [String] The filter property to be assigned the vector.
       # @param value [String] A string representing the vector.
@@ -305,15 +311,42 @@ module MovingImages
         @filter_hash[:cifilterproperties] = filter_properties
         filter_properties
       end
-  
-      # Add the image obtained from source as the filters input image.    
+
+      # Add an image property to the list of filter properties.    
+      # An image property of a CoreImage filter defines how to obtain the image
+      # used as an input image for the core image filter.
+      # @param propertykey [String, Symbol] The CoreImage image property key.
+      #   Typical values are 'inputImage' or 'inputBackgroundImage'
+      # @param image_source [Hash] See {SmigIDHash.make_objectid}. Specifies
+      #   the object from which to obtain the image.
+      # @param options [Hash] Options for obtaining the image from the object.
+      #   Pass nil for a bitmap or window context, is optional for an image
+      #   importer object which will assume the imageindex property to have
+      #   a value of 0. Options is required when an image is obtained from
+      #   a movie importer object, which requires the frametime property and
+      #   optionally the tracks property.
+      # @param keep_static [Bool, nil] Keep the image even if source changes.
+      #   Defaults to false. 
+      def add_image_property(propertykey, image_source: nil, options: nil,
+          keep_static: nil)
+        imageProperty = MIFilterProperty.make_ciimageproperty(key: propertykey,
+                                                            value: image_source,
+                                                          options: options,
+                                                      keep_static: keep_static)
+        self.add_property(imageProperty)
+      end
+
+      # Add the input image obtained from source as the filters input image.    
       # If you pass nil for image source then the property will be created but
       # the value will not be set.
       # @param image_source [Hash] Object or filter to get image from.
-      def add_inputimage_property(image_source)
-        imageProperty = MIFilterProperty.make_ciimageproperty(key: :inputImage,
-                                                              value: image_source)
-        self.add_property(imageProperty)
+      # @param options [Hash] Options for obtaining the image from the object.
+      # @param keep_static [Bool, nil] Keep the image even if source changes.
+      #   Defaults to false.
+      def add_inputimage_property(image_source, options: nil, keep_static: nil)
+        self.add_image_property(:inputImage, image_source: image_source,
+                                                  options: options,
+                                              keep_static: keep_static)
       end
   
       # Return the property from the property list with key.    

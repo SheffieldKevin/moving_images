@@ -1278,11 +1278,12 @@ module MovingImages
       # that objects you created & no longer need get closed. Adding
       # close object commands that take the object id to the list of clean up
       # commands ensures these objects will be closed.
-      # @param filterChain [Hash] The filter chain description
+      # @param filterChain [Hash] The filter chain description. 
+      #   See: {MICoreImage::MIFilterChain}
       # @param name [String] The name of the exporter to be created. optional.
       # @param addtocleanup [true, false] Should created context be closed.
       # @return [Hash] Object id, a reference to refer to a created object.
-      def make_createimagefilterchain(filterChain, addtocleanup: true,name: nil)
+      def make_createimagefilterchain(filterChain, addtocleanup: true, name: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         filterChainObject = SmigIDHash.make_objectid(objectname: theName,

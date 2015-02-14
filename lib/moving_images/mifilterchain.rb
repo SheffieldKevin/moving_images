@@ -317,8 +317,9 @@ module MovingImages
       # used as an input image for the core image filter.
       # @param propertykey [String, Symbol] The CoreImage image property key.
       #   Typical values are 'inputImage' or 'inputBackgroundImage'
-      # @param image_source [Hash] See {SmigIDHash.make_objectid}. Specifies
-      #   the object from which to obtain the image.
+      # @param image_source [Hash] Specifies the object from which to obtain the
+      #   image. See {SmigIDHash.make_objectid} or
+      #   {SmigIDHash.makeid_withfilternameid}
       # @param options [Hash] Options for obtaining the image from the object.
       #   Pass nil for a bitmap or window context, is optional for an image
       #   importer object which will assume the imageindex property to have

@@ -668,14 +668,15 @@ module MovingImages
     end
   
     # The filter chain, representing a list of connected filters.    
-    # A filter chain can be as short as a single filter, or lengthy including
-    # containing multiple branches which ultimately end at the last filter in the
-    # filter chain which generates the output image. The filter chain object
-    # also specifies the render destination, which is where the last filter
-    # in the filter chain renders to, the software render property specifies
-    # whether the filter chain is rendered in software rather than on the GPU, and
-    # whether the filter chain should work in the srgb color space instead of the
-    # generic linear color space which is its default.
+    # A filter chain can be as short as a single filter, or lengthy containing
+    # multiple branches which ultimately end at the last filter in the filter
+    # chain which generates the output image. The filter chain object also 
+    # specifies the render destination, which is where the last filter in the
+    # filter chain renders to, the software render property specifies whether
+    # the filter chain is rendered in software rather than on the GPU, and the
+    # use_srgprofile property specifies whether the filter chain should work in
+    # the srgb color space instead of the generic linear color space which is
+    # its default.
     class MIFilterChain
   
       # Initialize the filter chain object.    

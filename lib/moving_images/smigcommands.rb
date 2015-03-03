@@ -612,7 +612,7 @@ module MovingImages
                                                 propertyvalue: nil,
                                                 pathsubstitutionkey: nil)
       theCommand = ObjectCommand.new(:setproperty, receiver_object)
-      theCommand.add_option(key: :propertykey, value: :exportfilepath)
+      theCommand.add_option(key: :propertykey, value: :file)
 
       unless pathsubstitutionkey.nil?
         theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)

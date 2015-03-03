@@ -516,7 +516,7 @@ module MovingImages
         # Set the export file location to the exporter object
         setExportPathCommand = CommandModule.make_set_objectproperty(
                                                   exporter,
-                                                  propertykey: :exportfilepath,
+                                                  propertykey: :file,
                                                   propertyvalue: file_path)
         commands.add_command(setExportPathCommand)
 

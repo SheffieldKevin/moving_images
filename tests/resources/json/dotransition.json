@@ -103,7 +103,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image000.tiff"
     },
     {
@@ -146,7 +146,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image001.tiff"
     },
     {
@@ -189,7 +189,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image002.tiff"
     },
     {
@@ -232,7 +232,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image003.tiff"
     },
     {
@@ -275,7 +275,7 @@
         "objecttype": "imageexporter",
         "objectname": "8982d735-7224-4386-a493-0e967225d8b7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/image004.tiff"
     },
     {

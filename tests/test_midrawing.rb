@@ -322,10 +322,10 @@ class TestMIDrawImageElement < MiniTest::Unit::TestCase
     draw_imageelement.destinationrectangle = rectangle
     draw_imageelement.blendmode = :kCGBlendModeNormal
     new_json = draw_imageelement.elementhash.to_json
-#    puts new_json
+    # puts new_json
     old_json = '{"elementtype":"drawimage","sourceobject":{"objecttype":'\
     '"movieimporter","objectname":"TestDrawImageMovieImporter"},"imageoptions":'\
-    '{"frametime":{"time":2.0},"[{:mediatype=>:soun, :trackindex=>0}]"'\
+    '{"frametime":{"time":2.0},"tracks"'\
     ':[{"mediatype":"soun","trackindex":0}]},"destinationrectangle":'\
     '{"origin":{"x":0,"y":0},"size":{"width":400,"height":300}},"blendmode"'\
     ':"kCGBlendModeNormal"}'

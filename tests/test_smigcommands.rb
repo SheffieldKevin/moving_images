@@ -5,9 +5,11 @@ require 'securerandom'
 require_relative '../lib/moving_images/midrawing'
 require_relative '../lib/moving_images/smigcommands'
 require_relative '../lib/moving_images/smigobjectid'
+require_relative '../lib/moving_images/mimovie'
 
 include MovingImages
 include CommandModule
+include MICGDrawing
 
 # Test class for the SmigCommands class and it's objects
 class TestSmigCommands < MiniTest::Unit::TestCase
@@ -141,5 +143,76 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     '"pdfcontext","objectname":"test.pdfcontext.object"},'\
     '"saveresultstype":"jsonstring"}'
     assert new_json.eql?(old_json), '2#make_get_objectproperties different JSON'
+  end
+  
+  def test_make_insertemptysegment
+    object = SmigIDHash.make_objectid(objecttype: :movieeditor,
+                                      objectname: 'test.movieeditor.object')
+    track = MIMovie::MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                      mediatype: 'vide',
+                                     trackindex: 0)
+
+    # startTime is 1000 seconds into movie
+    startTime = MIMovie::MovieTime.make_movietime(timevalue: 600000,
+                                                  timescale: 600)
+    # durationTime of empty segment is 2 seconds
+    duration = MIMovie::MovieTime.make_movietime_fromseconds(2.0)
+    timeRange = MIMovie::MovieTime.make_movie_timerange(start: startTime,
+                                                     duration: duration)
+
+    insertemptysegment_command = CommandModule.make_insertemptysegment(
+                                     object,
+                              track: track,
+                 insertiontimerange: timeRange)
+    new_json = insertemptysegment_command.commandhash.to_json
+    old_json = '{"command":"insertemptysegment","receiverobject":'\
+    '{"objecttype":"movieeditor","objectname":"test.movieeditor.object"},'\
+    '"track":{"trackindex":0,"mediatype":"vide"},"timerange":{"start":{"value":'\
+    '600000,"timescale":600,"flags":1,"epoch":0},"duration":{"time":2.0}}}'
+    assert new_json.eql?(old_json), 'test_make_insertemptysegment different JSON'
+  end
+
+  def test_make_inserttracksegment
+    object = SmigIDHash.make_objectid(objecttype: :movieeditor,
+                                      objectname: 'test.movieeditor.object')
+    track = MIMovie::MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                      mediatype: 'vide',
+                                     trackindex: 0)
+
+    source_object = SmigIDHash.make_objectid(objecttype: :movieimporter,
+                                             objectname: 'test.movieimporter.object')
+    source_track = MIMovie::MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                      mediatype: 'vide',
+                                     trackindex: 0)
+    # startTime is 1000 seconds into track of source movie
+    startTime = MIMovie::MovieTime.make_movietime_fromseconds(1000)
+    # duration of track content from source track to insert is 5 seconds.
+    duration = MIMovie::MovieTime.make_movietime(timevalue: 3000,
+                                                 timescale: 600)
+
+    timeRange = MIMovie::MovieTime.make_movie_timerange(start: startTime,
+                                                     duration: duration)
+    
+    # The insertion time for the content is at the beginning of receiver track.
+    insertionTime = MIMovie::MovieTime.make_movietime_fromseconds(0)
+    
+    insertsegment_command = CommandModule.make_inserttracksegment(
+                                     object,
+                              track: track,
+                      source_object: source_object,
+                       source_track: source_track,
+                      insertiontime: insertionTime,
+                   source_timerange: timeRange)
+
+    new_json = insertsegment_command.commandhash.to_json
+    
+    old_json = '{"command":"inserttracksegment","receiverobject":{"objecttype":'\
+    '"movieeditor","objectname":"test.movieeditor.object"},"track":{'\
+    '"trackindex":0,"mediatype":"vide"},"sourceobject":{"objecttype":'\
+    '"movieimporter","objectname":"test.movieimporter.object"},"sourcetrack":'\
+    '{"trackindex":0,"mediatype":"vide"},"insertiontime":{"time":0},'\
+    '"sourcetimerange":{"start":{"time":1000},"duration":{"value":3000,'\
+    '"timescale":600,"flags":1,"epoch":0}}}'
+    assert new_json.eql?(old_json), 'test_make_inserttracksegment different JSON'
   end
 end

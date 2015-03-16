@@ -4,14 +4,14 @@ module MovingImages
   module MIMovie
     # Methods for creating movie time hashes.    
     module MovieTime
-      # Create a movie time hash which takes a seconds float value.    
+      # Make a movie time hash which takes a seconds float value.    
       # @param seconds [Float] Time in seconds from start of movie.
       # @return [Hash] A hash object containing the movie time.
       def self.make_movietime_fromseconds(seconds)
         return { time: seconds }
       end
       
-      # Create a movie time hash which takes a time value and scale.    
+      # Make a movie time hash which takes a time value and scale.    
       # The movie time is specified by a numerator and a denominator. The
       # time in the movie is specified by the numerator divided by the
       # denominator in seconds. The numerator is the time value and denominator
@@ -29,6 +29,15 @@ module MovingImages
       # @return [:movienextsample] The value for the frame time property.
       def self.make_movietime_nextsample()
         return :movienextsample
+      end
+      
+      
+      # Make a movie time range that takes a start time and a duration time.    
+      # Both the start and duration times can be [Hash] objects created by one
+      # of {MovieTime.make_movietime}, {MovieTime.make_movietime_fromseconds}
+      # @param start [Hash] The start time of the time range.
+      def self.make_movie_timerange(start: nil, duration: nil)
+        return { start: start, duration: duration }
       end
     end
   
@@ -173,6 +182,49 @@ module MovingImages
                  AVVideoCleanApertureVerticalOffsetKey: vertical_offset
                }
       end
-    end 
+    end
+    
+    # An array of layer video composition instructions which is part of a 
+    # video composition instruction. See {CommandModule.make_addvideoinstruction}
+    # To get the array of layer instructions to be passed into the 
+    # make_addvideoinstruction command use the layerinstructionsarray method.
+    class VideoLayerInstructions
+      # Initialize a VideoLayerInstructions object.
+      def initialize()
+        @layerinstructions = []
+      end
+      
+      # Return the array of video layer instructions.
+      def layerinstructionsarray
+        @layerinstructions
+      end
+      
+      # Add a passthru layer instruction layer to the list of layer instructions.
+      # @param track [Hash] Track identifier to have layer instruction applied to.
+      # @return [Hash] The layer instruction 
+      def add_passthrulayerinstruction(track: nil)
+        fail "Track needs to be defined" if track.nil?
+        passthru = {
+          layerinstructiontype: :MIJSONValueMovieEditorPassthruInstruction,
+          track: track
+        }
+        @layerinstructions.push(passthru)
+      end
+
+      def add_opacitylayerinstruction(track: nil,
+                               opacityvalue: nil,
+                                  timerange: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "opacityvalye needs to be defined" if opacityvalue.nil?
+        opacitylayerinstruction = {
+          layerinstructiontype: :opacityinstruction,
+          track: track
+        }
+        unless timerange.nil?
+          
+        end
+      end
+    end
+    
   end
 end

@@ -85,7 +85,7 @@
         "objecttype": "imageexporter",
         "objectname": "7fed744c-eb32-4b30-b9b0-1b25477ab1ca"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0744.png"
     },
     {
@@ -203,7 +203,7 @@
         "objecttype": "imageexporter",
         "objectname": "7fed744c-eb32-4b30-b9b0-1b25477ab1ca"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Users/ktam/github/moving_images/tests/resources/DSCN0746.png"
     },
     {

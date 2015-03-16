@@ -324,7 +324,7 @@ module MovingImages
     # @param name [String] The name of the object to be created
     # @param pathsubstitutionkey [String, Symbol] Get file path from variables
     #   with this key.
-    # @return [Command] The command that create the importer
+    # @return [Command] The command that will create the importer
     def self.make_createvideoframeswriter(movieFilePath,
                                          utifiletype: :"com.apple.quicktime-movie",
                                          name: nil, pathsubstitutionkey: nil)
@@ -339,7 +339,15 @@ module MovingImages
       theCommand
     end
 
-    
+    # Make a create movie editor command object    
+    # @param name [String] The name of the object to be created.
+    # @return [Command] The command that will create the movie editor.
+    def self.make_createmovieeditor(name: nil)
+      theCommand = Command.new(:create)
+      theCommand.add_option(key: :objecttype, value: :movieeditor)
+      theCommand.add_option(key: :objectname, value: name) unless name.nil?
+      theCommand
+    end
 
     # Make a create bitmap context command    
     # The color profile must match the color space, rgb profiles for a rgb
@@ -826,6 +834,123 @@ module MovingImages
     # @return [ObjectCommand] The constructed cancel writing frames command.
     def self.make_cancelwritingframescommand(receiver_object)
       theCommand = ObjectCommand.new(:cancelwritingframes, receiver_object)
+      theCommand
+    end
+
+    # Make a create track command.    
+    # Handled by a movie editor object.    
+    # This will create a movie track and the track to the movie composition.
+    # For version 1.0 the only mediatype allowed is :vide, other mediatypes
+    # will be available in future versions. The value returned by the command
+    # is the persistent track identifier.
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param trackid [Fixnum, nil] The persistent track id, which should be
+    #   unique to the track in the list of tracks in the composition. If nil
+    #   then a persistent track identifier value will be generated.
+    # @param contexttransform [Array, nil] An array of transformations.
+    #   Only one of contexttransformation, affinetransform should be specified.
+    # @param affinetransform [Hash, nil] A dictionary defining all the elements
+    #   of an affinetransform. See [MITransformations].
+    # @return [ObjectComand] The constructed create track command.
+    def self.make_createtrackcommand(receiver_object,
+                                     mediatype: :vide,
+                                       trackid: nil,
+                         contexttransformation: nil,
+                               affinetransform: nil)
+      theCommand = ObjectCommand.new(:createtrack, receiver_object)
+      theCommand.add_option(key: :trackid, value: trackid) unless trackid.nil?
+      theMediaType = mediatype unless mediatype.nil?
+      theMediaType = :vide if mediatype.nil?
+      theCommand.add_option(key: :mediatype, value: theMediaType)
+      unless affinetransform.nil?
+        theCommand.add_option(key: :affinetransform, value: affinetransform)
+      end
+      unless contexttransformation.nil?
+        theCommand.add_option(key: :contexttransformation,
+                            value: contexttransformation)
+      end
+      theCommand
+    end
+
+    # Insert a segment of content into a track.    
+    # Handled by a movie editor object. This will add a segment of content to
+    # the track taking the content from the source track.
+    # The track and source track must both be of the same media type.
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param track [Hash] A track identifier for a track in the receiver object
+    # @param source_object [Hash] Object containing source track.
+    # @param source_track [Hash] The track from which to obtain the content.
+    # @param insertiontime [Hash] The time in track where content is inserted
+    #   {MIMovie::MovieTime}
+    # @param source_timerange [Hash] The time range (start, duration) within
+    #   the source track time frame from which to get the content to insert.
+    # @return [ObjectCommand] The constructed insert track segment command.
+    def self.make_inserttracksegment(receiver_object,
+                              track: nil,
+                      source_object: nil,
+                       source_track: nil,
+                      insertiontime: nil,
+                   source_timerange: nil)
+      theCommand = ObjectCommand.new(:inserttracksegment, receiver_object)
+      theCommand.add_option(key: :track, value: track) unless track.nil?
+      unless source_object.nil?
+        theCommand.add_option(key: :sourceobject, value: source_object)
+      end
+      
+      unless source_track.nil?
+        theCommand.add_option(key: :sourcetrack, value: source_track)
+      end
+      
+      unless insertiontime.nil?
+        theCommand.add_option(key: :insertiontime, value: insertiontime)
+      end
+      
+      unless source_timerange.nil?
+        theCommand.add_option(key: :sourcetimerange, value: source_timerange)
+      end
+      
+      theCommand
+    end
+
+    # Insert an empty segment into a track.    
+    # Handled by a movie editor object. This will add a empty segment to the track
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param track [Hash] A track identifier for a track in the receiver object
+    # @param insertiontimerange [Hash] The empty time range
+    #   {MIMovie::MovieTime.make_movie_timerange} to insert into the track.
+    # @return [ObjectCommand] The constructed insert track segment command.
+    def self.make_insertemptysegment(receiver_object,
+                              track: nil,
+                 insertiontimerange: nil)
+      theCommand = ObjectCommand.new(:insertemptysegment, receiver_object)
+      theCommand.add_option(key: :track, value: track) unless track.nil?
+      
+      unless insertiontimerange.nil?
+        theCommand.add_option(key: :timerange, value: insertiontimerange)
+      end
+      
+      theCommand
+    end
+
+    # Add a movie video composition instruction.    
+    # Handled by a movie editor object.    
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param timerange [Hash] The time range that the instruction will apply.
+    #   See {MIMovie::MovieTime.make_movie_timerange}
+    # @param layerinstructions [Array] An array of video layer instructions.
+    # @return [ObjectCommand] The made add video composition instruction command
+    def self.make_addvideoinstruction(receiver_object,
+                           timerange: nil
+                   layerinstructions: nil)
+      theCommand = ObjectCommand.new(:movieeditorinstruction, receiver_object)
+      
+      unless insertiontimerange.nil?
+        theCommand.add_option(key: :timerange, value: timerange)
+      end
+      
+      unless layerinstructions.nil?
+        theCommand.add_option(key: :layerinstructions, value: layerinstructions)
+      end
       theCommand
     end
 
@@ -1382,6 +1507,24 @@ module MovingImages
           self.add_tocleanupcommands_closeobject(videoWriterObject)
         end
         videoWriterObject
+      end
+      
+      # Make a create movie editor command object    
+      # @param addtocleanup [true, false] Optional. Default true.
+      #   Close the created object when commands are completed.
+      # @param name [String] The name of the object to be created.
+      # @return [Command] The command that will create the movie editor.
+      def self.make_createmovieeditor(addtocleanup: true, name: nil)
+        theName = SecureRandom.uuid if name.nil?
+        theName = name unless name.nil?
+        movieEditorObject = SmigIDHash.make_objectid(objectname: theName,
+                                                     objecttype: :movieeditor)
+        createMovieEditor = CommandModule.make_createmovieeditor(theName)
+        self.add_command(createMovieEditor)
+        if addtocleanup
+          self.add_tocleanupcommands_closeobject(movieEditorObject)
+        end
+        movieEditorObject
       end
     end
   end

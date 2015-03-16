@@ -90,7 +90,7 @@
         "objecttype": "imageexporter",
         "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0744.jpg"
     },
     {
@@ -200,7 +200,7 @@
         "objecttype": "imageexporter",
         "objectname": "c38319fc-584b-4e3f-aff9-d6dd4cc3ced7"
       },
-      "propertykey": "exportfilepath",
+      "propertykey": "file",
       "propertyvalue": "/Volumes/MacintoshHD/Users/ktam/github/moving_images/tests/resources/DSCN0746.jpg"
     },
     {

@@ -8,7 +8,7 @@ module MovingImages
       # @param seconds [Float] Time in seconds from start of movie.
       # @return [Hash] A hash object containing the movie time.
       def self.make_movietime_fromseconds(seconds)
-        return { time: seconds }
+        return { timeinseconds: seconds }
       end
       
       # Make a movie time hash which takes a time value and scale.    
@@ -213,7 +213,7 @@ module MovingImages
 
       def add_opacitylayerinstruction(track: nil,
                                opacityvalue: nil,
-                                  timerange: nil)
+                                       time: nil)
         fail "Track needs to be defined" if track.nil?
         fail "opacityvalye needs to be defined" if opacityvalue.nil?
         opacitylayerinstruction = {
@@ -221,8 +221,9 @@ module MovingImages
           track: track
         }
         unless timerange.nil?
-          
+          opacitylayerinstruction[:time] = time
         end
+        @layerinstructions.push(opacitylayerinstruction)
       end
     end
     

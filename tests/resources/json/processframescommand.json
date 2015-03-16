@@ -63,7 +63,7 @@
       "processinstructions": [
         {
           "frametime": {
-            "time": 0.0
+            "timeinseconds": 0.0
           },
           "commands": [
             {
@@ -132,7 +132,7 @@
         },
         {
           "frametime": {
-            "time": 27.272727272727273
+            "timeinseconds": 27.272727272727273
           },
           "commands": [
             {
@@ -201,7 +201,7 @@
         },
         {
           "frametime": {
-            "time": 54.54545454545455
+            "timeinseconds": 54.54545454545455
           },
           "commands": [
             {
@@ -270,7 +270,7 @@
         },
         {
           "frametime": {
-            "time": 81.81818181818181
+            "timeinseconds": 81.81818181818181
           },
           "commands": [
             {
@@ -339,7 +339,7 @@
         },
         {
           "frametime": {
-            "time": 109.0909090909091
+            "timeinseconds": 109.0909090909091
           },
           "commands": [
             {
@@ -408,7 +408,7 @@
         },
         {
           "frametime": {
-            "time": 136.36363636363637
+            "timeinseconds": 136.36363636363637
           },
           "commands": [
             {
@@ -477,7 +477,7 @@
         },
         {
           "frametime": {
-            "time": 163.63636363636363
+            "timeinseconds": 163.63636363636363
           },
           "commands": [
             {
@@ -546,7 +546,7 @@
         },
         {
           "frametime": {
-            "time": 190.9090909090909
+            "timeinseconds": 190.9090909090909
           },
           "commands": [
             {
@@ -615,7 +615,7 @@
         },
         {
           "frametime": {
-            "time": 218.1818181818182
+            "timeinseconds": 218.1818181818182
           },
           "commands": [
             {
@@ -684,7 +684,7 @@
         },
         {
           "frametime": {
-            "time": 245.45454545454547
+            "timeinseconds": 245.45454545454547
           },
           "commands": [
             {
@@ -753,7 +753,7 @@
         },
         {
           "frametime": {
-            "time": 272.72727272727275
+            "timeinseconds": 272.72727272727275
           },
           "commands": [
             {
@@ -822,7 +822,7 @@
         },
         {
           "frametime": {
-            "time": 300.0
+            "timeinseconds": 300.0
           },
           "commands": [
             {

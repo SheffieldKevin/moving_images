@@ -105,7 +105,7 @@ class TestMovieTime < MiniTest::Unit::TestCase
   
   def test_movietime_make_fromseconds
     movie_time = MovieTime.make_movietime_fromseconds(0.9324)
-    assert movie_time[:time].eql?(0.9324), 'Movie time not equal to 0.9324'
+    assert movie_time[:timeinseconds].eql?(0.9324), 'Movie time not equal to 0.9324'
   end
   
   def test_movietime_make_nextframe

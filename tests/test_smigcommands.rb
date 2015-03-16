@@ -168,7 +168,7 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     old_json = '{"command":"insertemptysegment","receiverobject":'\
     '{"objecttype":"movieeditor","objectname":"test.movieeditor.object"},'\
     '"track":{"trackindex":0,"mediatype":"vide"},"timerange":{"start":{"value":'\
-    '600000,"timescale":600,"flags":1,"epoch":0},"duration":{"time":2.0}}}'
+    '600000,"timescale":600,"flags":1,"epoch":0},"duration":{"timeinseconds":2.0}}}'
     assert new_json.eql?(old_json), 'test_make_insertemptysegment different JSON'
   end
 
@@ -210,8 +210,8 @@ class TestObjectCommands < MiniTest::Unit::TestCase
     '"movieeditor","objectname":"test.movieeditor.object"},"track":{'\
     '"trackindex":0,"mediatype":"vide"},"sourceobject":{"objecttype":'\
     '"movieimporter","objectname":"test.movieimporter.object"},"sourcetrack":'\
-    '{"trackindex":0,"mediatype":"vide"},"insertiontime":{"time":0},'\
-    '"sourcetimerange":{"start":{"time":1000},"duration":{"value":3000,'\
+    '{"trackindex":0,"mediatype":"vide"},"insertiontime":{"timeinseconds":0},'\
+    '"sourcetimerange":{"start":{"timeinseconds":1000},"duration":{"value":3000,'\
     '"timescale":600,"flags":1,"epoch":0}}}'
     assert new_json.eql?(old_json), 'test_make_inserttracksegment different JSON'
   end

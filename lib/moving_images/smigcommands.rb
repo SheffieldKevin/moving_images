@@ -940,7 +940,7 @@ module MovingImages
     # @param layerinstructions [Array] An array of video layer instructions.
     # @return [ObjectCommand] The made add video composition instruction command
     def self.make_addvideoinstruction(receiver_object,
-                           timerange: nil
+                           timerange: nil,
                    layerinstructions: nil)
       theCommand = ObjectCommand.new(:movieeditorinstruction, receiver_object)
       
@@ -1007,7 +1007,6 @@ module MovingImages
 
       theCommand
     end
-    
     
 
     # Assign an image to the image collection.    

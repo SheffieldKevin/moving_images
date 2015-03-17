@@ -110,12 +110,23 @@ class TestMovieTime < MiniTest::Unit::TestCase
   
   def test_movietime_make_nextframe
     next_frame = MovieTime.make_movietime_nextsample
-    assert next_frame.eql?(:movienextsample)
+    assert next_frame.eql?(:movienextsample), 'Movie time next sample is not :nextsampe'
+  end
+  
+  def test_movietime_make_movie_timerange
+    start_time = MovieTime.make_movietime(timevalue: 10010, timescale: 30000)
+    duration = MovieTime.make_movietime(timevalue: 1001, timescale: 30000)
+    time_range = MovieTime.make_movie_timerange(start: start_time,
+                                             duration: duration)
+    assert time_range[:start].kind_of?(Hash), 'Start time is not a hash object'
+    assert time_range[:duration].kind_of?(Hash), 'Time range duration is not a hash'
+    assert time_range[:start][:value].eql?(10010), 'Start time value is not 10010'
+    assert time_range[:duration][:timescale].eql?(30000), 'Duration time scale is not 30000'
   end
 end
 
 # Test class for creating hashes that represent track identifiers.
-class TestMovieTrackIdentifiers
+class TestMovieTrackIdentifiers < MiniTest::Unit::TestCase
   def test_make_trackidentifier_with_mediatype
     track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
                                     mediatype: :vide, trackindex: 0)
@@ -126,7 +137,7 @@ class TestMovieTrackIdentifiers
   def test_make_trackidentifier_with_mediacharacteristic
     track_id = MovieTrackIdentifier.make_movietrackid_from_characteristic(
         characteristic: :AVMediaCharacteristicFrameBased, trackindex: 1)
-    assert track_id[:characteristic].eql?(:AVMediaCharacteristicFrameBased),
+    assert track_id[:mediacharacteristic].eql?(:AVMediaCharacteristicFrameBased),
                           'Characteristic is not AVMediaCharacteristicFrameBased'
     assert track_id[:trackindex].eql?(1), 'Track index is not 1'
   end
@@ -135,6 +146,102 @@ class TestMovieTrackIdentifiers
     track_id = MovieTrackIdentifier.make_movietrackid_from_persistenttrackid(2)
     assert track_id[:trackid].eql?(2), 'Persistent track id is not 2'
   end
+end
+
+# Test class for creating layer instruction hashes for MovieEditor video 
+# composition instructions
+class TestVideoLayerInstructions < MiniTest::Unit::TestCase
+  def test_add_passthrulayerinstruction
+    track = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                                       mediatype: :vide,
+                                                      trackindex: 0)
+    layer_instructions = VideoLayerInstructions.new
+    layer_instructions.add_passthrulayerinstruction(track: track)
+    layer_instructions_array = layer_instructions.layerinstructionsarray
+    assert layer_instructions_array.count.eql?(1),
+                                        'Should have 1 layer instruction'
+    assert layer_instructions_array[0][:layerinstructiontype].eql?(
+          :passthruinstruction),
+          'Layer instruction type is not pass thru'
+    assert layer_instructions_array[0][:track].kind_of?(Hash), 
+                                        'Track definition is not a hash object'
+    assert layer_instructions_array[0][:track][:mediatype].eql?(:vide), 
+                                        'Track media type is not :vide'
+  end
+  
+  def test_add_opacitylayerinstruction
+    track = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                                       mediatype: :vide,
+                                                      trackindex: 0)
+    opacity_starttime = MovieTime.make_movietime(timevalue: 900, timescale: 600)
+    layer_instructions = VideoLayerInstructions.new
+    layer_instructions.add_opacitylayerinstruction(track: track,
+                                            opacityvalue: 0.5,
+                                                    time: opacity_starttime)
+    layer_instructions_array = layer_instructions.layerinstructionsarray
+    assert layer_instructions_array.count.eql?(1),
+                                        'Should have 1 layer instruction'
+    assert layer_instructions_array[0][:layerinstructiontype].eql?(
+          :opacityinstruction), 'Layer instruction type is not opacity'
+    assert layer_instructions_array[0][:track].kind_of?(Hash), 
+                                        'Track definition is not a hash object'
+    assert layer_instructions_array[0][:track][:mediatype].eql?(:vide), 
+                                        'Track media type is not :vide'
+  end
+
+  def test_add_croplayerinstruction
+    track = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                                       mediatype: :vide,
+                                                      trackindex: 0)
+    croprect_starttime = MovieTime.make_movietime(timevalue: 2002,
+                                                  timescale: 30000)
+    layer_instructions = VideoLayerInstructions.new
+    crop_rect = MIShapes.make_rectangle(origin: { x: 100, y: 50 },
+                                          size: { width: 1400, height: 800 })
+    layer_instructions.add_croplayerinstruction(track: track,
+                                        croprectvalue: crop_rect,
+                                                 time: croprect_starttime)
+    layer_instructions_array = layer_instructions.layerinstructionsarray
+    assert layer_instructions_array.count.eql?(1),
+                                        'Should have 1 layer instruction'
+    assert layer_instructions_array[0][:layerinstructiontype].eql?(
+          :cropinstruction), 'Layer instruction type is not crop rectangle'
+    assert layer_instructions_array[0][:track].kind_of?(Hash), 
+                                        'Track definition is not a hash object'
+    assert layer_instructions_array[0][:track][:mediatype].eql?(:vide), 
+                                        'Track media type is not :vide'
+  end
+  
+  def test_add_transformand_opacitylayerinstruction
+    track = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                                       mediatype: :vide,
+                                                      trackindex: 0)
+    instruction_starttime = MovieTime.make_movietime(timevalue: 200,
+                                                     timescale: 6000)
+    layer_instructions = VideoLayerInstructions.new
+    layer_instructions.add_opacitylayerinstruction(track: track,
+                                            opacityvalue: 0.7,
+                                                    time: instruction_starttime)
+    transform = MITransformations.make_affinetransform(m11: 0.5, m12: 0.0,
+                                    m21: 0.0, m22: 0.5,  tX: 0.0,  tY: 0.0)
+
+    layer_instructions.add_transformlayerinstruction(track: track,
+                                            transformvalue: transform,
+                                                      time: instruction_starttime)
+    
+    layer_instructions_array = layer_instructions.layerinstructionsarray
+    assert layer_instructions_array.count.eql?(2),
+                                        'Should have 2 layer instruction'
+    assert layer_instructions_array[1][:layerinstructiontype].eql?(
+          :transforminstruction), 'Layer instruction type is not transform'
+    assert layer_instructions_array[1][:track].kind_of?(Hash), 
+                                        'Track definition is not a hash object'
+    assert layer_instructions_array[1][:track][:mediatype].eql?(:vide), 
+                                        'Track media type is not :vide'
+    assert layer_instructions_array[0][:layerinstructiontype].eql?(
+                                                          :opacityinstruction)
+  end
+
 end
 
 $resources_dir = File.expand_path(File.join(File.dirname(__FILE__), "resources"))

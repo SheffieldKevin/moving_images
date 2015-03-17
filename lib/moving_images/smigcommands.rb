@@ -40,6 +40,7 @@ module MovingImages
       # @param receiverObject [Hash] The object that will handle the command
       # @return SmigObjectCommand command object
       def initialize(theCommand, receiverObject)
+        fail "Receiver object is nil." if receiverObject.nil?
         super(theCommand)
         self.add_option(key: :receiverobject, value: receiverObject)
       end
@@ -938,11 +939,12 @@ module MovingImages
     # @param timerange [Hash] The time range that the instruction will apply.
     #   See {MIMovie::MovieTime.make_movie_timerange}
     # @param layerinstructions [Array] An array of video layer instructions.
+    #   See {MIMovie::VideoLayerInstructions}
     # @return [ObjectCommand] The made add video composition instruction command
     def self.make_addvideoinstruction(receiver_object,
                            timerange: nil,
                    layerinstructions: nil)
-      theCommand = ObjectCommand.new(:movieeditorinstruction, receiver_object)
+      theCommand = ObjectCommand.new(:addmovieinstruction, receiver_object)
       
       unless insertiontimerange.nil?
         theCommand.add_option(key: :timerange, value: timerange)
@@ -950,6 +952,40 @@ module MovingImages
       
       unless layerinstructions.nil?
         theCommand.add_option(key: :layerinstructions, value: layerinstructions)
+      end
+      theCommand
+    end
+
+    # Export the created composition from the movie editor object.    
+    # You can get a list of all movie export
+    # presets as a get property command directed at the movie editor class.
+    # You can obtain a list of export presets compatible with the movie composition
+    # using the get property command directed at the movie editor object. Similar
+    # applies to the export file type.
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param exportpreset [String] The export preset to be used to export the movie
+    # @param exportfilepath [String] The path to the where the movie file will be
+    #   exported. If a file already exists at the export location then it will
+    #   be deleted before export starts.
+    # @param exportfiletype [String] The uti file type to be used for exporting
+    #   the movie composition.
+    # @return [ObjectCommand] The made export video composition command.
+    def self.make_movieeditor_export(receiver_object,
+                                exportpreset: nil,
+                              exportfilepath: nil,
+                              exportfiletype: nil)
+      theCommand = ObjectCommand.new(:export, receiver_object)
+
+      unless exportpreset.nil?
+       theCommand.add_option(key: :preset, value: exportpreset)
+      end
+
+      unless exportfilepath.nil?
+       theCommand.add_option(key: :file, value: exportfilepath)
+      end
+
+      unless exportfiletype.nil?
+       theCommand.add_option(key: :utifiletype, value: exportfiletype)
       end
       theCommand
     end
@@ -1012,7 +1048,9 @@ module MovingImages
     # Assign an image to the image collection.    
     # The bitmap and window contexts, the movie and image file importer objects
     # can all add images to the image collection. The importer objects take
-    # image_creation_options for creating the image to be added to the collection
+    # image_creation_options for creating the image to be added to the collection.
+    # If this command is sent to the movie editor object then the image added to
+    # the image collection is a map of the movie editor composition.
     # @param receiver_object [Hash] Object that is to add the image to collection
     # @param image_creation_options [Hash] Options for creating image
     # @param identifier [String] The string to identify the image in collection

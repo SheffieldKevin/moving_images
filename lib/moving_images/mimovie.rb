@@ -205,27 +205,173 @@ module MovingImages
       def add_passthrulayerinstruction(track: nil)
         fail "Track needs to be defined" if track.nil?
         passthru = {
-          layerinstructiontype: :MIJSONValueMovieEditorPassthruInstruction,
+          layerinstructiontype: :passthruinstruction,
           track: track
         }
         @layerinstructions.push(passthru)
       end
 
+      # Add an opacity layer instruction to the list of layer instructions.    
+      # The opacity layer instruction is applied to the specified track.
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param opacityvalue [Float] the opacity to apply to the track.
+      # @param time [Hash] The starting time from when the opacity layer
+      #   instruction is applied. This must be within the time range specified
+      #   for the containing video composition instruction. Optional. {MovieTime}
+      # @return [Hash] The opacity layer instruction just added to list.
       def add_opacitylayerinstruction(track: nil,
                                opacityvalue: nil,
                                        time: nil)
         fail "Track needs to be defined" if track.nil?
-        fail "opacityvalye needs to be defined" if opacityvalue.nil?
+        fail "opacityvalue needs to be defined" if opacityvalue.nil?
         opacitylayerinstruction = {
           layerinstructiontype: :opacityinstruction,
+          instructionvalue: opacityvalue,
           track: track
         }
-        unless timerange.nil?
+        unless time.nil?
           opacitylayerinstruction[:time] = time
         end
         @layerinstructions.push(opacitylayerinstruction)
       end
+      
+      # Add an crop layer instruction to the list of layer instructions.    
+      # The crop layer instruction is applied to the specified track.
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param croprectvalue [Hash] the crop rectangle to apply to the track.
+      #   See {MICGDrawing::MIShapes.make_rectangle}
+      # @param time [Hash] The starting time from when the crop layer
+      #   instruction is applied. This must be within the time range specified
+      #   for the containing video composition instruction. Optional. {MovieTime}
+      # @return [Hash] The crop layer instruction just added to list.
+      def add_croplayerinstruction(track: nil,
+                           croprectvalue: nil,
+                                    time: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "croprectvalue needs to be defined" if croprectvalue.nil?
+        croplayerinstruction = {
+          layerinstructiontype: :cropinstruction,
+          instructionvalue: croprectvalue,
+          track: track
+        }
+        unless time.nil?
+          croplayerinstruction[:time] = time
+        end
+        @layerinstructions.push(croplayerinstruction)
+      end
+
+      # Add an transform layer instruction to the list of layer instructions.    
+      # The transform layer instruction is applied to the specified track.
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param transformvalue [Hash] the transform to apply to the track.
+      #   See {MICGDrawing::MITransformations}
+      # @param time [Hash] The starting time from when the opacity layer
+      #   instruction is applied. This must be within the time range specified
+      #   for the containing video composition instruction. Optional. {MovieTime}
+      # @return [Hash] The transform layer instruction just added to list.
+      def add_transformlayerinstruction(track: nil,
+                               transformvalue: nil,
+                                         time: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "transformvalue needs to be defined" if transformvalue.nil?
+        transforminstruction = {
+          layerinstructiontype: :transforminstruction,
+          instructionvalue: transformvalue,
+          track: track
+        }
+        unless time.nil?
+          transforminstruction[:time] = time
+        end
+        @layerinstructions.push(transforminstruction)
+      end
+      
+      # Add an opacity ramp layer instruction to the list of layer instructions.    
+      # The opacity ramp layer instruction is applied to the specified track.
+      # The timerange parameter specifies the start time and duration of the
+      # opacity ramp.
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param startopacityvalue [Float] the initial opacity value to apply. (0-1)
+      # @param endopacityvalue [Float] the final opacity value to be applied. (0-1)
+      # @param timerange [Hash] The time range over which the opacity ramp is
+      #   applied. The time range specifies the start time and how long the
+      #   ramp takes. Optional. (MovieTime.make_movie_timerange)
+      # @return [Hash] The opacity ramp layer instruction just added to list.
+      def add_opacityramplayerinstruction(track: nil,
+                              startopacityvalue: 1.0,
+                                endopacityvalue: 0.0,
+                                      timerange: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "start opacity value needs to be defined" if startopacityvalue.nil?
+        fail "end opacity value needs to be defined" if endopacityvalue.nil?
+        opacity_rampinstruction = {
+          layerinstructiontype: :opacityramp,
+                startrampvalue: startopacityvalue,
+                  endrampvalue: endopacityvalue,
+                         track: track
+        }
+        opacity_rampinstruction[:timerange] = timerange unless timerange.nil?
+        @layerinstructions.push(opacity_rampinstruction)
+      end
+      
+      # Add an crop rect ramp layer instruction to the list of layer instructions.    
+      # The crop rect ramp layer instruction is applied to the specified track.
+      # The timerange parameter specifies the start time and duration of the
+      # crop rect ramp.
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param startcroprectvalue [Hash] the initial rect value to apply.
+      #   See {MICGDrawing::MIShapes.make_rectangle}
+      # @param endcroprectvalue [Hash] the final rect value to be applied.
+      #   See {MICGDrawing::MIShapes.make_rectangle}
+      # @param timerange [Hash] The time range over which the crop rectangle
+      #   ramp is applied. The time range specifies the start time and how long
+      #   the ramp takes. Optional. (MovieTime.make_movie_timerange)
+      # @return [Hash] The crop rect ramp layer instruction just added to list.
+      def add_croprectramplayerinstruction(track: nil,
+                              startcroprectvalue: nil,
+                                endcroprectvalue: nil,
+                                       timerange: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "start crop rectangle value needs to be defined" if startcroprectvalue.nil?
+        fail "end crop rectangle value needs to be defined" if endcroprectvalue.nil?
+        croprect_rampinstruction = {
+          layerinstructiontype: :cropramp,
+                startrampvalue: startopacityvalue,
+                  endrampvalue: endopacityvalue,
+                         track: track
+        }
+        croprect_rampinstruction[:timerange] = timerange unless timerange.nil?
+        @layerinstructions.push(croprect_rampinstruction)
+      end
+
+      # Add an transform ramp layer instruction to the list of layer instructions.    
+      # The transform ramp layer instruction is applied to the specified track.
+      # The timerange parameter specifies the start time and duration of the
+      # transform ramp. The start and end transform values can be defined either
+      # by a Hash representation of an affine transform, or an array of context
+      # transformations. See {MICGDrawing::MITransformations}
+      # @param track [Hash] The identified track, see {MovieTrackIdentifier}
+      # @param starttransformvalue [Hash, Array] the initial transform to apply.
+      # @param endcroprectvalue [Hash, Array] the final transform to be applied.
+      # @param timerange [Hash] The time range over which the transform
+      #   ramp is applied. The time range specifies the start time and how long
+      #   the ramp takes. Optional. (MovieTime.make_movie_timerange)
+      # @return [Hash] The transform ramp layer instruction just added to list.
+      def add_transformramplayerinstruction(track: nil,
+                              starttransformvalue: nil,
+                                endtransformvalue: nil,
+                                        timerange: nil)
+        fail "Track needs to be defined" if track.nil?
+        fail "start transform value needs to be defined" if starttransformvalue.nil?
+        fail "end transform value needs to be defined" if endtransformvalue.nil?
+        transform_rampinstruction = {
+          layerinstructiontype: :transformramp,
+                startrampvalue: starttransformvalue,
+                  endrampvalue: endtransformvalue,
+                         track: track
+        }
+        transform_rampinstruction[:timerange] = timerange unless timerange.nil?
+        @layerinstructions.push(transform_rampinstruction)
+      end
     end
-    
   end
 end

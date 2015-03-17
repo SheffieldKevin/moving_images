@@ -196,7 +196,15 @@ module MovingImages
     # After all the frames have been added to the video frames writer. Write them.
     FinishWritingVideoFrames = :finishwritingframes
     
+    # Add a movie composition instruction to the movie editor object.
+    AddMovieCompositionInstruction = :addmovieinstruction
 
+    # Insert a track segment into a track of the movie editor object.
+    InsertTrackSegment = :inserttracksegment
+    
+    # Insert an empty track segment into a track of the movie editor object.
+    InsertEmptyTrackSegment = :insertemptytracksegment
+    
     # Lists of commands handled by objects of a particular type
     CommandsForObjectsOfClasses = {
       BitmapContextType => [ GetPropertyCommand, GetPropertiesCommand,
@@ -224,12 +232,13 @@ module MovingImages
                              AssignImageToCollectionCommand ],
       MovieEditorType => [ GetPropertyCommand, GetPropertiesCommand,
                            SetPropertyCommand, CloseObjectCommand,
-                           CreateTrackCommand ],
+                           CreateTrackCommand, ExportCommand,
+                           AddMovieCompositionInstruction,
+                           InsertTrackSegment, InsertEmptyTrackSegment,
+                           AssignImageToCollectionCommand ],
       MovieVideoFramesWriter => [ GetPropertyCommand, GetPropertiesCommand,
-                                  CloseObjectCommand, ProcessFramesCommand, 
-                                  AddInputToMovieFrameWriter,
-                                  FinishWritingVideoFrames, 
-                                  AddImageSampleToWriter ]
+                                CloseObjectCommand, AddInputToMovieFrameWriter,
+                                FinishWritingVideoFrames, AddImageSampleToWriter ]
     }
 
     # Get a list of the different types of objects MovingImages can create.    
@@ -251,7 +260,9 @@ module MovingImages
                RenderFilterChainCommand, AssignImageToCollectionCommand,
                RemoveImageFromCollectionCommand, ProcessFramesCommand,
                CreateTrackCommand, AddInputToMovieFrameWriter,
-               AddImageSampleToWriter, FinishWritingVideoFrames ]
+               AddImageSampleToWriter, FinishWritingVideoFrames,
+               AddMovieCompositionInstruction, InsertTrackSegment,
+               InsertEmptyTrackSegment ]
     end
 
     # The list of draw elements.    
@@ -295,7 +306,7 @@ module MovingImages
     # @return [Array<Symbol>] A list of the named rgb color profiles.
     def self.listrgbprofiles
       [:kCGColorSpaceGenericRGB, :kCGColorSpaceGenericRGBLinear,
-        :kCGColorSpaceAdobeRGB1998, :kCGColorSpaceSRGB]
+        :kCGColorSpaceAdobeRGB1998, :kCGColorSpaceSRGB, :devicergb ]
     end
 
     # Get a list of named grayscale profiles. Default: kCGColorSpaceGenericGray.    
@@ -365,21 +376,28 @@ module MovingImages
     # @return [String] A space delimited string of user interface fonts
     def self.listuserinterfacefonts
       return Smig.get_classtypeproperty(objecttype: BitmapContextType,
-                                         property: "userinterfacefonts")
+                                          property: "userinterfacefonts")
     end
     
     # Get the list of available image file exporter types.    
     # @return [String] A space delimited string of export uti file types
     def self.listimageexporttypes
       return Smig.get_classtypeproperty(objecttype: ImageExporterType,
-                                        property: :imageexporttypes)
+                                          property: :imageexporttypes)
     end
 
     # Get the list of available image file importer types.    
     # @return [String] A space delimited string of import uti file types
     def self.listimageimporttypes
       return Smig.get_classtypeproperty(objecttype: ImageImporterType,
-                                        property: :imageimporttypes)
+                                          property: :imageimporttypes)
+    end
+
+    # Get the list of movie file export presets from the movie editor class.
+    # @return [String] A space delimited string of movie export presets
+    def self.listmovieeditorexportpresets
+      return Smig.get_classtypeproperty(objecttype: MovieEditorType,
+                                          property: :presets)
     end
   end
 end

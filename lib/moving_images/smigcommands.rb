@@ -923,7 +923,7 @@ module MovingImages
     def self.make_insertemptysegment(receiver_object,
                               track: nil,
                  insertiontimerange: nil)
-      theCommand = ObjectCommand.new(:insertemptysegment, receiver_object)
+      theCommand = ObjectCommand.new(:insertemptytracksegment, receiver_object)
       theCommand.add_option(key: :track, value: track) unless track.nil?
       
       unless insertiontimerange.nil?
@@ -946,11 +946,14 @@ module MovingImages
                    layerinstructions: nil)
       theCommand = ObjectCommand.new(:addmovieinstruction, receiver_object)
       
-      unless insertiontimerange.nil?
+      unless timerange.nil?
         theCommand.add_option(key: :timerange, value: timerange)
       end
       
       unless layerinstructions.nil?
+        if layerinstructions.respond_to?("layerinstructionsarray")
+          layerinstructions = layerinstructions.layerinstructionsarray
+        end
         theCommand.add_option(key: :layerinstructions, value: layerinstructions)
       end
       theCommand
@@ -1020,6 +1023,7 @@ module MovingImages
     end
 
     # Make a addimage command that gets the image from a movie object    
+    # The add image command is handled by the image exporter.
     # The image is sourced from a movie object. To get the image the time in
     # the movie of the desired frame is required. You can also optionally 
     # specify the tracks from which to generate the image. If no tracks are
@@ -1043,7 +1047,23 @@ module MovingImages
 
       theCommand
     end
-    
+
+    # Make a add image command that takes the image from the image collection    
+    # The add image command is handled by the image exporter.
+    # The image is sourced from the image collection using the imageidentifier
+    # key to select the image in the collection. The image is added to the list
+    # of images in the image exporter object ready for export.
+    # @param receiver_object [Hash] Object that will handle add image command
+    # @param imageidentifier [String] The image identifier.
+    # @return [ObjectCommand] The addimage command
+    def self.make_addimage_fromimagecollection(receiver_object, 
+                              imageidentifier: nil)
+      theCommand = ObjectCommand.new(:addimage, receiver_object)
+      unless imageidentifier.nil?
+        theCommand.add_option(key: :imageidentifier, value: imageidentifier)
+      end
+      theCommand
+    end
 
     # Assign an image to the image collection.    
     # The bitmap and window contexts, the movie and image file importer objects
@@ -1056,8 +1076,8 @@ module MovingImages
     # @param identifier [String] The string to identify the image in collection
     # @return [ObjectCommand] The assignimagetocollection command object
     def self.make_assignimage_tocollection(receiver_object,
-                                      image_creation_options: nil,
-                                      identifier: nil)
+                   image_creation_options: nil,
+                               identifier: nil)
       fail "Image collection identifier not specified. " if identifier.nil?
       theCommand = ObjectCommand.new(:assignimagetocollection, receiver_object)
       unless image_creation_options.nil? 
@@ -1191,7 +1211,7 @@ module MovingImages
       # Initialize the SmigCommands object.
       def initialize()
         # The command hash containing the configuration options and command list
-        @commandsHash = {}
+        @commandsHash = { commands: [] }
       end
 
       # If a command fails, then if stoponfailure is true the commands that
@@ -1232,11 +1252,7 @@ module MovingImages
           theCommand = command
         end
 
-        if @commandsHash[:commands].nil?
-          @commandsHash[:commands] = [ theCommand ]
-        else
-          @commandsHash[:commands] << theCommand
-        end
+        @commandsHash[:commands] << theCommand
         nil
       end
 
@@ -1249,6 +1265,19 @@ module MovingImages
           @commandsHash[:cleanupcommands] = [ closeCommand.commandhash ]
         else
           @commandsHash[:cleanupcommands].push(closeCommand.commandhash)
+        end
+        nil
+      end
+
+      # Add a remove image from collection command to list of cleanup commands
+      # @param imageIdentifier [String] Identifier of image to be removed.
+      # @return [void]
+      def add_tocleanupcommands_removeimagefromcollection(imageIdentifier)
+        removeImage = CommandModule.make_removeimage_fromcollection(imageIdentifier)
+        if @commandsHash[:cleanupcommands].nil?
+          @commandsHash[:cleanupcommands] = [ removeImage.commandhash ]
+        else
+          @commandsHash[:cleanupcommands].push(removeImage.commandhash)
         end
         nil
       end
@@ -1292,12 +1321,12 @@ module MovingImages
 
       # Reset the command hash.
       def clear()
-        @commandsHash = {}
+        @commandsHash = { commands: [] }
       end
 
       # Scrub the command list, leaving other options unchanged.
       def clear_commandlist()
-        @commandsHash.delete(:commands)
+        @commandsHash[:commands] = []
         return @commandsHash
       end
 
@@ -1551,12 +1580,12 @@ module MovingImages
       #   Close the created object when commands are completed.
       # @param name [String] The name of the object to be created.
       # @return [Command] The command that will create the movie editor.
-      def self.make_createmovieeditor(addtocleanup: true, name: nil)
+      def make_createmovieeditor(addtocleanup: true, name: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         movieEditorObject = SmigIDHash.make_objectid(objectname: theName,
                                                      objecttype: :movieeditor)
-        createMovieEditor = CommandModule.make_createmovieeditor(theName)
+        createMovieEditor = CommandModule.make_createmovieeditor(name: theName)
         self.add_command(createMovieEditor)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(movieEditorObject)

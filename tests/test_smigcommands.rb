@@ -21,9 +21,8 @@ class TestSmigCommands < MiniTest::Unit::TestCase
     commands.saveresultstype = :jsonfile
     commands.saveresultsto = '~/Documents/commandresult.json'
     new_json = commands.commandshash.to_json
-    old_json = '{"stoponfailure":false,"returns":"lastcommandresult",'\
-    '"saveresultstype":"jsonfile",'\
-    '"saveresultsto":"~/Documents/commandresult.json"}'
+    old_json = '{"commands":[],"stoponfailure":false,"returns":"lastcommandresult",'\
+    '"saveresultstype":"jsonfile","saveresultsto":"~/Documents/commandresult.json"}'
     assert new_json.eql?(old_json), '1. SmigCommands produced different json'
   end
 
@@ -165,10 +164,11 @@ class TestObjectCommands < MiniTest::Unit::TestCase
                               track: track,
                  insertiontimerange: timeRange)
     new_json = insertemptysegment_command.commandhash.to_json
-    old_json = '{"command":"insertemptysegment","receiverobject":'\
+    old_json = '{"command":"insertemptytracksegment","receiverobject":'\
     '{"objecttype":"movieeditor","objectname":"test.movieeditor.object"},'\
     '"track":{"trackindex":0,"mediatype":"vide"},"timerange":{"start":{"value":'\
     '600000,"timescale":600,"flags":1,"epoch":0},"duration":{"timeinseconds":2.0}}}'
+
     assert new_json.eql?(old_json), 'test_make_insertemptysegment different JSON'
   end
 

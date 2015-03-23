@@ -335,8 +335,8 @@ module MovingImages
         fail "end crop rectangle value needs to be defined" if endcroprectvalue.nil?
         croprect_rampinstruction = {
           layerinstructiontype: :cropramp,
-                startrampvalue: startopacityvalue,
-                  endrampvalue: endopacityvalue,
+                startrampvalue: startcroprectvalue,
+                  endrampvalue: endcroprectvalue,
                          track: track
         }
         croprect_rampinstruction[:timerange] = timerange unless timerange.nil?

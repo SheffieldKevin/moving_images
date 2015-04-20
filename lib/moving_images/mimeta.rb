@@ -196,6 +196,9 @@ module MovingImages
     # After all the frames have been added to the video frames writer. Write them.
     FinishWritingVideoFrames = :finishwritingframes
     
+    # Cancel writing video frames
+    CancelWritingVideoFrames = :cancelwritingframes
+    
     # Add a movie composition instruction to the movie editor object.
     AddMovieCompositionInstruction = :addmovieinstruction
 
@@ -238,7 +241,8 @@ module MovingImages
                            AssignImageToCollectionCommand ],
       MovieVideoFramesWriter => [ GetPropertyCommand, GetPropertiesCommand,
                                 CloseObjectCommand, AddInputToMovieFrameWriter,
-                                FinishWritingVideoFrames, AddImageSampleToWriter ]
+                                FinishWritingVideoFrames, AddImageSampleToWriter,
+                                CancelWritingVideoFrames ]
     }
 
     # Get a list of the different types of objects MovingImages can create.    
@@ -261,8 +265,8 @@ module MovingImages
                RemoveImageFromCollectionCommand, ProcessFramesCommand,
                CreateTrackCommand, AddInputToMovieFrameWriter,
                AddImageSampleToWriter, FinishWritingVideoFrames,
-               AddMovieCompositionInstruction, InsertTrackSegment,
-               InsertEmptyTrackSegment ]
+               CancelWritingVideoFrames, AddMovieCompositionInstruction,
+               InsertTrackSegment, InsertEmptyTrackSegment ]
     end
 
     # The list of draw elements.    

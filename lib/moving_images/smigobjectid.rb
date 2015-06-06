@@ -1,3 +1,4 @@
+# Copyright (c) 2015 Zukini Ltd.
 
 module MovingImages
   # Making Ruby hashes that identify MovingImage's objects and filters.    

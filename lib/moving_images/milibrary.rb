@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Zukini Ltd.
+
 require 'Open3'
 require 'JSON'
 require 'tmpdir'

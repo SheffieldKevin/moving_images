@@ -1,5 +1,4 @@
-
-# require_relative 'smig'
+# Copyright (c) 2015 Zukini Ltd.
 
 module MovingImages
 

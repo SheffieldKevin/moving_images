@@ -1,3 +1,4 @@
+# Copyright (c) 2015 Zukini Ltd.
 
 module MovingImages
   # The wrapper module for all core image related classes.    

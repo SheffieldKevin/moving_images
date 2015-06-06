@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Zukini Ltd.
+
 require "moving_images/version"
 require "moving_images/spotlight"
 require "moving_images/smig"

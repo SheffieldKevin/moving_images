@@ -1,3 +1,5 @@
+# Copyright (c) 2015 Zukini Ltd.
+
 require 'securerandom'
 
 # The MovingImages module wraps all the moving_images gem interface
@@ -1355,7 +1357,7 @@ module MovingImages
       # @param name [String, nil] Object name identifier.
       # @return [Hash] The bitmap context object id, to refer to the context
       def make_createbitmapcontext(size: nil, addtocleanup: true,
-                                        preset: "AlphaPreMulFirstRGB8bpcInt",
+                                        preset: :AlphaPreMulFirstRGB8bpcInt,
                                         profile: nil,
                                         name: nil)
         size = MIShapes.make_size(800, 600) if size.nil?

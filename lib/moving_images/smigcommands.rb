@@ -811,7 +811,7 @@ module MovingImages
       end
       
       unless frameduration.nil?
-        theCommand.add_option(key: :lastaccessedframedurationkey,
+        theCommand.add_option(key: :frameduration,
                             value: frameduration)
       end
       

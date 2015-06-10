@@ -366,6 +366,7 @@ module MovingImages
     #   AlphaPreMulLastRGB8bpcInt AlphaPreMulLastRGB16bpcInt
     #   AlphaSkipLastRGB16bpcInt AlphaSkipLastRGB32bpcFloat
     #   AlphaPreMulLastRGB32bpcFloat CMYK8bpcInt CMYK16bpcInt CMYK32bpcFloat
+    #   PlatformDefaultBitmapContext
     # @param profile [nil, String, Symbol] Name of a color profile to use.
     # @param name [String] The name of the object to be created.
     # @return [Command] The command to create the bitmap object
@@ -1535,7 +1536,7 @@ module MovingImages
                                                   objecttype: :movieimporter)
         createImporter = CommandModule.make_createmovieimporter(filePath,
                                                     name: theName,
-                                     pathsubstitutionkey: nil)
+                                     pathsubstitutionkey: pathsubstitutionkey)
         self.add_command(createImporter)
         if addtocleanup
           self.add_tocleanupcommands_closeobject(importerObject)

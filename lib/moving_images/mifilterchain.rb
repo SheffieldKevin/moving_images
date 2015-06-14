@@ -152,7 +152,7 @@ module MovingImages
   
       # Make a number property.    
       # @param key [String] The filter property to be assigned the numeric value.
-      # @param value [Float] The numeric value to be assigned.
+      # @param value [Float, String] The numeric value to be assigned.
       # @return [Hash] The core image numeric property hash.
       def self.make_cinumberproperty(key: "inputRadius", value: nil)
         return { :cifilterkey => key, :cifiltervalue => value }

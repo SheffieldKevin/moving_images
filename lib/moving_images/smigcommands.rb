@@ -1168,7 +1168,8 @@ module MovingImages
     # add_option before the get pixel data command is sent.
     # @param receiver_object [Hash] Object that handles the getpixeldata command
     # @param rectangle [Hash] Representing the area to get pixel data from
-    # @param resultstype [:jsonfile, :propertyfile, :dictionaryobject, nil]
+    # @param resultstype [:jsonstring, :jsonfile,
+    #   :propertyfile, :dictionaryobject, nil]
     # @param savelocation [String, nil] path, required if resultstypes is a file
     # @return [ObjectCommand] The get pixel data command
     def self.make_getpixeldata(receiver_object, rectangle: nil,

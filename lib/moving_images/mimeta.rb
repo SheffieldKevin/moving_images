@@ -350,7 +350,8 @@ module MovingImages
       commandHash = { :command => "getproperty",
                       :objecttype => "imagefilterchain",
                       :propertykey => "filterattributes",
-                      :filtername => filtername }
+                      :filtername => filtername,
+                      :saveresultstype => :jsonstring }
       return Smig.perform_commands( { :commands => [ commandHash ] } )
     end
 

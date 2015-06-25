@@ -435,7 +435,7 @@ module MovingImages
           self.add_property(imageProperty)
         end
       end
-    
+=begin
       # The CIAccordionFolderTransition filter.    
       class CIAccordionFoldTransition < MITransitionFilter
         # Initialize the CIAccordionFolderTransition object.    
@@ -667,6 +667,7 @@ module MovingImages
           self.add_property(backsideImage)
         end
       end
+=end
     end
   
     # The filter chain, representing a list of connected filters.    

@@ -770,7 +770,7 @@ module MovingImages
     # @param imageoptions [Hash] Optional. Options for obtaining object.
     #   An image importer might have an image index, a movie importer requires
     #   a frame time from which to obtain the image.
-    # @param imagecollectionidentifier [Hash] Optional. Used as the key to get
+    # @param imagecollectionidentifier [String] Optional. Used as the key to get
     #   the image from the image collection.
     # @param sourceobject [Hash] Optional. Used to identify the object from
     #   which to obtain the image.
@@ -802,7 +802,7 @@ module MovingImages
       
       unless imagecollectionidentifier.nil?
         theCommand.add_option(key: :imageidentifer,
-                            value: imagecollectionidentifer)
+                            value: imagecollectionidentifier)
       end
       
       unless lastaccessedframedurationkey.nil?

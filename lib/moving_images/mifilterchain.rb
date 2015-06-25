@@ -318,9 +318,10 @@ module MovingImages
       # used as an input image for the core image filter.
       # @param propertykey [String, Symbol] The CoreImage image property key.
       #   Typical values are 'inputImage' or 'inputBackgroundImage'
-      # @param image_source [Hash] Specifies the object from which to obtain the
-      #   image. See {SmigIDHash.make_objectid} or
-      #   {SmigIDHash.makeid_withfilternameid}
+      # @param image_source [Hash] Specifies the object or the image in the
+      #   image collection from which to obtain the image.
+      #   See {SmigIDHash.make_objectid}, {SmigIDHash.makeid_withfilternameid}
+      #   or, {SmigIDHash.make_imageidentifier}
       # @param options [Hash] Options for obtaining the image from the object.
       #   Pass nil for a bitmap or window context, is optional for an image
       #   importer object which will assume the imageindex property to have
@@ -341,7 +342,7 @@ module MovingImages
       # Add the input image obtained from source as the filters input image.    
       # If you pass nil for image source then the property will be created but
       # the value will not be set.
-      # @param image_source [Hash] Object or filter to get image from.
+      # @param image_source [Hash] Object, image id, or filter to get image from.
       # @param options [Hash] Options for obtaining the image from the object.
       # @param keep_static [Bool, nil] Keep the image even if source changes.
       #   Defaults to false.
@@ -377,7 +378,7 @@ module MovingImages
       # @param value [Hash, Fixnum, Float, String] The value to be set.
       def set_propertyvalue_propertywith_key(key, value)
         theProperty = self.get_property_withkey(key: key)
-        theProperty[:cifiltervalue] = value unles theProperty.nil?
+        theProperty[:cifiltervalue] = value unless theProperty.nil?
       end
   
       # Get the first property in the list of properties with an unset value
@@ -742,7 +743,7 @@ module MovingImages
     # render properties that are associated with filters.
     module MIFilterRenderProperty
       # Create a filter property with a name identifier.    
-      # @param key [String] the filter property to be set.
+      # @param key [String, Symbol] the filter property to be set.
       # @param value [String, Float, Fixnum, Hash] The value the filter property
       #   will be assigned to. CIVector and CIColor filter class can both have
       #   a hash as their value.
@@ -759,6 +760,36 @@ module MovingImages
         return renderProp
       end
   
+      # Create a filter point vector filter property with a filter name id.
+      # @param key [String, Symbol] the filter property to be set.
+      # @param point [Hash] A point hash to make the render property from.
+      # @param filtername_id [String] Identifier for filter in filter chain.
+      # @return [Hash] The created render property.
+      def self.make_renderproperty_pointvector_withfilternamid(key: :inputCenter,
+                                                             point: nil,
+                                                     filtername_id: nil)
+        pointHash = { point: point }
+        return self.make_renderproperty_withfilternameid(key: key,
+                                                       value: pointHash,
+                                               filtername_id: filtername_id,
+                                                 value_class: :CIVector)
+      end
+
+      # Create a filter rectangle property with a filter name id.
+      # @param key [String, Symbol] the filter property to be set.
+      # @param rectangle [Hash] A Rectangle to make the render property from.
+      # @param filtername_id [String] Identifier for filter in filter chain.
+      # @return [Hash] The created render property.
+      def self.make_renderproperty_rectangle_withfilternamid(key: :inputCenter,
+                                                       rectangle: nil,
+                                                   filtername_id: nil)
+        rectHash = { rect: rectangle }
+        return self.make_renderproperty_withfilternameid(key: key,
+                                                       value: rectHash,
+                                               filtername_id: filtername_id,
+                                                 value_class: :CIVector)
+      end
+
       # Create a filter property with a filter index.    
       # @param key [String] the filter property to be set.
       # @param value [String, Float, Fixnum, Hash] The value the filter property
@@ -768,15 +799,46 @@ module MovingImages
       # @param value_class [String, nil] The CoreImage class name to assign
       # @return [Hash] The created render property.
       def self.make_renderproperty_withfilterindex(key: :inputRadius,
-                                                   value: 100.0,
-                                                   filter_index: 1,
-                                                   value_class: nil)
+                                                 value: 100.0,
+                                          filter_index: 1,
+                                           value_class: nil)
         renderProp =  { :cifilterkey => key, :cifiltervalue => value,
                         :cifilterindex => filter_index }
         renderProp[:cifiltervalueclass] = value_class unless value_class.nil?
         return renderProp
       end
-  
+
+      # Create a filter point vector filter property with a filter index.
+      # @param key [String, Symbol] the filter property to be set.
+      # @param point [Hash] A point hash to make the render property from.
+      # @param filter_index [Fixnum] The filter index in the filter chain.
+      # @return [Hash] The created render property.
+      def self.make_renderproperty_pointvector_withfilterindex(key: :inputCenter,
+                                                             point: nil,
+                                                      filter_index: 1)
+        pointHash = { point: point }
+        return self.make_renderproperty_withfilterindex(key: key,
+                                                      value: pointHash,
+                                               filter_index: filter_index,
+                                                value_class: :CIVector)
+      end
+
+      # Create a filter rectangle property with a filter index.
+      # @param key [String, Symbol] the filter property to be set.
+      # @param rectangle [Hash] A Rectangle to make the render property from.
+      # @param filter_index [Fixnum] The filter index in the filter chain.
+      # @return [Hash] The created render property.
+      def self.make_renderproperty_rectangle_withfilterindex(key: :inputCenter,
+                                                       rectangle: nil,
+                                                    filter_index: nil)
+        rectHash = { rect: rectangle }
+        return self.make_renderproperty_withfilternameid(key: key,
+                                                       value: rectHash,
+                                                filter_index: filter_index,
+                                                 value_class: :CIVector)
+      end
+
+
       # Make a keep image, image filter chain render property.    
       # If keep_static is true then once the input image for the filter is
       # obtained for the first time, then that image will not be replaced even

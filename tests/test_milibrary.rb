@@ -105,7 +105,6 @@ $images_dir = File.join($resources_dir, "images")
 
 # Test class for creating shape hashes
 class TestMILibrary < MiniTest::Unit::TestCase
-=begin
   def test_dotransition
     json_filepath = File.join($resources_dir, "json", "dotransition.json")
     the_json = File.read(json_filepath)
@@ -130,7 +129,6 @@ class TestMILibrary < MiniTest::Unit::TestCase
     assert EqualHashes::equal_hashes?(JSON.parse(generated_json), json_hash),
                                                   'Different dotransition json'
   end
-=end
 
   def test_customcrop
     json_filepath = File.join($resources_dir, "json", "customcrop.json")

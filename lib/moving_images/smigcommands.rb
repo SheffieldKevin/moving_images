@@ -801,7 +801,7 @@ module MovingImages
       end
       
       unless imagecollectionidentifier.nil?
-        theCommand.add_option(key: :imageidentifer,
+        theCommand.add_option(key: :imageidentifier,
                             value: imagecollectionidentifier)
       end
       

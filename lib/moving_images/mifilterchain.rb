@@ -431,7 +431,7 @@ module MovingImages
           self.add_property(timeProperty)
           self.add_inputimage_property(input_image_source)
           imageProperty = MIFilterProperty.make_ciimageproperty(
-                                key: :inputTargetImage, value: input_image_source)
+                                key: :inputTargetImage, value: input_targetimage_source)
           self.add_property(imageProperty)
         end
       end

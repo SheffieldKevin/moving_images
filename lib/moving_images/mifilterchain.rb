@@ -708,7 +708,7 @@ module MovingImages
       # @param softwareRender [bool] Should filter chain be rendered in software
       # @return [Hash] The filter chain hash
       def softwarerender=(softwareRender)
-        @filterChainHash[:coreimagesoftwarerender] = softwareRender
+        @filterChainHash[:softwarerender] = softwareRender
         @filterChainHash
       end
   

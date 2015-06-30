@@ -1,5 +1,6 @@
 # Copyright (c) 2015 Zukini Ltd.
 
+=begin
 module MovingImages
   # A representation of the objective-c class MIRenderer
   class MIRenderer
@@ -75,3 +76,4 @@ module MovingImages
     end
   end
 end
+=end

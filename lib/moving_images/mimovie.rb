@@ -5,7 +5,7 @@ module MovingImages
     # Methods for creating movie time hashes.    
     module MovieTime
       # Make a movie time hash which takes a seconds float value.    
-      # @param seconds [Float] Time in seconds from start of movie.
+      # @param seconds [Float, String] Time in seconds from start of movie.
       # @return [Hash] A hash object containing the movie time.
       def self.make_movietime_fromseconds(seconds)
         return { timeinseconds: seconds }

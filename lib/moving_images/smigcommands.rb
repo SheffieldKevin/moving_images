@@ -975,11 +975,14 @@ module MovingImages
     #   be deleted before export starts.
     # @param exportfiletype [String] The uti file type to be used for exporting
     #   the movie composition.
+    # @param pathsubstitutionkey [String] Do path substitution when command 
+    #   processed. This key should be the dictionary key into the variables dict.
     # @return [ObjectCommand] The made export video composition command.
     def self.make_movieeditor_export(receiver_object,
                                 exportpreset: nil,
                               exportfilepath: nil,
-                              exportfiletype: nil)
+                              exportfiletype: nil,
+                         pathsubstitutionkey: nil)
       theCommand = ObjectCommand.new(:export, receiver_object)
 
       unless exportpreset.nil?
@@ -993,6 +996,11 @@ module MovingImages
       unless exportfiletype.nil?
        theCommand.add_option(key: :utifiletype, value: exportfiletype)
       end
+
+      unless pathsubstitutionkey.nil?
+        theCommand.add_option(key: :pathsubstitution, value: pathsubstitutionkey)
+      end
+      
       theCommand
     end
 

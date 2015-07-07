@@ -1,8 +1,10 @@
+
 --title 'MovingImages Documentation'
 --readme README.md
 --markup markdown
 --markup-provider redcarpet
 --output-dir ./docs
+--template-path '/Users/ktam/gitlab/movingimages-documentation/yard-resources/templates'
 -
 LICENSE.txt
 
@@ -20,8 +22,7 @@ LICENSE.txt
 ./markdown/JSONandPropertyLists
 ./markdown/JSONCommandsPropertyKeysAndValues
 ./markdown/MIFilterChainJSONKeys
-./markdown/MovingImagesFramework
 ./markdown/MovingImagesLaunchAgentMeta
+./markdown/MovingImagesFramework
 ./markdown/PlayingWithObjects
 ./markdown/Scripts
-

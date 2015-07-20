@@ -724,7 +724,7 @@ module MovingImages
 
     # Add a video input to the video frames writer object command    
     # Handled by a video frames writer object.
-    # @param receiver_object [Hash] Filter chain object that handles render
+    # @param receiver_object [Hash] Video writer object to add the input to.
     # @param preset [String, Symbol] Required. Video input preset. Possible values:
     #   h264preset_sd jpegpreset h264preset_hd prores4444preset prores422preset
     # @param framesize [Hash] Required. Size dict defining the video dimensions.

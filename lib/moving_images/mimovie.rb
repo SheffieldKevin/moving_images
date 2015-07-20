@@ -86,6 +86,7 @@ module MovingImages
     # from when to get the image frame and the video tracks from which to generate
     # the image. 
     class FrameOptions
+
       # Initialize the FrameOptions object.
       def initialize()
         @options = { }

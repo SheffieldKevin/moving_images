@@ -24,5 +24,7 @@ LICENSE.txt
 ./markdown/MIFilterChainJSONKeys
 ./markdown/MovingImagesLaunchAgentMeta
 ./markdown/MovingImagesFramework
+./markdown/MovieImporter
 ./markdown/PlayingWithObjects
 ./markdown/Scripts
+./markdown/VideoFramesWriter

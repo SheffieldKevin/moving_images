@@ -84,7 +84,7 @@ module MovingImages
       # The instruction contains a frame time, which is the time in the movie
       # from which to obtain the frame, and a command list which is used to
       # process the image frame. Plus a couple of other optional properties.
-      # @param insruction [Hash, #instructionshash] The instruction for
+      # @param instruction [Hash, #instructionshash] The instruction for
       #   processing a movie frame.
       # @return [Hash] The processing instruction hash.
       def add_processinstruction(instruction)

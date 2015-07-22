@@ -848,6 +848,7 @@ module MovingImages
     # will be available in future versions. The value returned by the command
     # is the persistent track identifier.
     # @param receiver_object [Hash] Object that will handle the command.
+    # @param mediatype [String, Symbol] Media type of track. Currently only vide
     # @param trackid [Fixnum, nil] The persistent track id, which should be
     #   unique to the track in the list of tracks in the composition. If nil
     #   then a persistent track identifier value will be generated.

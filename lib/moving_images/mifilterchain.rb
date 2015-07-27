@@ -933,13 +933,7 @@ module MovingImages
           @renderHash[:cifilterproperties].push(renderFilterProperty)
         end
       end
-  
-      # Set the render filter chain variables.    
-      # @param theVariables [Hash] The variables
-      def variables=(theVariables)
-        @renderHash[:variables] = theVariables
-      end
-  
+
       # Get the render filter chain hash
       # @return The filter chain hash.
       def renderfilterchainhash

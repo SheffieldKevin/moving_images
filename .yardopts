@@ -5,6 +5,8 @@
 --markup-provider redcarpet
 --output-dir ./docs
 --template-path '/Users/ktam/gitlab/movingimages-documentation/yard-resources/templates'
+--template moving-images
+--verbose
 -
 LICENSE.txt
 

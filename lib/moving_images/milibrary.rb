@@ -465,7 +465,7 @@ module MovingImages
       # The default values represent setting up a CIBloom core image 
       # filter. If the filter is one that takes 0 or 1 inputs then set 
       # inputkey1 and or inputkey2 to nil. 
-      # @param cifitler [Symbol, String] The cifilter to apply to the images
+      # @param cifilter [Symbol, String] The cifilter to apply to the images
       # @param outputdir [Path] A path to the directory where files exported to.
       # @param exportfiletype [Symbol] The export file type: e.g. "public.tiff"
       # @param quality [Float] The export compression quality. 0.0 - 1.0.

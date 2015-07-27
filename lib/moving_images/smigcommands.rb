@@ -320,8 +320,8 @@ module MovingImages
     end
 
     # Make a create video frames writer command object    
-    # @param imageFilePath [String] A path to the movie file
-    # @param uti_filetype [String, Symbol] File type of exported movie file.
+    # @param movieFilePath [String] A path to the movie file
+    # @param utifiletype [String, Symbol] File type of exported movie file.
     #   Possible values are: "com.apple.quicktime-movie", "public.mpeg-4",
     #   "com.apple.m4v-video". Respective extensions are mov, mp4, m4v
     # @param name [String] The name of the object to be created
@@ -329,8 +329,9 @@ module MovingImages
     #   with this key.
     # @return [Command] The command that will create the importer
     def self.make_createvideoframeswriter(movieFilePath,
-                                         utifiletype: :"com.apple.quicktime-movie",
-                                         name: nil, pathsubstitutionkey: nil)
+                             utifiletype: :"com.apple.quicktime-movie",
+                                    name: nil,
+                     pathsubstitutionkey: nil)
       theCommand = Command.new(:create)
       theCommand.add_option(key: :objecttype, value: :videoframeswriter)
       theCommand.add_option(key: :file, value: movieFilePath)
@@ -852,7 +853,7 @@ module MovingImages
     # @param trackid [Fixnum, nil] The persistent track id, which should be
     #   unique to the track in the list of tracks in the composition. If nil
     #   then a persistent track identifier value will be generated.
-    # @param contexttransform [Array, nil] An array of transformations.
+    # @param contexttransformation [Array, nil] An array of transformations.
     #   Only one of contexttransformation, affinetransform should be specified.
     # @param affinetransform [Hash, nil] A dictionary defining all the elements
     #   of an affinetransform. See [MITransformations].
@@ -1555,19 +1556,21 @@ module MovingImages
       end
       
       # Make a create video frames writer command object and add it to command list    
-      # @param imageFilePath [String] A path to the movie file
+      # @param movieFilePath [String] A path to the movie file
       # @param addtocleanup [true, false] Optional. Default true.
       #   Close the created object when commands are completed.
-      # @param uti_filetype [String, Symbol] File type of exported movie file.
+      # @param utifiletype [String, Symbol] File type of exported movie file.
       #   Possible values are: "com.apple.quicktime-movie", "public.mpeg-4",
       #   "com.apple.m4v-video". Respective extensions are mov, mp4, m4v
       # @param name [String] The name of the object to be created
       # @param pathsubstitutionkey [String, Symbol] Get file path from variables
       #   with this key.
       # @return [Command] The command that create the importer
-      def make_createvideoframeswriter(movieFilePath, addtocleanup: true,
-                                       utifiletype: :"com.apple.quicktime-movie",
-                                       name: nil, pathsubstitutionkey: nil)
+      def make_createvideoframeswriter(movieFilePath,
+                         addtocleanup: true,
+                          utifiletype: :"com.apple.quicktime-movie",
+                                 name: nil,
+                  pathsubstitutionkey: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?
         videoWriterObject = SmigIDHash.make_objectid(objectname: theName,

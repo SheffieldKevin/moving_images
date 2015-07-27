@@ -62,7 +62,7 @@ module MovingImages
       # AVMediaCharacteristicFrameBased AVMediaCharacteristicLegible
       # AVMediaCharacteristicVisual" plus others. A track can conform to more than
       # characteristic unlike media type.
-      # @param mediacharacteristic [String] Optional or one of the values listed above.
+      # @param characteristic [String] Optional or one of the values listed above.
       # @param trackindex [Fixnum] An index into the list of tracks of type.
       # @return [Hash] A Track identifier hash object.
       def self.make_movietrackid_from_characteristic(characteristic: nil,
@@ -352,7 +352,7 @@ module MovingImages
       # transformations. See {MICGDrawing::MITransformations}
       # @param track [Hash] The identified track, see {MovieTrackIdentifier}
       # @param starttransformvalue [Hash, Array] the initial transform to apply.
-      # @param endcroprectvalue [Hash, Array] the final transform to be applied.
+      # @param endtransformvalue [Hash, Array] the final transform to be applied.
       # @param timerange [Hash] The time range over which the transform
       #   ramp is applied. The time range specifies the start time and how long
       #   the ramp takes. Optional. (MovieTime.make_movie_timerange)

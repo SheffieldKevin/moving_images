@@ -702,7 +702,7 @@ module MovingImages
   
       # Set the shadow to be applied to the drawing.    
       # @param theShadow [Hash, #shadowhash] The shadow to apply to the drawing
-      #   see {MISHadow}
+      #   see {MIShadow}
       # @return [Hash] The assigned shadow hash.
       def shadow=(theShadow)
         if theShadow.respond_to? "shadowhash"
@@ -725,7 +725,7 @@ module MovingImages
       # Set the context transformation for the draw element.    
       # If an affine transform was previously set, it is deleted from the
       # the draw element hash. If there was a previous context transformation set
-      # it is replaced.
+      # it is replaced. See {MITransformations}
       # @param transformation [Array<Hash>] An ordered list of context transforms
       # @return [Hash] The context transformation hash
       def contexttransformations=(transformation)
@@ -736,7 +736,7 @@ module MovingImages
       # Set the affine transform for the draw element.    
       # If a context transformation was previously set, it is deleted from the
       # draw element hash. If there was a previous affine transform set then it is
-      # replaced.
+      # replaced. See {MITransformations}
       # @param affineTransform [Hash] Representation of an affine transform
       # @return [Hash] The affine transform hash
       def affinetransform=(affineTransform)
@@ -820,8 +820,8 @@ module MovingImages
       end
 
       # Set the inner shadow. Required.    
-      # @param theShadow [Hash, #shadowhash] The inner shadow to apply to fill path
-      #   see {MISHadow}
+      # @param innerShadow [Hash, #shadowhash] The inner shadow to apply to fill path
+      #   see {MIShadow}
       # @return [Hash] The inner shadow assigned.
       def innershadow=(innerShadow)
         if innerShadow.respond_to? "shadowhash"
@@ -1117,7 +1117,7 @@ module MovingImages
       # drawn beyond the circles.
       # @param theOption [:kCGGradientDrawsBeforeStartLocation,
       #   :kCGGradientDrawsAfterEndLocation]
-      # @return Array[:Symbol] The list of applied options.
+      # @return [Array<Symbol>] The list of applied options.
       def add_drawgradient_option(theOption)
         if @elementHash[:gradientoptions].nil?
           @elementHash[:gradientoptions] = [theOption]
@@ -1251,7 +1251,7 @@ module MovingImages
       # This is an alternative to using array of path elements and 
       # point_textdrawnfrom.
       # @param boundingBox [Hash] Rectangle hash: {MIShapes.make_rectangle}
-      # @returns [Array<Hash>] Array of path elements containing a rectangle.
+      # @return [Array<Hash>] Array of path elements containing a rectangle.
       def boundingbox=(boundingBox)
         self.point_textdrawnfrom = boundingBox[:origin]
         thePath = MIPath.new
@@ -1290,7 +1290,7 @@ module MovingImages
       end
 
       # Set the inner shadow. Optional.    
-      # @param theShadow [Hash, #shadowhash] The inner shadow to apply to text
+      # @param innerShadow [Hash, #shadowhash] The inner shadow to apply to text
       #   see {MIShadow}
       # @return [Hash] The inner shadow assigned.
       def innershadow=(innerShadow)

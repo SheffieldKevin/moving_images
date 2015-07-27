@@ -202,38 +202,6 @@ class TestMIDrawElement < MiniTest::Unit::TestCase
   # * arrayofelements
 end
 
-=begin
-# This is not even close to being complete. I've implemented enough so that the
-# common part to the 3 other types of draw element objects can be refactored
-# into a common abstract base class.
-
-# Presently the following is completely broken. A new test should start anew.
-class TestMIDrawLinearGradientFillElement < MiniTest::Unit::TestCase
-  # Test that a draw linear gradient fill produces correct json
-  def test_drawlinear_basics
-    draw_lineargradientelement = MILinearGradientFillElement.new
-    draw_lineargradientelement.blendmode = :kCGBlendModeColorDodge
-    variables = { widthoffset: '5.0 + 3 * $widthadjust',
-                  redcolorcomponent: '0.2 + 2 * $redcolorcomponentadjust' }
-    draw_lineargradientelement.variables = variables
-    affine_transform = MITransformations.make_affinetransform(m22: 2.0)
-    draw_lineargradientelement.affinetransform = affine_transform
-    new_json = draw_lineargradientelement.to_json
-    old_jsn = '{"elementtype":"lineargradientfill","startpoint":{"x":0,"y":0},'\
-    '"blendmode":"kCGBlendModeColorDodge","variables":'\
-    '{"widthoffset":"5.0 + 3 * $widthadjust","redcolorcomponent":'\
-    '"0.2 + 2 * $redcolorcomponentadjust"},"affinetransform":{"m11":1.0,'\
-    '"m12":0.0,"m21":0.0,"m22":2.0,"tX":0.0,"tY":0.0}}'
-    assert new_json.eql?(old_jsn), 'MILinearGradientFillElement json different'
-  end
-  # Need further tests
-  # * Specifying the clipping path.
-  # * Specifying array of locations and colors
-  # * Specifying the line
-  # * Specifying context transformations
-end
-=end
-
 # This is not close to being complete. I've completed enough to to test that
 # refactoring by moving common methods into an abstract base class works.
 # Tests that draw basic string element produces correct json.

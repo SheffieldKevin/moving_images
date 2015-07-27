@@ -30,7 +30,7 @@ module MovingImages
       # Add the object to the property hash which provides the image.    
       # @param ciProperty [Hash] The filter property to be assigned the image.
       # @param imageSource [Hash] The object to get image from. See {SmigIDHash}
-      # @param imageoptions: [Hash] 
+      # @param imageoptions [Hash] Options for obtaining image from source.
       # @return [Hash] The filter property image hash.
       def self.addimagesource_tociimageproperty(ciProperty, imageSource,
           imageoptions: nil)

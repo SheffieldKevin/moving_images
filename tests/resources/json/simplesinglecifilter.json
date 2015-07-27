@@ -29,7 +29,7 @@
           "objecttype": "bitmapcontext",
           "objectname": "2e2d9aea-2d2f-4a5d-96bb-0f0984aaa8c9"
         },
-        "coreimagesoftwarerender": false,
+        "softwarerender": false,
         "cifilterlist": [
           {
             "cifiltername": "CIUnsharpMask",

@@ -30,7 +30,7 @@
           "objecttype": "bitmapcontext",
           "objectname": "39d339ef-1508-45c9-82ca-5fbab2cfaede"
         },
-        "coreimagesoftwarerender": false,
+        "softwarerender": false,
         "cifilterlist": [
           {
             "cifiltername": "CIBarsSwipeTransition",

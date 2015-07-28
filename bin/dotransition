@@ -612,7 +612,7 @@ class DoTransition
       opts.separator "Perform a dissolve transition in 20 steps:"
       opts.separator "  dotransition --count 20 " +
                      "--sourceimage \"~/Pictures/sourceimage.png\" " +
-                     "--destinationimage \"~/Pictures/destinationimage.png\" " +
+                     "--targetimage \"~/Pictures/destinationimage.png\" " +
                      "--basename Dissolve " +
                      "--transitionfilter CIDissolveTransition " +
                      "--outputdir \"~/Desktop/deleteme/\""
@@ -621,7 +621,7 @@ class DoTransition
                 " --basename FlashTransition " +
                 " --outputdir ~/Desktop/deleteme --sourceimage " +
                 "\"~/Desktop/exampleimages/DSCN0733.JPG\"" +
-                "--destinationimage \"~/Desktop/exampleimages/DSCN0724.JPG\" "+ 
+                "--targetimage \"~/Desktop/exampleimages/DSCN0724.JPG\" "+ 
                 "--verbose --color 0.8,0.7,0.1,1.0 --extent 0,0,908,681 " +
                 "--center 610,450"
     end # parse!

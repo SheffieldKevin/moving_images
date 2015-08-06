@@ -104,7 +104,7 @@ $resources_dir = File.expand_path(File.join(File.dirname(__FILE__), "resources")
 $images_dir = File.join($resources_dir, "images")
 
 # Test class for creating shape hashes
-class TestMILibrary < MiniTest::Unit::TestCase
+class TestMILibrary < MiniTest::Test
   def test_dotransition
     json_filepath = File.join($resources_dir, "json", "dotransition.json")
     the_json = File.read(json_filepath)
@@ -121,7 +121,6 @@ class TestMILibrary < MiniTest::Unit::TestCase
                     inputWidth: 20,
                     inputBarOffset: 60,
                     verbose: false,
-                    generate_json: true,
                     softwarerender: false }
     generated_json = MILibrary.dotransition(the_options)
 #    File.write(json_filepath, generated_json)

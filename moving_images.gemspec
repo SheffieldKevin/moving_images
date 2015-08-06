@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "moving_images"
   spec.version       = MovingImages::VERSION
   spec.authors       = ["Kevin Meaney"]
-  spec.email         = ["ktam@yvs.eu.com"]
+  spec.email         = ["kevin@zukini.eu"]
   spec.summary       = %q{Ruby interface for using MovingImages}
-  spec.description   = %q{Currently a pre alpha release}
+  spec.description   = %q{Creates the JSON output required by MovingImages}
   spec.homepage      = "http://blog.yvs.eu.com"
   spec.license       = "MIT"
 

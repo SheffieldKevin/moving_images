@@ -7,7 +7,7 @@ include MovingImages
 
 # Test class for MIFilter
 
-class TestMIFilter < MiniTest::Unit::TestCase
+class TestMIFilter < MiniTest::Test
   def test_mifilter
     gamma_filter = MIFilter.new(:CIGammaAdjust,
                                 identifier: :testidentifierfilter)
@@ -29,7 +29,7 @@ class TestMIFilter < MiniTest::Unit::TestCase
   end
 end
 
-class TestMIFilterProperty < MiniTest::Unit::TestCase
+class TestMIFilterProperty < MiniTest::Test
   def test_make_inputimage_filterproperty
     filter_property = MIFilterProperty.make_ciimageproperty(
                           key: :inputImage,

@@ -7,7 +7,7 @@ require_relative '../lib/moving_images/smigobjectid'
 include MovingImages
 
 # Test class for creating shape hashes
-class TestMIShapes < MiniTest::Unit::TestCase
+class TestMIShapes < MiniTest::Test
   def test_point_make
     my_point = MIShapes.make_point(0, 0)
     assert my_point[:x].is_a?(Numeric), 'In point hash :x is not a float'
@@ -59,7 +59,7 @@ class TestMIShapes < MiniTest::Unit::TestCase
 end
 
 # Test class for transformation hashes
-class TestMITransformations < MiniTest::Unit::TestCase
+class TestMITransformations < MiniTest::Test
   def test_transformations
     point = MIShapes.make_point('5 + $halfwidth', '4 + $halfheight')
     transforms = MITransformations.make_contexttransformation
@@ -87,7 +87,7 @@ class TestMITransformations < MiniTest::Unit::TestCase
 end
 
 # Test class for color hashes
-class TestMIColor < MiniTest::Unit::TestCase
+class TestMIColor < MiniTest::Test
   def test_rgba_color
     color = MIColor.make_rgbacolor(1, 0, 0.5)
     the_json = '{"red":1,"green":0,"blue":0.5,"alpha":1.0,'\
@@ -99,7 +99,7 @@ class TestMIColor < MiniTest::Unit::TestCase
 end
 
 # Test class for path hashes
-class TestMIPath < MiniTest::Unit::TestCase
+class TestMIPath < MiniTest::Test
   def test_make_mipath
     path = MIPath.new
     assert path.patharray.is_a?(Array), 'The path is not an array'
@@ -126,7 +126,7 @@ class TestMIPath < MiniTest::Unit::TestCase
 end
 
 # Test class for shadow hashes
-class TestMIShadow < MiniTest::Unit::TestCase
+class TestMIShadow < MiniTest::Test
   def test_make_shadow
     shadow = MIShadow.new
     assert shadow.shadowhash.is_a?(Hash), 'The shadow is not a hash'
@@ -142,7 +142,7 @@ class TestMIShadow < MiniTest::Unit::TestCase
 end
 
 # Test class for draw element
-class TestMIDrawElement < MiniTest::Unit::TestCase
+class TestMIDrawElement < MiniTest::Test
   # Test that a draw fill rectangle element produces correct json
   def test_make_drawfillrectangleelement
     draw_element = MIDrawElement.new(:fillrectangle)
@@ -205,7 +205,7 @@ end
 # This is not close to being complete. I've completed enough to to test that
 # refactoring by moving common methods into an abstract base class works.
 # Tests that draw basic string element produces correct json.
-class TestMIDrawBasicStringElement < MiniTest::Unit::TestCase
+class TestMIDrawBasicStringElement < MiniTest::Test
   # Test that a draw basic string produces the correct json output
   def test_drawbasicstring_basics
     draw_basicstringelement = MIDrawBasicStringElement.new
@@ -234,7 +234,7 @@ end
 
 # This is not close to being complete. I've implement enough to test that
 # refactoring by moving common methods into an abstract draw base class.
-class TestMIDrawImageElement < MiniTest::Unit::TestCase
+class TestMIDrawImageElement < MiniTest::Test
   # Test that the draw image element produces correct json output.
   def test_drawimage_basics
     draw_imageelement = MIDrawImageElement.new
@@ -307,7 +307,7 @@ class TestMIDrawImageElement < MiniTest::Unit::TestCase
   # * Specifying a shadow
 end
 
-class TestMIPathWithArcs < MiniTest::Unit::TestCase
+class TestMIPathWithArcs < MiniTest::Test
   def test_make_mipath_witharcs
     path = MIPath.new
 
@@ -334,7 +334,7 @@ class TestMIPathWithArcs < MiniTest::Unit::TestCase
   end
 end
 
-class TestMIClip < MiniTest::Unit::TestCase
+class TestMIClip < MiniTest::Test
   def test_make_drawingclipper
     theClip = MIClip.new
     theClip.startpoint = { x: 0.0, y: 0.0 }

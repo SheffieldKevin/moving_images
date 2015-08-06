@@ -12,7 +12,7 @@ include CommandModule
 include MICGDrawing
 
 # Test class for the SmigCommands class and it's objects
-class TestSmigCommands < MiniTest::Unit::TestCase
+class TestSmigCommands < MiniTest::Test
   # Test the creation and the configuring of a smig command
   def test_configuring_smigcommand
     commands = SmigCommands.new
@@ -64,7 +64,7 @@ end
 # The SmigHelper methods need to be tested.
 
 # The creation of all sort of command objects.
-class TestObjectCommands < MiniTest::Unit::TestCase
+class TestObjectCommands < MiniTest::Test
   def test_making_objectcommands1
     importer_object = { objecttype: :imageimporter, objectname: 'test.object' }
     exporter_object = { objecttype: :imageexporter,

@@ -94,7 +94,7 @@ module EqualHashes
 end
 
 # Test class for creating hashes that represent times that can be used by movie objects.
-class TestMovieTime < MiniTest::Unit::TestCase
+class TestMovieTime < MiniTest::Test
   def test_movietime_make
     movie_time = MovieTime.make_movietime(timevalue: 900, timescale: 600)
     assert movie_time[:flags].eql?(1), 'CMTime flag hash value not 1'
@@ -126,7 +126,7 @@ class TestMovieTime < MiniTest::Unit::TestCase
 end
 
 # Test class for creating hashes that represent track identifiers.
-class TestMovieTrackIdentifiers < MiniTest::Unit::TestCase
+class TestMovieTrackIdentifiers < MiniTest::Test
   def test_make_trackidentifier_with_mediatype
     track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
                                     mediatype: :vide, trackindex: 0)
@@ -150,7 +150,7 @@ end
 
 # Test class for creating layer instruction hashes for MovieEditor video 
 # composition instructions
-class TestVideoLayerInstructions < MiniTest::Unit::TestCase
+class TestVideoLayerInstructions < MiniTest::Test
   def test_add_passthrulayerinstruction
     track = MovieTrackIdentifier.make_movietrackid_from_mediatype(
                                                        mediatype: :vide,
@@ -246,7 +246,7 @@ end
 
 $resources_dir = File.expand_path(File.join(File.dirname(__FILE__), "resources"))
 
-class TestMovieProcessFramesCommand < MiniTest::Unit::TestCase
+class TestMovieProcessFramesCommand < MiniTest::Test
   def test_process_movieframe_commandgeneration
     sourceMovie = "/Users/ktam/images/604_sd_clip.mov"
     width = 576

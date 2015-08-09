@@ -1,6 +1,6 @@
-# MovingImages
+# MovingImages gem
 
-This gem provides a ruby interface for using [MovingImages](http://zukini.eu/docs/Contents) a OS X Launch Agent for processing image files.
+This gem provides a ruby interface for using [MovingImages](http://zukini.eu/docs/Contents) a OS X Launch Agent for processing video and image files.
 
 ## Installation
 
@@ -8,22 +8,23 @@ This gem provides a ruby interface for using [MovingImages](http://zukini.eu/doc
 
 ## Usage
 
-Please see the [documentation for MovingImages](http://yvs.eu.com/MovingImages/docs/Contents).
+Please see the [documentation for MovingImages](http://zukini.ey/docs/Contents).
 
 ## Requirements
 
 ### To build moving_images gem
 
-* bundler
+* bundler gem required
 
 ### To test moving_images gem
 
-* minitest
+* minitest gem required
 
 ### To test MovingImages
 
-* Installing the MovingImages LaunchAgent
-* pdf-reader gem
+* Install the MovingImages LaunchAgent
+* pdf-reader gem required
+* [Test repository on github](https://github.com/SheffieldKevin/MovingImages-RubyTests)
 
 ## License
 

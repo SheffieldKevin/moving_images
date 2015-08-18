@@ -52,7 +52,7 @@ class CustomCropCommand
   def self.parse!(theArgs)
     @@options = MILibrary::Utility.make_customcrop_options()
     opt_parser = OptionParser.new do |opts|
-      opts.version = "0.2a"
+      opts.version = "1.0"
       opts.banner = "Usage: customcrop [options] file1, file2, ..."
       opts.separator "Crop the image by specifying how much to crop from each "\
                      "edge independently."

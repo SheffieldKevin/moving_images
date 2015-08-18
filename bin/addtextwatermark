@@ -66,17 +66,12 @@ class AddTextWatermarkCommand
       opts.on("--watermarktext TEXT", String,
               "The text to draw as a watermark.") do |text|
         @@options[:text] = text
-        # puts "Text: #{text}"
-        # puts @@options
       end
 
       opts.on("--strokewidth STROKEWIDTH", Float,
               "The width of the text stroke. If a negative the text will be " +
               "drawn with a fill then stroked.") do |sw|
-        # puts sw
         @@options[:strokewidth] = clamp_to_range(sw, -50.0, 50.0)
-        # puts "Stroke width: #{sw}"
-        # puts @@options
       end
 
       opts.on("--fontsize FONTSIZE", Integer,
@@ -93,16 +88,12 @@ class AddTextWatermarkCommand
             "The fill color represented as a comma delimited string. For example: "\
             "0.0,0.0,0.0,1.0 is opaque black. Order is: r,g,b,a") do |fcolor|
         @@options[:fillcolor] = MIColor.make_rgbacolor_fromstring(fcolor)
-        # puts "Fillcolor: #{fcolor}"
-        # puts @@options
       end
 
       opts.on("-s", "--strokecolor [STROKECOLOR]", String,
             "The stroke color represented as a comma delimited string. The default "\
             "is: 1.0,1.0,1.0,1.0 opaque white. Order is: r,g,b,a") do |scolor|
         @@options[:strokecolor] = MIColor.make_rgbacolor_fromstring(scolor)
-        # puts "Strokecolor: #{scolor}"
-        # puts @@options
       end
 
       opts.on("--scale [SCALE]", Float,
@@ -115,8 +106,6 @@ class AddTextWatermarkCommand
             "Export quality. 0.0 = max compression, min quality " +
             "1.0 = best quality min compression") do |qual|
         @@options[:quality] = clamp_to_range(qual, 0.0, 1.0)
-        # puts "Quality: #{qual}"
-        # puts @@options
       end
 
       opts.on("-t", "--exportfiletype [FILETYPE]", String,
@@ -129,8 +118,6 @@ class AddTextWatermarkCommand
                "com.compuserve.gif, public.jpeg-2000, com.apple.icns,\n"\
                "\t\t\t\t\tcom.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
         @@options[:exportfiletype] = eft
-        # puts "Export file type: #{eft}"
-        # puts @@options
       end
 
       opts.on("-m", "--copymetadata",
@@ -142,15 +129,11 @@ class AddTextWatermarkCommand
       opts.on("-o", "--outputdir PATH", String, 
               "Directory where images to be saved.") do |od|
         @@options[:outputdir] = od
-        # puts "Output directory: #{od}"
-        # puts @@options
       end
 
       opts.on("--assumesamedimensions",
               "Assume all image files will have the same dimensions.") do
         @@options[:assume_images_have_same_dimensions] = true
-        # puts "Assume same dimensions"
-        # puts @@options
       end
 
       # Now for options common to many command line scripts.
@@ -178,8 +161,6 @@ class AddTextWatermarkCommand
     end # parse!
     begin
       opt_parser.parse!(theArgs)
-      # puts theArgs
-      # puts @@options.to_s
       if self.missing_mandatory_options?()
         raise "Missing mandatory options."
       end

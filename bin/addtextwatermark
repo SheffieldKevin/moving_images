@@ -4,9 +4,9 @@
 # You are granted the rights to modify this file for your own purposes
 # or for distribution to third parties. In either case you accept all
 # responsibility for liability. Please include the link to the documentation:
-# https://gitlab.com/ktam/using-movingimages/wikis/UsingMovingImagesContents
+# http://zukini.eu/docs/Scripts#Scripts
 
-# FILE: custompad
+# FILE: addtextwatermark
 # Crops images, each edge can be cropped by a specified amount.
 
 require 'optparse'
@@ -39,7 +39,7 @@ def clamp_to_min(val, min)
   return val
 end
 
-class CustomCropCommand
+class AddTextWatermarkCommand
   @@options = { }
   
   def self.missing_mandatory_options?()
@@ -52,7 +52,7 @@ class CustomCropCommand
   def self.parse!(theArgs)
     @@options = MILibrary::Utility.make_addtextwatermark_options()
     opt_parser = OptionParser.new do |opts|
-      opts.version = "0.1a"
+      opts.version = "1.0"
       opts.banner = "Usage: addtextwatermark [options] file1 file2 ..."
       opts.separator "Add a text watermark to the center of each image."
       opts.separator "If the output directory is the same as the directory " +
@@ -66,34 +66,43 @@ class CustomCropCommand
       opts.on("--watermarktext TEXT", String,
               "The text to draw as a watermark.") do |text|
         @@options[:text] = text
+        puts "Text: #{text}"
+        puts @@options
       end
 
-      opts.on("--strokewidth [STROKEWIDTH]", Float,
-              "The width of the text stroke. If a negative the text will be "\
+      opts.on("--strokewidth STROKEWIDTH", Float,
+              "The width of the text stroke. If a negative the text will be " +
               "drawn with a fill then stroked.") do |sw|
+        puts sw
         @@options[:strokewidth] = clamp_to_range(sw, -50.0, 50.0)
+        puts "Stroke width: #{sw}"
+        puts @@options
       end
 
-      opts.on("--fontsize [FONTSIZE]", Integer,
+      opts.on("--fontsize FONTSIZE", Integer,
               "The fontsize to draw the watermark text with.") do |t|
         @@options[:fontsize] = clamp_to_range(t, 4, 256)
       end
 
-      opts.on("--postscriptfont [POSTSCRIPTFONT]", String,
+      opts.on("--postscriptfont POSTSCRIPTFONT", String,
             "The postscript font name used to draw the text with.") do |font|
         @@options[:font] = font
       end
 
       opts.on("-f", "--fillcolor [FILLCOLOR]", String,
             "The fill color represented as a comma delimited string. For example: "\
-            "0.0,0.0,0.0,1.0 is opaque black. Order is: r,g,b,a") do |color|
-        @@options[:fillcolor] = MIColor.make_rgbacolor_fromstring(color)
+            "0.0,0.0,0.0,1.0 is opaque black. Order is: r,g,b,a") do |fcolor|
+        @@options[:fillcolor] = MIColor.make_rgbacolor_fromstring(fcolor)
+        puts "Fillcolor: #{fcolor}"
+        puts @@options
       end
 
       opts.on("-s", "--strokecolor [STROKECOLOR]", String,
             "The stroke color represented as a comma delimited string. The default "\
-            "is: 1.0,1.0,1.0,1.0 opaque white. Order is: r,g,b,a") do |color|
-        @@options[:strokecolor] = MIColor.make_rgbacolor_fromstring(color)
+            "is: 1.0,1.0,1.0,1.0 opaque white. Order is: r,g,b,a") do |scolor|
+        @@options[:strokecolor] = MIColor.make_rgbacolor_fromstring(scolor)
+        puts "Strokecolor: #{scolor}"
+        puts @@options
       end
 
       opts.on("--scale [SCALE]", Float,
@@ -106,9 +115,11 @@ class CustomCropCommand
             "Export quality. 0.0 = max compression, min quality " +
             "1.0 = best quality min compression") do |qual|
         @@options[:quality] = clamp_to_range(qual, 0.0, 1.0)
+        puts "Quality: #{qual}"
+        puts @@options
       end
 
-      opts.on("-t", "--exportfiletype [FILETYPE]",
+      opts.on("-t", "--exportfiletype [FILETYPE]", String,
               [:'public.jpeg', :'public.png', :'com.compuserve.gif',
                :'public.tiff', :'public.jpeg-2000', :'com.apple.icns',
                :'com.adobe.photoshop-image', :'com.apple.rjpeg' ],
@@ -118,6 +129,8 @@ class CustomCropCommand
                "com.compuserve.gif, public.jpeg-2000, com.apple.icns,\n"\
                "\t\t\t\t\tcom.adobe.photoshop-image, com.apple.rjpeg)") do |eft|
         @@options[:exportfiletype] = eft
+        puts "Export file type: #{eft}"
+        puts @@options
       end
 
       opts.on("-m", "--copymetadata",
@@ -126,19 +139,24 @@ class CustomCropCommand
       end
 
       # Now get the directory where the scaled images are to be saved.
-      opts.on("-o", "--outputdir PATH",
+      opts.on("-o", "--outputdir PATH", String, 
               "Directory where images to be saved.") do |od|
         @@options[:outputdir] = od
+        puts "Output directory: #{od}"
+        puts @@options
       end
 
       opts.on("--assumesamedimensions",
               "Assume all image files will have the same dimensions.") do
         @@options[:assume_images_have_same_dimensions] = true
+        puts "Assume same dimensions"
+        puts @@options
       end
 
       # Now for options common to many command line scripts.
       opts.separator "Common options"
 
+      # @@options[:verbose] = false
       opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
         @@options[:verbose] = v
       end
@@ -160,6 +178,8 @@ class CustomCropCommand
     end # parse!
     begin
       opt_parser.parse!(theArgs)
+      puts theArgs
+      puts @@options.to_s
       if self.missing_mandatory_options?()
         raise "Missing mandatory options."
       end
@@ -229,13 +249,14 @@ class CustomCropCommand
 end
 
 def localmain()
-  options = CustomCropCommand.parse!(ARGV)
+  # puts ARGV
+  options = AddTextWatermarkCommand.parse!(ARGV)
   $verbose = options[:verbose]
   if $verbose
     pp options
   end
 
-  result = CustomCropCommand.addtextwatermark()
+  result = AddTextWatermarkCommand.addtextwatermark()
   if !result.zero?
     verboseputs("Error fail code: " + result.to_s)
   end

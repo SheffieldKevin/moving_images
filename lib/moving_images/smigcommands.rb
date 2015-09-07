@@ -1393,7 +1393,7 @@ module MovingImages
       #   Close the created object when commands are completed.
       # @param borderlesswindow [true, false] Should the window be borderless?
       # @param name [String] The name of the object to be created.
-      # @return [Command] The command to create a window context
+      # @return [Hash] Object id, a reference to refer to a created object
       def make_createwindowcontext(rect: nil, addtocleanup: true,
                                       borderlesswindow: false, name: nil)
         theName = SecureRandom.uuid if name.nil?
@@ -1565,7 +1565,7 @@ module MovingImages
       # @param name [String] The name of the object to be created
       # @param pathsubstitutionkey [String, Symbol] Get file path from variables
       #   with this key.
-      # @return [Command] The command that create the importer
+      # @return [Hash] Object id, a reference to refer to a created object
       def make_createvideoframeswriter(movieFilePath,
                          addtocleanup: true,
                           utifiletype: :"com.apple.quicktime-movie",
@@ -1590,7 +1590,7 @@ module MovingImages
       # @param addtocleanup [true, false] Optional. Default true.
       #   Close the created object when commands are completed.
       # @param name [String] The name of the object to be created.
-      # @return [Command] The command that will create the movie editor.
+      # @return [Hash] Object id, a reference to refer to a created object.
       def make_createmovieeditor(addtocleanup: true, name: nil)
         theName = SecureRandom.uuid if name.nil?
         theName = name unless name.nil?

@@ -69,14 +69,14 @@ class AddTextWatermarkCommand
       end
 
       opts.on("--strokewidth STROKEWIDTH", Float,
-              "The width of the text stroke. If a negative the text will be " +
+              "The width of the text stroke. If a negative the text will be "\
               "drawn with a fill then stroked.") do |sw|
         @@options[:strokewidth] = clamp_to_range(sw, -50.0, 50.0)
       end
 
       opts.on("--fontsize FONTSIZE", Integer,
               "The fontsize to draw the watermark text with.") do |t|
-        @@options[:fontsize] = clamp_to_range(t, 4, 256)
+        @@options[:fontsize] = clamp_to_range(t, 4, 512)
       end
 
       opts.on("--postscriptfont POSTSCRIPTFONT", String,

@@ -408,3 +408,64 @@ class TestMovieProcessFramesCommand < MiniTest::Test
                                               'Different process movie frame json'
   end
 end
+
+# Testing the creation of audio instructions.
+class TestMovieAudioInstruction < MiniTest::Test
+  def test_make_setvolume_audio_instruction
+    track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                    mediatype: :soun, trackindex: 0)
+    volumeInstruction = AudioInstruction.new(track: track_id)
+    
+    volumeTime = MovieTime.make_movietime_fromseconds(2.0)
+    volumeInstruction.set_volume_instruction(time: volumeTime, volume: 0.5)
+    
+    hashOriginal = {
+      track: {
+        mediatype: :soun,
+        trackindex: 0
+      },
+      audioinstruction: :volumeinstruction,
+      time: { timeinseconds: 2.0 },
+      instructionvalue: 0.5
+    }
+    # puts JSON.pretty_generate(hashOriginal)
+    # puts JSON.pretty_generate(volumeInstruction.audioinstructionhash)
+    hashesEqual = EqualHashes::equal_hashes?(hashOriginal,
+                                      volumeInstruction.audioinstructionhash)
+    assert hashesEqual, "Volume instructions different."
+  end
+
+  def test_make_setvolumeramp_audio_instruction
+    track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                    mediatype: :soun, trackindex: 0)
+    volumeInstruction = AudioInstruction.new(track: track_id)
+    
+    startVolumeRampTime = MovieTime.make_movietime(timevalue: 6000, timescale: 6000)
+    volumeRampDuration = MovieTime.make_movietime(timevalue: 6000, timescale: 12000)
+    volumeRampTimeRange = MovieTime.make_movie_timerange(start: startVolumeRampTime,
+                                                      duration: volumeRampDuration)
+    
+    volumeInstruction.set_volumeramp_instruction(timerange: volumeRampTimeRange,
+                                               startvolume: 0.0,
+                                                 endvolume: 1.0)
+                                                 
+    hashOriginal = {
+      track: {
+        mediatype: :soun,
+        trackindex: 0
+      },
+      audioinstruction: :volumerampinstruction,
+      timerange: {
+        start: MovieTime.make_movietime(timevalue: 6000, timescale: 6000),
+        duration: MovieTime.make_movietime(timevalue: 6000, timescale: 12000)
+      },
+      startrampvalue: 0.0,
+      endrampvalue: 1.0
+    }
+    # puts JSON.pretty_generate(hashOriginal)
+    # puts JSON.pretty_generate(volumeInstruction.audioinstructionhash)
+    hashesEqual = EqualHashes::equal_hashes?(hashOriginal,
+                                      volumeInstruction.audioinstructionhash)
+    assert hashesEqual, "Volume instructions different."
+  end
+end

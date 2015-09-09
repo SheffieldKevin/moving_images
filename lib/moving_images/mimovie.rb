@@ -33,9 +33,11 @@ module MovingImages
       
       
       # Make a movie time range that takes a start time and a duration time.    
-      # Both the start and duration times can be [Hash] objects created by one
+      # Both the start and duration times are [Hash] objects created by one
       # of {MovieTime.make_movietime}, {MovieTime.make_movietime_fromseconds}
       # @param start [Hash] The start time of the time range.
+      # @param duration [Hash] The duration of the time range.
+      # @return [Hash] The time range hash.
       def self.make_movie_timerange(start: nil, duration: nil)
         return { start: start, duration: duration }
       end
@@ -185,9 +187,9 @@ module MovingImages
       end
     end
 
-    # Instruction for specifying track volume.
+    # Instruction for specifying track volume. Only set one of volume/volumeramp.
     class AudioInstruction
-      # Initialize an audio instruction with an optional track.
+      # Initialize an audio instruction with an optional track.    
       # @param track [Hash] Track identifier to have volume change applied to.
       def initialize(track: nil)
         @audioinstructions = {}
@@ -206,11 +208,11 @@ module MovingImages
         @audioinstructions[:track] = track
       end
 
-      # Assign a volume instruction.  
+      # Assign a volume instruction.    
       # The volume will remain at this level until the next time the volume
       # is specified or the audio track ends.
       # @param time [Hash] The time when to set the audio track volume level.
-      #   See: {MovieTime::make_movie_time}
+      #   See: {MovieTime.make_movie_time}
       # @param volume [Float] The volume level to be assigned.. Range 0..1
       # @return [Hash] The audio instructions.
       def set_volume_instruction(time: nil, volume: nil)
@@ -220,10 +222,10 @@ module MovingImages
         @audioinstructions
       end
 
-      # Assign a volume ramp audio instruction.  
+      # Assign a volume ramp audio instruction.    
       # @param timerange [Hash] The time range over which the volume
       #   ramp is applied. The time range specifies the start time and how long
-      #   the ramp takes. {MovieTime::make_movie_timerange}
+      #   the ramp takes. {MovieTime.make_movie_timerange}
       # @param startvolume [Float] The start volume level. Range 0..1
       # @param endvolume [Float] The end volume level. Range 0..1
       # @return [Hash] The audio instructions.

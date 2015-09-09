@@ -10,6 +10,85 @@ require_relative '../lib/moving_images/mimovie'
 include MovingImages
 include CommandModule
 include MICGDrawing
+include MIMovie
+
+module EqualHashes
+  def self.equal_arrays?(array1, array2)
+    return false unless array1.kind_of?(Array)
+    return false unless array2.kind_of?(Array)
+    unless array1.size.eql?(array2.size)
+      puts "Arrays have different lengths"
+      return false
+    end
+    begin
+      array1.each_index do |index|
+        if array1[index].kind_of?(Hash)
+          return false unless self.equal_hashes?(array1[index], array2[index])
+        elsif array1[index].kind_of?(Array)
+          return false unless self.equal_arrays?(array1[index], array2[index])
+        else
+          result = array1[index].eql?(array2[index])
+          unless result
+            puts "array1: #{array1.to_json}"
+            puts "array2: #{arrat2.to_json}"
+          end
+          return false unless result
+        end
+      end
+    rescue RuntimeError => e
+      return false
+    end
+    return true
+  end
+
+  def self.equal_hashes?(hash1, hash2)
+    return false unless hash1.kind_of?(Hash)
+    return false unless hash2.kind_of?(Hash)
+    unless hash1.size.eql?(hash2.size)
+      puts "Number of hash attributes different"
+      puts "hash1 keys: #{hash1.keys}"
+      puts "hash2 keys: #{hash2.keys}"
+      return false
+    end
+    return false unless hash1.size.eql?(hash2.size)
+    begin
+      hash1.keys.each do |key|
+        # First check keys where the key must exist in both but value can differ
+        if key.eql?('objectname')
+          return false if hash2[key].nil?
+        elsif key.eql?('file')
+          return false if hash2[key].nil?
+        elsif key.eql?('propertyvalue')
+          return false if hash2[key].nil?
+        elsif key.eql?('imageidentifier')
+          return false if hash2[key].nil?
+        else
+          if hash1[key].kind_of?(Hash)
+# Uncomment the following if you want context of difference displayed.
+#            areEqual = self.equal_hashes?(hash1[key], hash2[key])
+#            unless areEqual
+#              puts "hash1: #{hash1.to_json}"
+#              puts "hash2: #{hash2.to_json}"
+#            end
+            return false unless self.equal_hashes?(hash1[key], hash2[key])
+          elsif hash1[key].kind_of?(Array)
+            return false unless self.equal_arrays?(hash1[key], hash2[key])
+          else
+            result = hash1[key].eql?(hash2[key])
+            unless result
+              puts "hash1: #{hash1.to_json}"
+              puts "hash2: #{hash2.to_json}"
+            end
+            return false unless result
+          end
+        end
+      end
+    rescue RuntimeError => e
+      return false
+    end
+    return true
+  end
+end
 
 # Test class for the SmigCommands class and it's objects
 class TestSmigCommands < MiniTest::Test
@@ -214,5 +293,57 @@ class TestObjectCommands < MiniTest::Test
     '"sourcetimerange":{"start":{"timeinseconds":1000},"duration":{"value":3000,'\
     '"timescale":600,"flags":1,"epoch":0}}}'
     assert new_json.eql?(old_json), 'test_make_inserttracksegment different JSON'
+  end
+  
+  def test_make_addaudioinstruction
+    object = SmigIDHash.make_objectid(objecttype: :movieeditor,
+                                      objectname: 'test.movieeditor.object')
+    track_id = MovieTrackIdentifier.make_movietrackid_from_mediatype(
+                                      mediatype: :soun,
+                                     trackindex: 0)
+    volumeInstruction = AudioInstruction.new(track: track_id)
+    
+    startVolumeRampTime = MovieTime.make_movietime(timevalue: 600, timescale: 600)
+    volumeRampDuration = MovieTime.make_movietime(timevalue: 600, timescale: 1200)
+    volumeRampTimeRange = MovieTime.make_movie_timerange(start: startVolumeRampTime,
+                                                      duration: volumeRampDuration)
+    
+    volumeInstruction.set_volumeramp_instruction(timerange: volumeRampTimeRange,
+                                               startvolume: 1.0,
+                                                 endvolume: 0.0)
+    addAudioInstruction = CommandModule.make_addaudioinstruction(object,
+                                               audioinstruction: volumeInstruction)
+    originalHash = {
+      command: :addaudiomixinstruction,
+      receiverobject: {
+        objecttype: :movieeditor,
+        objectname: 'test.movieeditor.object'
+      },
+      track: {
+        trackindex: 0,
+        mediatype: :soun
+      },
+      audioinstruction: :volumerampinstruction,
+      timerange: {
+        start: {
+          value: 600,
+          timescale: 600,
+          flags: 1,
+          epoch: 0
+        },
+        duration: {
+          value: 600,
+          timescale: 1200,
+          flags: 1,
+          epoch: 0
+        }
+      },
+      startrampvalue: 1.0,
+      endrampvalue: 0.0
+    }
+    hashesEqual = EqualHashes::equal_hashes?(originalHash,
+                                      addAudioInstruction.commandhash)
+
+    assert hashesEqual, "Add audio instruction hash has changed"
   end
 end

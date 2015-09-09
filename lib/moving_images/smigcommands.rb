@@ -970,15 +970,15 @@ module MovingImages
     # @param audioinstructions [Hash, #audioinstructionhash] Audio volume instruction.
     #   See {MIMovie::AudioInstruction}
     # @return [ObjectCommand] The made add audio volume setting instruction command
-    def self.make_addaudioinstruction(receiver_object, audioinstructions: nil)
+    def self.make_addaudioinstruction(receiver_object, audioinstruction: nil)
       theCommand = ObjectCommand.new(:addaudiomixinstruction, receiver_object)
       
-      unless audioinstructions.nil?
-        if audioinstructions.respond_to?("audioinstructionhash")
-          audioinstructions = audioinstructions.audioinstructionhash
+      unless audioinstruction.nil?
+        if audioinstruction.respond_to?("audioinstructionhash")
+          audioinstruction = audioinstruction.audioinstructionhash
         end
         
-        audioinstructions.each do |hashkey, hashvalue|
+        audioinstruction.each do |hashkey, hashvalue|
           theCommand.add_option(key: hashkey, value: hashvalue)
         end
       end

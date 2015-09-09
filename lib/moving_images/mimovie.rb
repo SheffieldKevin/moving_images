@@ -184,6 +184,58 @@ module MovingImages
                }
       end
     end
+
+    # Instruction for specifying track volume.
+    class AudioInstruction
+      # Initialize an audio instruction with an optional track.
+      # @param track [Hash] Track identifier to have volume change applied to.
+      def initialize(track: nil)
+        @audioinstructions = {}
+        @audioinstructions[:track] = track unless track.nil?
+      end
+      
+      # Return the audio instruction.
+      # @return [Hash] The audio instructions.
+      def audioinstructionhash
+        @audioinstructions
+      end
+      
+      # Assign the track to have volume instruction applied. 
+      # @param track [Hash] Track identifier to have volume change applied to.
+      def track=(track)
+        @audioinstructions[:track] = track
+      end
+
+      # Assign a volume instruction.  
+      # The volume will remain at this level until the next time the volume
+      # is specified or the audio track ends.
+      # @param time [Hash] The time when to set the audio track volume level.
+      #   See: {MovieTime::make_movie_time}
+      # @param volume [Float] The volume level to be assigned.. Range 0..1
+      # @return [Hash] The audio instructions.
+      def set_volume_instruction(time: nil, volume: nil)
+        @audioinstructions[:audioinstruction] = :volumeinstruction
+        @audioinstructions[:time] = time
+        @audioinstructions[:instructionvalue] = volume
+        @audioinstructions
+      end
+
+      # Assign a volume ramp audio instruction.  
+      # @param timerange [Hash] The time range over which the volume
+      #   ramp is applied. The time range specifies the start time and how long
+      #   the ramp takes. {MovieTime::make_movie_timerange}
+      # @param startvolume [Float] The start volume level. Range 0..1
+      # @param endvolume [Float] The end volume level. Range 0..1
+      # @return [Hash] The audio instructions.
+      def set_volumeramp_instruction(timerange: nil, startvolume: nil,
+                                     endvolume: nil)
+        @audioinstructions[:audioinstruction] = :volumerampinstruction
+        @audioinstructions[:timerange] = timerange
+        @audioinstructions[:startrampvalue] = startvolume
+        @audioinstructions[:endrampvalue] = endvolume
+        @audioinstructions
+      end
+    end
     
     # An array of layer video composition instructions which is part of a 
     # video composition instruction. See {CommandModule.make_addvideoinstruction}

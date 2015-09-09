@@ -964,6 +964,27 @@ module MovingImages
       theCommand
     end
 
+    # Add a movie audio volume instruction.    
+    # Handled by a movie editor object.    
+    # @param receiver_object [Hash] Object that will handle the command.
+    # @param audioinstructions [Hash, #audioinstructionhash] Audio volume instruction.
+    #   See {MIMovie::AudioInstruction}
+    # @return [ObjectCommand] The made add audio volume setting instruction command
+    def self.make_addaudioinstruction(receiver_object, audioinstructions: nil)
+      theCommand = ObjectCommand.new(:addaudiomixinstruction, receiver_object)
+      
+      unless audioinstructions.nil?
+        if audioinstructions.respond_to?("audioinstructionhash")
+          audioinstructions = audioinstructions.audioinstructionhash
+        end
+        
+        audioinstructions.each do |hashkey, hashvalue|
+          theCommand.add_option(key: hashkey, value: hashvalue)
+        end
+      end
+      theCommand
+    end
+
     # Export the created composition from the movie editor object.    
     # You can get a list of all movie export
     # presets as a get property command directed at the movie editor class.

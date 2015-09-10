@@ -967,7 +967,7 @@ module MovingImages
     # Add a movie audio volume instruction.    
     # Handled by a movie editor object.    
     # @param receiver_object [Hash] Object that will handle the command.
-    # @param audioinstructions [Hash, #audioinstructionhash] Audio volume instruction.
+    # @param audioinstruction [Hash, #audioinstructionhash] Audio volume instruction.
     #   See {MIMovie::AudioInstruction}
     # @return [ObjectCommand] The made add audio volume setting instruction command
     def self.make_addaudioinstruction(receiver_object, audioinstruction: nil)

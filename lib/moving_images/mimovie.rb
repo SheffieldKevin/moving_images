@@ -212,7 +212,7 @@ module MovingImages
       # The volume will remain at this level until the next time the volume
       # is specified or the audio track ends.
       # @param time [Hash] The time when to set the audio track volume level.
-      #   See: {MovieTime.make_movie_time}
+      #   See: {MovieTime.make_movietime}
       # @param volume [Float] The volume level to be assigned.. Range 0..1
       # @return [Hash] The audio instructions.
       def set_volume_instruction(time: nil, volume: nil)

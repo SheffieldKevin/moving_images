@@ -64,7 +64,6 @@ module MovingImages
     # essentially a private module method, though I've not found a easy solution 
     # to hide private methods.
     def self.make_contenttypepartofquery(fileType)
-      puts "fileType1: #{fileType}"
       typesHash = { "public.jpeg" => "public.jpeg",
                     "public.png" => "public.png",
                     "public.tiff" => "public.tiff",
@@ -72,10 +71,7 @@ module MovingImages
                     "public.movie" => "public.movie",
                     "com.apple.quicktime-movie" => "com.apple.quicktime-movie",
                     "public.mpeg-4" => "public.mpeg-4" }
-#      puts "Filetype.intern = #{fileType.to_sym}"
       fileType = typesHash[fileType] unless fileType.nil?
-#      puts typesHash
-      puts "fileType2: #{fileType}"
       contentTypeQueryPart = if fileType.nil?
                                "kMDItemContentTypeTree == public.image"
                              else

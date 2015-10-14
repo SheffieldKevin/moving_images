@@ -8,6 +8,30 @@ module MovingImages
   # which match certain criteria.
   module SpotlightCommand
 
+    # Get the movie dimensions and length in seconds. return as a hash with attributes 
+    # :width,:height, :length
+    # @param imageFilePath [String] Path to file to get dimensions from.
+    # @return [Hash] the dimensions stored in a hash.
+    def self.get_moviedimensions_andlength(movieFilePath)
+      finalResult = {}
+      resultStr, exitVal = Open3.capture2("mdls",
+                                 "-name", "kMDItemPixelWidth",
+                                 "-name", "kMDItemPixelHeight",
+                                 "-name", "kMDItemDurationSeconds",
+                                 movieFilePath)
+      return {} unless exitVal.exitstatus.zero? || !resultStr.include?('null')
+      resultStr.split("\n").each do |item|
+        if item.include?('kMDItemPixelWidth')
+          finalResult[:width] = item.partition(' = ').last.to_i # width
+        elsif item.include?('kMDItemPixelHeight')
+          finalResult[:height] = item.partition(' = ').last.to_i # height
+        elsif item.include?('kMDItemDurationSeconds')
+          finalResult[:length] = item.partition(' = ').last.to_i # height
+        end
+      end
+      finalResult
+    end
+
     # Get the image dimensions and return as a hash with attributes 
     # :width,:height
     # @param imageFilePath [String] Path to file to get dimensions from.
@@ -40,12 +64,18 @@ module MovingImages
     # essentially a private module method, though I've not found a easy solution 
     # to hide private methods.
     def self.make_contenttypepartofquery(fileType)
-      typesHash = { :"public.jpeg" => "public.jpeg",
-                  :"public.png" => "public.png",
-                  :"public.tiff" => "public.tiff",
-                  :"com.compuserve.gif" => "com.compuserve.gif" }
-
-      fileType = typesHash[fileType.intern] unless fileType.nil?
+      puts "fileType1: #{fileType}"
+      typesHash = { "public.jpeg" => "public.jpeg",
+                    "public.png" => "public.png",
+                    "public.tiff" => "public.tiff",
+                    "com.compuserve.gif" => "com.compuserve.gif",
+                    "public.movie" => "public.movie",
+                    "com.apple.quicktime-movie" => "com.apple.quicktime-movie",
+                    "public.mpeg-4" => "public.mpeg-4" }
+#      puts "Filetype.intern = #{fileType.to_sym}"
+      fileType = typesHash[fileType] unless fileType.nil?
+#      puts typesHash
+      puts "fileType2: #{fileType}"
       contentTypeQueryPart = if fileType.nil?
                                "kMDItemContentTypeTree == public.image"
                              else
@@ -66,7 +96,7 @@ module MovingImages
     # Find image files with optional file type in an optional directory.    
     # If no file type is specified then images belonging to all file types will
     # be returned.
-    # @param filetype [String, Symbol, nil] The image file type
+    # @param filetype [String, nil] The image file type
     # @param onlyin [String, nil] Path to directory to find files in
     # @return [Array<String>] An array of paths to image files
     def self.find_imagefiles(filetype: nil, onlyin: nil)
@@ -195,7 +225,7 @@ module MovingImages
     # The files attribute value is an array of file paths.
     # @param width [Fixnum] The width of the image
     # @param height [Fixnum] The height of the image
-    # @param filetype [String, Symbol] The image uti file type
+    # @param filetype [String] The image uti file type
     # @param onlyin [nil, String] Option directory to find files within.
     # @return [Hash] With keys :width, :height, :files.
     def self.find_imagefiles_withdimensions(width: 800, height: 600,
@@ -252,11 +282,11 @@ module MovingImages
     # Unlike the months ago find files which finds files created within a month, 
     # this finds all files created since some day in the past until today using
     # spotlight.
-    # @param days_ago [Fixnum] How long ago in months an image file was created
+    # @param days_ago [Fixnum] How long ago within days an image file was created
     # @param filetype [String] Find image files with type. Default is any
     # @param onlyin  [String] Option directory to find files within
     # @return [Array<String>] A list of path, one path per result
-    def self.find_imagefilescreatedsince(days_ago: 20, filetype: nil,
+    def self.find_imagefilescreatedsince(days_ago: 20, filetype: "public.image",
                                                                   onlyin: nil)
       theCommand = [ "mdfind" ]
       theCommand.push('-onlyin', onlyin) unless onlyin.nil?
@@ -264,6 +294,25 @@ module MovingImages
       query += "kMDItemContentCreationDate >= $time.today(#{(-days_ago)})"
       theCommand.push(query)
       return self.runquerycommand(theCommand)
+    end
+
+    # Find movie files created since number of days days_ago.    
+    # Unlike the months ago find files which finds files created within a month, 
+    # this finds all files created since some day in the past until today using
+    # spotlight.
+    # @param days_ago [Fixnum] How long ago within days an image file was created
+    # @param filetype [String] Find image files with type. Default is any
+    # @param onlyin  [String] Option directory to find files within
+    # @return [Array<String>] A list of path, one path per result
+    def self.find_moviefilescreatedsince(days_ago: 20, filetype: "com.apple.quicktime-movie",
+                                                                  onlyin: nil)
+      theCommand = [ "mdfind" ]
+      theCommand.push('-onlyin', onlyin) unless onlyin.nil?
+      query = self.make_contenttypepartofquery(filetype) + " && "
+      query += "kMDItemContentCreationDate >= $time.today(#{(-days_ago)})"
+      theCommand.push(query)
+      return self.runquerycommand(theCommand)
+      # return self.runquerycommand(theCommand)
     end
   end
 end

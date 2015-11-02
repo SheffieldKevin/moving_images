@@ -787,6 +787,22 @@ module MovingImages
         end
         @elementHash[:applyimagemask] = theMask
       end
+      
+      # Assign an array of segment lengths for stroking with dashes.    
+      # The first value is the length of a painted segment, the next of an 
+      # unpainted segment etc.
+      # @param segments [Array<float>] Array of stroke segment lengths.
+      # @return [Array<float>] The assigned array.
+      def dashsegments=(segments)
+        @elementHash[:dasharray] = segments
+      end
+      
+      # Set the dash phase when stroking with dashes.
+      # @param phase [Float] The distance from beginning of dash definition to start.
+      # @return [Float] The assigned phase value.
+      def dashphase=(phase)
+        @elementHash[:dashphase] = phase
+      end
     end
 
     # Draws a filled path with a inner shadow.    
